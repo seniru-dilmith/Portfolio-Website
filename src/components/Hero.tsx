@@ -7,7 +7,7 @@ const Hero = () => (
     animate={{ opacity: 1 }}
     transition={{ duration: 1 }}
   >
-    <h1 className="text-4xl font-bold">Welcome to My Portfolio</h1>
+    <h1 className="text-4xl font-bold">{ process.env.NEXT_PUBLIC_SITE_NAME }</h1>
   </motion.div>
 );
 
