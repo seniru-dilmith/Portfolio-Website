@@ -7,4 +7,5 @@ const ContentSchema = new Schema({
 });
 
 const ContentModel = models.Content || model('Content', ContentSchema);
+
 export default ContentModel;
