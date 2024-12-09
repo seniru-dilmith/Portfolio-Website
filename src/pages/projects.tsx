@@ -1,18 +1,16 @@
 import { useEffect, useState } from 'react';
-
-interface Project {
-  _id: string;
-  title: string;
-  description: string;
-  technologies: string[];
-  githubURL: string;
-  createdAt: string;
-}
+import { Project } from '@/types/Project';
+import ProjectForm from '@/components/projects/ProjectForm';
+import ProjectList from '@/components/projects/ProjectList';
+import Navbar from '@/components/Navbar';
+import Hero from '@/components/Hero';
+import Footer from '@/components/Footer';
 
 const Projects = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [viewForm, setViewForm] = useState(false);
 
   const [formState, setFormState] = useState({
     title: '',
@@ -91,6 +89,17 @@ const Projects = () => {
     }
   };
 
+  const handleEdit = (project: Project) => {
+    setFormState({
+      title: project.title,
+      description: project.description,
+      technologies: project.technologies.join(', '),
+      githubURL: project.githubURL,
+    });
+    setEditingProjectId(project._id);
+    setViewForm(true);
+  };
+
   const resetForm = () => {
     setFormState({
       title: '',
@@ -101,6 +110,10 @@ const Projects = () => {
     setEditingProjectId(null);
   };
 
+  const handleFormView = () => {
+    setViewForm((prev) => !prev);
+  };
+
   if (loading) {
     return <div className="p-8 text-center">Loading projects...</div>;
   }
@@ -109,106 +122,35 @@ const Projects = () => {
     return <div className="p-8 text-center text-red-500">{error}</div>;
   }
 
-  const handleEdit = (project: Project) => {
-    setFormState({
-      title: project.title,
-      description: project.description,
-      technologies: project.technologies.join(', '),
-      githubURL: project.githubURL,
-    });
-    setEditingProjectId(project._id);
-  }
-
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-4">Projects</h1>
-
-      {/* Add/Update Form */}
-      <form onSubmit={handleAddOrUpdate} className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">{editingProjectId ? 'Update Project' : 'Add New Project'}</h2>
-        <input
-          type="text"
-          placeholder="Title"
-          value={formState.title}
-          onChange={(e) => setFormState({ ...formState, title: e.target.value })}
-          className="border p-2 mb-4 block w-full"
-          required
-        />
-        <textarea
-          placeholder="Description"
-          value={formState.description}
-          onChange={(e) => setFormState({ ...formState, description: e.target.value })}
-          className="border p-2 mb-4 block w-full"
-          required
-        />
-        <input
-          type="text"
-          placeholder="Technologies (comma-separated)"
-          value={formState.technologies}
-          onChange={(e) => setFormState({ ...formState, technologies: e.target.value })}
-          className="border p-2 mb-4 block w-full"
-          required
-        />
-        <input
-          type="url"
-          placeholder="GitHub URL"
-          value={formState.githubURL}
-          onChange={(e) => setFormState({ ...formState, githubURL: e.target.value })}
-          className="border p-2 mb-4 block w-full"
-          required
-        />
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          {editingProjectId ? 'Update' : 'Add'}
-        </button>
-        {editingProjectId && (
+    <>
+      <Navbar />
+      <Hero />
+      <div className="p-8">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold mb-4">Projects</h1>
           <button
-            type="button"
-            onClick={resetForm}
-            className="bg-gray-500 text-white px-4 py-2 rounded ml-4 hover:bg-gray-700"
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+            onClick={handleFormView}
           >
-            Cancel
+            {viewForm ? 'Hide Form' : 'View Form'}
           </button>
-        )}
-      </form>
+        </div>
 
-      {/* Projects List */}
-      <ul>
-        {projects.map((project) => (
-          <li key={project._id} className="border p-4 mb-4 rounded">
-            <h2 className="text-xl font-semibold">{project.title}</h2>
-            <p>{project.description}</p>
-            <p className="text-sm text-gray-500">
-              Technologies: {project.technologies.join(', ')}
-            </p>
-            <a
-              href={project.githubURL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 underline"
-            >
-              GitHub
-            </a>
-            <div className="mt-4">
-              <button
-                onClick={ () => handleEdit(project) }
-                className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-700 mr-2"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => handleDelete(project._id)}
-                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
-              >
-                Delete
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+        {viewForm && (
+          <ProjectForm
+            handleAddOrUpdate={handleAddOrUpdate}
+            formState={formState}
+            setFormState={setFormState}
+            editingProjectId={editingProjectId}
+            resetForm={resetForm}
+          />
+        )}
+
+        <ProjectList projects={projects} handleEdit={handleEdit} handleDelete={handleDelete} />
+      </div>
+      <Footer />
+    </>
   );
 };
 
