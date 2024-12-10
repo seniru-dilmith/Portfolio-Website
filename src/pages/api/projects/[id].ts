@@ -1,14 +1,33 @@
 import dbConnect from '../../../util/dbConnect';
 import Project from '../../../models/ProjectModel';
 import { NextApiRequest, NextApiResponse } from 'next';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET || '';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
   await dbConnect();
 
+  const verifyToken = () => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      throw new Error('Unauthorized! No token provided!');      
+    }
+
+    const token = authHeader.split(' ')[1];
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET);
+      return decoded;
+    } catch (error) {
+      throw new Error('Unauthorized! Invalid Token!');
+    }
+  }
+
   switch (req.method) {
     case 'PUT':
       try {
+        verifyToken();
         const project = await Project.findByIdAndUpdate(id, req.body, { new: true });
         if (!project) {
           return res.status(404).json({ success: false, message: 'Project not found' });
@@ -23,6 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     case 'DELETE':
       try {
+        verifyToken();
         const deletedProject = await Project.findByIdAndDelete(id);
         if (!deletedProject) {
           return res.status(404).json({ success: false, message: 'Project not found' });

@@ -5,12 +5,14 @@ import ProjectList from '@/components/projects/ProjectList';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import Footer from '@/components/Footer';
+import { useAuth } from '@/components/context/AuthContext';
 
 const Projects = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [viewForm, setViewForm] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const [ projects, setProjects ] = useState<Project[]>([]);
+  const [ loading, setLoading ] = useState(true);
+  const [ error, setError ] = useState<string | null>(null);
+  const [ viewForm, setViewForm ] = useState(false);
 
   const [formState, setFormState] = useState({
     title: '',
@@ -49,10 +51,20 @@ const Projects = () => {
     e.preventDefault();
     const isEditing = !!editingProjectId;
 
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      alert('first login....');
+      return;      
+    }
+
     try {
       const res = await fetch(`/api/projects${isEditing ? `/${editingProjectId}` : ''}`, {
         method: isEditing ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json' ,
+          Authorization: `Bearer ${token}`
+        },
         body: JSON.stringify({
           ...formState,
           technologies: formState.technologies.split(',').map((tech) => tech.trim()),
@@ -75,12 +87,24 @@ const Projects = () => {
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this project?')) return;
 
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      alert('First login...');
+      return;
+    }
+
     try {
-      const res = await fetch(`/api/projects/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/projects/${id}`, { 
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       const data = await res.json();
 
       if (data.success) {
-        fetchProjects(); // Refresh projects after deletion
+        fetchProjects(); 
       } else {
         alert('Failed to delete project.');
       }
@@ -124,17 +148,16 @@ const Projects = () => {
 
   return (
     <>
-      <Navbar />
       <Hero />
       <div className="p-8">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold mb-4">Projects</h1>
-          <button
+          {isAuthenticated && <button
             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
             onClick={handleFormView}
           >
             {viewForm ? 'Hide Form' : 'View Form'}
-          </button>
+          </button>}
         </div>
 
         {viewForm && (
@@ -147,7 +170,7 @@ const Projects = () => {
           />
         )}
 
-        <ProjectList projects={projects} handleEdit={handleEdit} handleDelete={handleDelete} />
+        <ProjectList projects={projects} handleEdit={handleEdit} handleDelete={handleDelete} isAuthenticated={isAuthenticated} />
       </div>
       <Footer />
     </>

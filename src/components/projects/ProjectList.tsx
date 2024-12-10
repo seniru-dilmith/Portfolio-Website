@@ -5,9 +5,10 @@ interface ProjectListProps {
   projects: Project[];
   handleEdit: (project: Project) => void;
   handleDelete: (id: string) => void;
+  isAuthenticated: boolean;
 }
 
-const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleDelete }) => {
+const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleDelete, isAuthenticated }) => {
   return (
     <ul>
       {projects.map((project) => (
@@ -23,7 +24,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleD
           >
             GitHub
           </a>
-          <div className="mt-4">
+          {isAuthenticated && <div className="mt-4">
             <button
               onClick={() => handleEdit(project)}
               className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-700 mr-2"
@@ -36,7 +37,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleD
             >
               Delete
             </button>
-          </div>
+          </div>}
         </li>
       ))}
     </ul>
