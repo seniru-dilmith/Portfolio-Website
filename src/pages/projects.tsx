@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Project } from '@/types/Project';
 import ProjectForm from '@/components/projects/ProjectForm';
 import ProjectList from '@/components/projects/ProjectList';
-import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import Footer from '@/components/Footer';
 import { useAuth } from '@/components/context/AuthContext';

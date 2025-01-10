@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, model, models} from "mongoose";
+import { Schema, Document, model, models} from "mongoose";
 
 interface IProject extends Document {
     title: string;
