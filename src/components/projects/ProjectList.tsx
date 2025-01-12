@@ -16,6 +16,13 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleD
           <h2 className="text-xl font-semibold">{project.title}</h2>
           <p>{project.description}</p>
           <p className="text-sm text-gray-500">Technologies: {project.technologies.join(', ')}</p>
+          {project.imageURL && (
+          <img
+            src={project.imageURL}
+            alt={project.title}
+            className="mb-4 h-40 object-cover"
+          />
+          )}
           <a
             href={project.githubURL}
             target="_blank"
@@ -24,7 +31,8 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleD
           >
             GitHub
           </a>
-          {isAuthenticated && <div className="mt-4">
+          {isAuthenticated &&
+          <div className="mt-4">
             <button
               onClick={() => handleEdit(project)}
               className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-700 mr-2"

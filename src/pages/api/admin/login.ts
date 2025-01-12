@@ -10,7 +10,7 @@ interface User extends Document {
     password: string;
 }
 
-const JWT_SECERT = process.env.JWT_SECRET || "";
+const JWT_SECERT = process.env.NEXT_JWT_SECRET || "";
 const token_expiery = '1h';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

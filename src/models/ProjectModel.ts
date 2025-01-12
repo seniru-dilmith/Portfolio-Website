@@ -5,6 +5,7 @@ interface IProject extends Document {
     description: string;
     technologies: string[];
     githubURL: string;
+    imageURL: string;
     createdAt: Date;
 }
 
@@ -13,6 +14,7 @@ const ProjectSchema: Schema = new Schema({
     description: { type: String, required:true },
     technologies: { type: [String], required: true},
     githubURL: { type: String, required:true },
+    imageURL: { type: String },
     createdAt: { type: Date, default: Date.now },
 });
 
