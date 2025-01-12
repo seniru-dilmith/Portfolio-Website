@@ -5,6 +5,8 @@ import ProjectList from '@/components/projects/ProjectList';
 import Hero from '@/components/Hero';
 import Footer from '@/components/Footer';
 import { useAuth } from '@/components/context/AuthContext';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { storage } from '@/firebase';
 
 const Projects = () => {
   const { isAuthenticated } = useAuth();
@@ -18,8 +20,10 @@ const Projects = () => {
     description: '',
     technologies: '',
     githubURL: '',
+    imageURL: '',
   });
 
+  const [file, setFile] = useState<File | null>(null);
   const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
 
   // Fetch projects on component mount
@@ -54,18 +58,26 @@ const Projects = () => {
 
     if (!token) {
       alert('first login....');
-      return;      
+      return;
     }
 
     try {
+      let imageURL = formState.imageURL;
+
+      if (file) {
+        const storageRef = ref(storage, `project-images/${file.name}`);
+        const snapshot = await uploadBytes(storageRef, file);
+        imageURL = await getDownloadURL(storageRef);
+      }
       const res = await fetch(`/api/projects${isEditing ? `/${editingProjectId}` : ''}`, {
         method: isEditing ? 'PUT' : 'POST',
-        headers: { 
-          'Content-Type': 'application/json' ,
-          Authorization: `Bearer ${token}`
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           ...formState,
+          imageURL,
           technologies: formState.technologies.split(',').map((tech) => tech.trim()),
         }),
       });
@@ -103,7 +115,7 @@ const Projects = () => {
       const data = await res.json();
 
       if (data.success) {
-        fetchProjects(); 
+        fetchProjects();
       } else {
         alert('Failed to delete project.');
       }
@@ -118,6 +130,7 @@ const Projects = () => {
       description: project.description,
       technologies: project.technologies.join(', '),
       githubURL: project.githubURL,
+      imageURL: project.imageURL,
     });
     setEditingProjectId(project._id);
     setViewForm(true);
@@ -129,8 +142,16 @@ const Projects = () => {
       description: '',
       technologies: '',
       githubURL: '',
+      imageURL: '',
     });
+    setFile(null);
     setEditingProjectId(null);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+    }
   };
 
   const handleFormView = () => {
@@ -138,7 +159,7 @@ const Projects = () => {
   };
 
   if (loading) {
-    return <div className="p-8 text-center">Loading projects...</div>;
+    return <div className="p-8 text-center animate-pulse text-gray-500">Loading projects...</div>;
   }
 
   if (error) {
@@ -166,9 +187,9 @@ const Projects = () => {
             setFormState={setFormState}
             editingProjectId={editingProjectId}
             resetForm={resetForm}
+            handleFileChange={handleFileChange}
           />
         )}
-
         <ProjectList projects={projects} handleEdit={handleEdit} handleDelete={handleDelete} isAuthenticated={isAuthenticated} />
       </div>
       <Footer />

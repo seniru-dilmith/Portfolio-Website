@@ -1,4 +1,6 @@
-import React from 'react';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import React, { useState } from 'react';
+import { storage } from '../../firebase';
 
 interface ProjectFormProps {
   formState: {
@@ -6,6 +8,7 @@ interface ProjectFormProps {
     description: string;
     technologies: string;
     githubURL: string;
+    imageURL: string;
   };
   setFormState: React.Dispatch<
     React.SetStateAction<{
@@ -13,9 +16,11 @@ interface ProjectFormProps {
       description: string;
       technologies: string;
       githubURL: string;
+      imageURL: string;
     }>
   >;
   handleAddOrUpdate: (e: React.FormEvent) => void;
+  handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   editingProjectId: string | null;
   resetForm: () => void;
 }
@@ -27,6 +32,24 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
   editingProjectId,
   resetForm,
 }) => {
+  const [ upLoading, setUpLoading ] = useState(false);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+    const storageRef = ref(storage, `project-images/${file.name}`);
+    setUpLoading(true);
+
+    try {
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+      setFormState({ ...formState, imageURL: url });
+    } catch (err) {
+      console.error('Image Upload error:', err);
+    } finally {
+      setUpLoading(false);
+    }
+  }
   return (
     <form onSubmit={handleAddOrUpdate} className="mb-8">
       <h2 className="text-xl font-semibold mb-4">
@@ -63,9 +86,17 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
         className="border p-2 mb-4 block w-full"
         required
       />
+      <input
+        type='file'
+        accept='image/*'
+        onChange={handleFileChange}
+        className="border p-2 mb-4 block w-full"
+      />
+      {upLoading && <p className="text-gray-500">Uploading image...</p>}
       <button
         type="submit"
         className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+        disabled={upLoading}
       >
         {editingProjectId ? 'Update' : 'Add'}
       </button>
