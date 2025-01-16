@@ -1,5 +1,5 @@
 import dbConnect from "@/util/dbConnect";
-import User, { IUser } from "../../../models/UserModel";
+import User from "../../../models/UserModel";
 import { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -45,7 +45,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 token
             });
         } catch (error) {
-            console.error("Error during Login...");
+            if (error instanceof Error) {
+                console.error("Error during Login...", error.message);
+            } else {
+                console.error("Error during Login...", error);
+            }
             return res.status(500).json({ success: false, message: "Internal server error" });
         }
     }

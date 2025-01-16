@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Project } from '@/types/Project';
 
 interface ProjectListProps {
@@ -17,10 +18,13 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleD
           <p>{project.description}</p>
           <p className="text-sm text-gray-500">Technologies: {project.technologies.join(', ')}</p>
           {project.imageURL && (
-          <img
+          <Image
             src={project.imageURL}
             alt={project.title}
-            className="mb-4 h-40 object-cover"
+            width={300}
+            height={160} 
+            className="mb-4 object-cover"
+            quality={75}
           />
           )}
           <a
