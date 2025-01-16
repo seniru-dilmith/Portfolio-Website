@@ -19,7 +19,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const decoded = jwt.verify(token, JWT_SECRET); // Verify token
       return decoded; // Return the decoded token payload
     } catch (error) {
-      throw new Error('Unauthorized: Invalid token');
+      if (error instanceof Error) {
+        throw new Error(`Unauthorized: Invalid token, ${error.message}`);
+      } else {
+        throw new Error('Unauthorized: Invalid token');
+      }
     }
   };
 

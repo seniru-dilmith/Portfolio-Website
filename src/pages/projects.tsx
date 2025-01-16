@@ -6,7 +6,7 @@ import Hero from '@/components/Hero';
 import Footer from '@/components/Footer';
 import { useAuth } from '@/components/context/AuthContext';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from '@/firebase';
+import { storage } from '../../firebase';
 
 const Projects = () => {
   const { isAuthenticated } = useAuth();
@@ -66,7 +66,7 @@ const Projects = () => {
 
       if (file) {
         const storageRef = ref(storage, `project-images/${file.name}`);
-        const snapshot = await uploadBytes(storageRef, file);
+        await uploadBytes(storageRef, file);
         imageURL = await getDownloadURL(storageRef);
       }
       const res = await fetch(`/api/projects${isEditing ? `/${editingProjectId}` : ''}`, {
