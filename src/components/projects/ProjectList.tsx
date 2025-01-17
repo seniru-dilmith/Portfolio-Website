@@ -74,7 +74,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleD
     hover: { scale: 1.1, rotate: 1, boxShadow: '0px 8px 15px rgba(0, 0, 0, 0.2)' },
   });
 
-  const emptyCellVariants = () => ({
+  const emptyCellVariants = (_index: number) => ({
     visible: {
       opacity: 0,
     },
