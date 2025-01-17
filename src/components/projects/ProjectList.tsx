@@ -20,7 +20,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleD
     const grid: (Project | null)[][] = [];
     let currentRow: (Project | null)[] = [];
 
-    projects.forEach((project, index) => {
+    projects.forEach((project) => {
       currentRow.push(project);
       currentRow.push(null); // Add a blank cell
 
@@ -62,7 +62,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleD
     return () => window.removeEventListener('scroll', onScroll);
   }, [gridData.length]);
 
-  // Variants for animations with delay based on index
+  // Variants for animations with delay
   const cardVariants = (index: number) => ({
     hidden: { opacity: 0, y: 20, scale: 0.9 },
     visible: {
@@ -74,7 +74,8 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleD
     hover: { scale: 1.1, rotate: 1, boxShadow: '0px 8px 15px rgba(0, 0, 0, 0.2)' },
   });
 
-  const emptyCellVariants = (_index: number) => ({
+  const emptyCellVariants = () => ({
+    hidden: { opacity: 0, scale: 0.9 },
     visible: {
       opacity: 0,
     },
@@ -85,19 +86,17 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleD
       {gridData.map((row, rowIndex) => (
         <React.Fragment key={rowIndex}>
           {rowIndex < visibleRows && // Only render visible rows
-            row.map((item, index) => {
-              const globalIndex = rowIndex * 3 + index; // Global index for delay calculation
-
+            row.map((item, cellIndex) => {
               if (!item) {
                 // Render blank cell with hover animation
                 return (
                   <motion.div
-                    key={`empty-${rowIndex}-${index}`}
+                    key={`empty-${rowIndex}-${cellIndex}`}
                     initial="hidden"
                     animate="visible"
                     exit="hidden"
                     whileHover="hover"
-                    variants={emptyCellVariants(globalIndex)}
+                    variants={emptyCellVariants()} // Calculate globalIndex inline
                     className="h-40 bg-gray-200 rounded-lg shadow-md"
                   />
                 );
@@ -110,7 +109,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleD
                   animate="visible"
                   exit="hidden"
                   whileHover="hover"
-                  variants={cardVariants(globalIndex)}
+                  variants={cardVariants(rowIndex * 3 + cellIndex)} // Calculate globalIndex inline
                   className="card bg-base-100 shadow-xl p-4 rounded-lg"
                 >
                   {item.imageURL && (
