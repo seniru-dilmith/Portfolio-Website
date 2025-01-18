@@ -1,69 +1,69 @@
-import { useState, useEffect, SetStateAction } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { carouselItems } from './component/carousal/data';
+import { CarouselItem } from '@/types/carousal_item';
 
-const HeroForHome = () => {
-    const carouselItems = [
-        {
-            id: 1,
-            title: 'Welcome to Seniru’s Place!',
-            description: 'A hub of innovation and creativity.',
-            image: '/caro-01.png',
-        },
-        {
-            id: 2,
-            title: 'Explore Amazing Projects',
-            description: 'Dive into exciting tech and ideas.',
-            image: '/caro-02.png',
-        },
-        {
-            id: 3,
-            title: 'Join the Journey',
-            description: 'Stay tuned for more amazing content.',
-            image: '/caro-03.png',
-        },
-    ];
+const HeroForHome: React.FC = () => {
+    const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-    const [currentIndex, setCurrentIndex] = useState(0);
+    // Clone carousel items to create infinite scrolling effect
+    const infiniteCarouselItems = [...carouselItems, ...carouselItems];
 
-    // Auto-rotate logic
+    // Auto-scroll logic
     useEffect(() => {
         const interval = setInterval(() => {
-            setCurrentIndex((prevIndex) => (prevIndex + 1) % carouselItems.length);
+            setCurrentIndex((prevIndex) => prevIndex + 1);
         }, 5000); // Change slide every 5 seconds
 
         return () => clearInterval(interval);
-    }, [carouselItems.length]);
+    }, []);
 
-    const handleManualNavigation = (index: SetStateAction<number>) => {
-        setCurrentIndex(index);
+    // Reset position logic for infinite scroll
+    useEffect(() => {
+        if (currentIndex >= carouselItems.length) {
+            setTimeout(() => {
+                setCurrentIndex((prevIndex) => prevIndex % carouselItems.length);
+            }, 500); // Smooth transition before resetting
+        }
+    }, [currentIndex]);
+
+    const handleNext = (): void => {
+        setCurrentIndex((prevIndex) => prevIndex + 1);
+    };
+
+    const handlePrev = (): void => {
+        if (currentIndex === 0) return; // Prevent going left indefinitely
+        setCurrentIndex((prevIndex) => prevIndex - 1);
     };
 
     return (
         <div className="w-full bg-gradient-to-r from-green-400 to-blue-500 text-white">
             <div className="relative overflow-hidden">
+                {/* Carousel Content */}
                 <div
                     className="flex transition-transform duration-700 ease-in-out"
                     style={{
-                        transform: `translateX(-${currentIndex * 100}%)`,
+                        transform: `translateX(-${(currentIndex % carouselItems.length) * 100}%)`,
                     }}
                 >
-                    {carouselItems.map((item) => (
-                        <div key={item.id} className="w-full flex-shrink-0">
+                    {infiniteCarouselItems.map((item: CarouselItem, idx: number) => (
+                        <div key={idx} className="w-full flex-shrink-0">
                             <motion.div
-                                className="relative w-full h-64 lg:h-96 flex flex-col items-center text-center"
+                                className="relative w-full h-64 lg:h-96 flex flex-col items-center justify-center"
                                 initial={{ opacity: 0, scale: 0.8 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ duration: 1 }}
                             >
-                                <Image
-                                    src={item.image}
-                                    alt={item.title}
-                                    layout="fill"
-                                    objectFit="cover"
-                                    className="w-full h-full"
-                                    priority={item.id === 1} // Prioritize loading the first image
-                                />
+                                <div className="relative w-full h-full">
+                                    <Image
+                                        src={item.image}
+                                        alt={item.title}
+                                        fill
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                        className="object-cover"
+                                    />
+                                </div>
                                 <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center p-8">
                                     <h2 className="text-3xl lg:text-5xl font-bold mb-4">{item.title}</h2>
                                     <p className="text-lg lg:text-xl">{item.description}</p>
@@ -72,18 +72,34 @@ const HeroForHome = () => {
                         </div>
                     ))}
                 </div>
+
+                {/* Navigation Buttons */}
+                <button
+                    onClick={handlePrev}
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-black text-3xl rounded-full w-14 h-14 flex items-center justify-center transition"
+                    aria-label="Previous"
+                >
+                    <i className="fa fa-chevron-left"></i>
+                </button>
+                <button
+                    onClick={handleNext}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-black text-3xl rounded-full w-14 h-14 flex items-center justify-center transition"
+                    aria-label="Next"
+                >
+                    <i className="fa fa-chevron-right"></i>
+                </button>
             </div>
 
-            {/* Carousel Navigation */}
+            {/* Dots Navigation */}
             <div className="flex justify-center mt-4 space-x-2">
                 {carouselItems.map((_, idx) => (
                     <button
                         key={idx}
-                        onClick={() => handleManualNavigation(idx)}
-                        className={`btn btn-xs ${currentIndex === idx ? 'btn-primary' : 'btn-outline'}`}
-                    >
-                        {idx + 1}
-                    </button>
+                        onClick={() => setCurrentIndex(idx)}
+                        className={`w-3 h-3 rounded-full ${
+                            currentIndex % carouselItems.length === idx ? 'bg-white' : 'bg-gray-400'
+                        } transition`}
+                    />
                 ))}
             </div>
         </div>

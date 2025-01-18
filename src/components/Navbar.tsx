@@ -8,6 +8,7 @@ const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [menuHeight, setMenuHeight] = useState(0);
 
   // Toggle visibility of navbar on scroll
   useEffect(() => {
@@ -23,6 +24,14 @@ const Navbar: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
+
+  // Adjust content padding when the menu expands
+  useEffect(() => {
+    const menu = document.getElementById('mobile-menu');
+    if (menu) {
+      setMenuHeight(isMenuOpen ? menu.scrollHeight : 0);
+    }
+  }, [isMenuOpen]);
 
   // Framer Motion Variants
   const navbarVariants = {
@@ -66,20 +75,14 @@ const Navbar: React.FC = () => {
           >
             <motion.div
               initial={{ rotate: 0 }}
-              animate={{ rotate: isMenuOpen ? 45 : 0 }}
-              transition={{ duration: 0.5, ease: 'easeInOut' }}
+              animate={{ rotate: isMenuOpen ? 90 : 0 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                x="0px"
-                y="0px"
-                width="30"
-                height="30"
-                viewBox="0 0 48 48"
-                className="fill-current text-gray-800 hover:text-gray-500"
-              >
-                <path d="M6 22H42V26H6zM6 10H42V14H6zM6 34H42V38H6z"></path>
-              </svg>
+              {isMenuOpen ? (
+                <i className="fa fa-times text-2xl text-gray-800 hover:text-gray-500"></i>
+              ) : (
+                <i className="fa fa-bars text-2xl text-gray-800 hover:text-gray-500"></i>
+              )}
             </motion.div>
           </button>
 
@@ -112,7 +115,7 @@ const Navbar: React.FC = () => {
         {/* Mobile Menu */}
         <motion.div
           id="mobile-menu"
-          className="lg:hidden bg-neutral-100 text-gray-100 overflow-hidden"
+          className="lg:hidden bg-neutral-100 text-gray-800 overflow-hidden"
           initial="closed"
           animate={isMenuOpen ? 'open' : 'closed'}
           variants={mobileMenuVariants}
@@ -148,7 +151,12 @@ const Navbar: React.FC = () => {
       </motion.div>
 
       {/* Content below navbar */}
-      <div className={`pt-16 ${isMenuOpen ? 'lg:pt-64' : 'pt-16'}`}>
+      <div
+        className="transition-all duration-300 ease-in-out"
+        style={{
+          paddingTop: `${menuHeight + 64}px`, // Adjust padding dynamically
+        }}
+      >
         {/* Page content goes here */}
       </div>
     </>
