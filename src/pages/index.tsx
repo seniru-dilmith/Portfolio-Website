@@ -1,12 +1,20 @@
-import Footer from '../components/Footer';
-import Hero from '../components/Hero';
+import Head from 'next/head';
+import HeroForHome from '@/components/HeroForHome';
+import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
 
 const Home = () => (
-  <div>
-    <Hero />
-    <div className="p-8">
-      <h2 className="text-2xl font-bold mb-4 animate-pulse">Index Page</h2>
+  <div className="min-h-screen flex flex-col">
+    <Head>
+      <meta name="description" content="Home Page" />
+    </Head>
+    <Navbar />
+    {/* Hero Section */}
+    <div className="flex-grow">
+      <HeroForHome />
     </div>
+
+    {/* Footer */}
     <Footer />
   </div>
 );

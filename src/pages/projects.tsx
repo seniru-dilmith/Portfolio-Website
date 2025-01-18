@@ -3,10 +3,12 @@ import { Project } from '@/types/Project';
 import ProjectForm from '@/components/projects/ProjectForm';
 import ProjectList from '@/components/projects/ProjectList';
 import Hero from '@/components/Hero';
-import Footer from '@/components/Footer';
 import { useAuth } from '@/components/context/AuthContext';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../firebase';
+import Head from 'next/head';
+import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
 
 const Projects = () => {
   const { isAuthenticated } = useAuth();
@@ -168,6 +170,10 @@ const Projects = () => {
 
   return (
     <>
+      <Head>
+        <meta name="description" content="Projects Page" />
+      </Head>
+      <Navbar />
       <Hero />
       <div className="p-8">
         <div className="flex items-center justify-between">
