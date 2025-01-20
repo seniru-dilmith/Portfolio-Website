@@ -1,9 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import links from '@/components/footer/links';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-gradient-to-br from-primary via-secondary to-accent text-white py-10 rounded-t-lg shadow-inner">
+    <footer className="z-9999 overflow-hidden bg-gradient-to-br from-primary via-secondary to-accent text-white py-10 rounded-t-lg shadow-inner ">
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between px-6 space-y-8 md:space-y-0">
         {/* Left Section */}
         <motion.div
@@ -13,7 +14,7 @@ const Footer: React.FC = () => {
           transition={{ duration: 0.7, ease: 'easeOut' }}
         >
           <p className="text-lg font-semibold text-white">
-            &copy; 2024 <span className="text-accent-content">Seniru Dilmith</span>.
+            &copy; 2025 <span className="text-accent-content">Seniru Dilmith</span>.
           </p>
           <p className="text-gray-200">Made with ❤️ and creativity.</p>
         </motion.div>
@@ -27,46 +28,18 @@ const Footer: React.FC = () => {
         >
           {/* Social Links */}
           <div className="flex space-x-4">
-            <a
-              href="https://github.com/seniru.dilmith"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-circle btn-outline text-white hover:text-black hover:bg-white hover:shadow-lg"
-            >
-              <i className="fab fa-facebook"></i>
-            </a>
-            <a
-              href="https://github.com/SeniruDilmith"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-circle btn-outline text-white hover:text-black hover:bg-white hover:shadow-lg"
-            >
-              <i className="fab fa-instagram"></i>
-            </a>
-            <a
-              href="https://github.com/SeniruDilmith"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-circle btn-outline text-white hover:text-black hover:bg-white hover:shadow-lg"
-            >
-              <i className="fab fa-github"></i>
-            </a>
-            <a
-              href="https://twitter.com/SeniruDilmith"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-circle btn-outline text-white hover:text-black hover:bg-white hover:shadow-lg"
-            >
-              <i className="fab fa-twitter"></i>
-            </a>
-            <a
-              href="https://linkedin.com/in/seniru-dilmith"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-circle btn-outline text-white hover:text-black hover:bg-white hover:shadow-lg"
-            >
-              <i className="fab fa-linkedin"></i>
-            </a>
+          {links.map((link, index) => (
+        <a
+          key={index}
+          href={link.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-circle btn-outline text-white hover:text-black hover:bg-white hover:shadow-lg"
+          aria-label={link.label}
+        >
+          <i className={link.iconClass}></i>
+        </a>
+      ))}
           </div>
 
           {/* Bottom Section */}

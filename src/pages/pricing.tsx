@@ -58,32 +58,34 @@ const SubscriptionPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="h-screen flex flex-col">
       <Navbar />
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 p-4">
+      <div className="flex-grow flex items-center justify-center bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 p-4 overflow-auto">
         <motion.div
-          className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full text-center"
+          className="bg-white rounded-3xl shadow-2xl p-6 md:p-8 w-full max-w-lg flex flex-col items-center text-center"
           initial="hidden"
           animate="visible"
           variants={containerVariants}
         >
-          <h2 className="text-4xl font-extrabold text-gray-800 mb-6">📬 Stay Updated!</h2>
-          <p className="text-lg font-light text-gray-700 italic mb-8 leading-relaxed">
+          <h2 className="text-2xl md:text-4xl font-extrabold text-gray-800 mb-4 md:mb-6">
+            📬 Stay Updated!
+          </h2>
+          <p className="text-sm md:text-lg font-light text-gray-700 italic mb-4 md:mb-8 leading-relaxed">
             I’m not currently accepting outside projects, but I will be soon. Stay informed by subscribing to my mailing list. Enter your email below, and I’ll notify you when I’m ready to take orders.
           </p>
-          <form onSubmit={handleSubscribe} className="flex flex-col gap-6 items-center">
+          <form onSubmit={handleSubscribe} className="flex flex-col gap-4 w-full items-center">
             <motion.input
               type="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="p-4 w-full max-w-md border border-gray-300 rounded-lg text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="p-3 w-full border border-gray-300 rounded-lg text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               variants={inputVariants}
             />
             <motion.button
               type="submit"
-              className="p-4 w-1/2 max-w-md bg-purple-600 text-white font-semibold text-lg shadow-lg hover:bg-purple-700 transition rounded-box"
+              className="p-3 w-full bg-purple-600 text-white font-semibold text-lg shadow-lg hover:bg-purple-700 transition rounded-lg"
               variants={buttonVariants}
               whileHover="hover"
               whileTap="tap"
@@ -93,7 +95,9 @@ const SubscriptionPage: React.FC = () => {
           </form>
           {message && (
             <motion.p
-              className={`mt-6 text-lg font-medium ${success ? 'text-green-600' : 'text-red-600'}`}
+              className={`mt-4 text-sm md:text-lg font-medium ${
+                success ? 'text-green-600' : 'text-red-600'
+              }`}
               initial="hidden"
               animate="visible"
               variants={messageVariants}
@@ -101,10 +105,12 @@ const SubscriptionPage: React.FC = () => {
               {message}
             </motion.p>
           )}
-          <p className="text-sm text-gray-500 mt-8">
+          <p className="text-xs md:text-sm text-gray-500 mt-4">
             By subscribing, you agree to our{' '}
             <Link href="/privacy">
-              Privacy Policy
+              <span className="underline hover:text-red-500 transition duration-300 cursor-pointer">
+                Privacy Policy
+              </span>
             </Link>
             .
           </p>

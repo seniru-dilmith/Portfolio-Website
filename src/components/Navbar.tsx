@@ -3,12 +3,15 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/components/context/AuthContext';
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  pushContentDown?: boolean;
+}
+
+const Navbar: React.FC<NavbarProps> = ({pushContentDown = true}) => {
   const { isAuthenticated, handleLogout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [menuHeight, setMenuHeight] = useState(0);
 
   // Toggle visibility of navbar on scroll
   useEffect(() => {
@@ -24,14 +27,6 @@ const Navbar: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
-
-  // Adjust content padding when the menu expands
-  useEffect(() => {
-    const menu = document.getElementById('mobile-menu');
-    if (menu) {
-      setMenuHeight(isMenuOpen ? menu.scrollHeight : 0);
-    }
-  }, [isMenuOpen]);
 
   // Framer Motion Variants
   const navbarVariants = {
@@ -57,7 +52,7 @@ const Navbar: React.FC = () => {
     <>
       {/* Navbar */}
       <motion.div
-        className="fixed top-0 left-0 w-full bg-neutral-100 bg-opacity-90 text-gray-800 z-50 shadow-lg"
+        className={` ${!pushContentDown && 'fixed'} top-0 left-0 z-50 w-full bg-neutral-50 ${pushContentDown && 'bg-opacity-90'} text-gray-800 shadow-lg`}
         initial="hidden"
         animate={isVisible ? 'visible' : 'hidden'}
         variants={navbarVariants}
@@ -151,14 +146,7 @@ const Navbar: React.FC = () => {
       </motion.div>
 
       {/* Content below navbar */}
-      <div
-        className="transition-all duration-300 ease-in-out"
-        style={{
-          paddingTop: `${menuHeight + 64}px`, // Adjust padding dynamically
-        }}
-      >
-        {/* Page content goes here */}
-      </div>
+      
     </>
   );
 };

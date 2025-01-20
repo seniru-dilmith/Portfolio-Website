@@ -1,0 +1,1 @@
+export const skills = ['React.Js', 'Next.js', 'Laravel', 'JAVA', 'Python', 'C/C++', 'SQL', 'NoSQL'];
