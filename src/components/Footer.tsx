@@ -4,14 +4,14 @@ import links from '@/components/footer/links';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="z-9999 overflow-hidden bg-gradient-to-br from-primary via-secondary to-accent text-white py-10 rounded-t-lg shadow-inner ">
+    <footer className="z-9999 overflow-hidden bg-gradient-to-br from-primary via-secondary to-accent text-white py-10 rounded-t-lg shadow-inner">
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between px-6 space-y-8 md:space-y-0">
         {/* Left Section */}
         <motion.div
           className="w-full md:w-1/4 text-sm md:text-base text-center md:text-left"
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, ease: 'easeOut' }}
+          initial={{ x: '100vw' }}
+          animate={{ x: 0 }}
+          transition={{ duration: 2, ease: 'easeOut' }}
         >
           <p className="text-lg font-semibold text-white">
             &copy; 2025 <span className="text-accent-content">Seniru Dilmith</span>.
@@ -28,18 +28,18 @@ const Footer: React.FC = () => {
         >
           {/* Social Links */}
           <div className="flex space-x-4">
-          {links.map((link, index) => (
-        <a
-          key={index}
-          href={link.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn btn-circle btn-outline text-white hover:text-black hover:bg-white hover:shadow-lg"
-          aria-label={link.label}
-        >
-          <i className={link.iconClass}></i>
-        </a>
-      ))}
+            {links.map((link, index) => (
+              <a
+                key={index}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-circle btn-outline text-white hover:text-black hover:bg-white hover:shadow-lg"
+                aria-label={link.label}
+              >
+                <i className={link.iconClass}></i>
+              </a>
+            ))}
           </div>
 
           {/* Bottom Section */}
@@ -51,9 +51,9 @@ const Footer: React.FC = () => {
         {/* Right Section */}
         <motion.div
           className="w-full md:w-1/4 text-sm md:text-base text-center md:text-right"
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, ease: 'easeOut', delay: 0.4 }}
+          initial={{ x: '-100vw' }}
+          animate={{ x: 0 }}
+          transition={{ duration: 1, ease: 'easeOut', delay: 0.4 }}
         >
           <p className="text-white">
             Built using <span className="text-accent-content font-semibold">Next.js</span> and{' '}
