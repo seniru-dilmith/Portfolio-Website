@@ -109,58 +109,56 @@ const Projects = () => {
     }
   };
 
-  if (loading) {
-    return <div className="p-8 text-center animate-pulse text-gray-500">Loading projects...</div>;
-  }
-
-  if (error) {
-    return <div className="p-8 text-center text-red-500">{error}</div>;
-  }
-
   return (
     <div className="bg-gradient-to-br from-primary/70 via-secondary/60 to-accent/50 min-h-screen">
       <Head>
-        <title>Projects - Seniru Dilmith</title>
+        <title>Projects</title>
         <meta name="description" content="Explore the projects by Seniru Dilmith, showcasing expertise in software development and engineering." />
       </Head>
       <Navbar />
-      <Hero />
-      <motion.div
-        className="p-8 bg-base-100/90 rounded-lg shadow-lg mx-auto max-w-7xl mt-8"
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-4xl font-bold text-primary-content">My Projects</h1>
-          {isAuthenticated && (
-            <button
-              className="btn btn-primary"
-              onClick={() => setViewForm((prev) => !prev)}
+      {loading ? <div className="p-8 text-center animate-pulse text-gray-500">Loading projects...</div>
+        :
+        error ? <div className="p-8 text-center text-red-500">{error}</div>
+          :
+          <>
+            <Hero />
+            <motion.div
+              className="p-8 bg-base-100/90 rounded-lg shadow-lg mx-auto max-w-7xl mt-8"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
             >
-              {viewForm ? 'Hide Form' : 'Add Project'}
-            </button>
-          )}
-        </div>
+              <div className="flex justify-between items-center mb-6">
+                <h1 className="text-4xl font-bold text-primary-content">My Projects</h1>
+                {isAuthenticated && (
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => setViewForm((prev) => !prev)}
+                  >
+                    {viewForm ? 'Hide Form' : 'Add Project'}
+                  </button>
+                )}
+              </div>
 
-        {viewForm && (
-          <ProjectForm
-            handleAddOrUpdate={handleAddOrUpdate}
-            formState={formState}
-            setFormState={setFormState}
-            editingProjectId={editingProjectId}
-            resetForm={resetForm}
-            handleFileChange={handleFileChange}
-          />
-        )}
+              {viewForm && (
+                <ProjectForm
+                  handleAddOrUpdate={handleAddOrUpdate}
+                  formState={formState}
+                  setFormState={setFormState}
+                  editingProjectId={editingProjectId}
+                  resetForm={resetForm}
+                  handleFileChange={handleFileChange}
+                />
+              )}
 
-        <ProjectList
-          projects={projects}
-          handleEdit={handleEdit}
-          handleDelete={handleDelete}
-          isAuthenticated={isAuthenticated}
-        />
-      </motion.div>
+              <ProjectList
+                projects={projects}
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+                isAuthenticated={isAuthenticated}
+              />
+            </motion.div>
+          </>}
       <Footer />
     </div>
   );

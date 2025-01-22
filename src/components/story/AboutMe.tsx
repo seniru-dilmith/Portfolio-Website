@@ -16,10 +16,10 @@ const AboutMe = () => {
         <section className="py-16 px-6 sm:px-12 lg:px-24 mx-4 sm:mx-8 lg:mx-16">
             {/* Heading */}
             <motion.h2
-                className="text-4xl font-bold text-primary-content mb-6 text-center"
+                className="text-5xl font-bold text-primary-content mb-12 text-center"
                 variants={headingVariants}
             >
-                About Me
+                My Story
             </motion.h2>
 
             {/* Paragraphs */}

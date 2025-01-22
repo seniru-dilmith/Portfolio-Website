@@ -63,13 +63,13 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleD
   }, [gridData.length]);
 
   // Variants for animations with delay
-  const cardVariants = (index: number) => ({
+  const cardVariants = () => ({
     hidden: { opacity: 0, y: 20, scale: 0.9 },
     visible: {
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: { duration: 0.7, ease: 'easeOut', delay: index * 0.2 },
+      transition: { duration: 0.7, ease: 'easeOut' },
     },
     hover: { scale: 1.1, rotate: 1, boxShadow: '0px 8px 15px rgba(0, 0, 0, 0.2)' },
   });
@@ -109,7 +109,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleD
                   animate="visible"
                   exit="hidden"
                   whileHover="hover"
-                  variants={cardVariants(rowIndex * 3 + cellIndex)} // Calculate globalIndex inline
+                  variants={cardVariants()} // Calculate globalIndex inline
                   className="card bg-base-100 shadow-xl p-4 rounded-lg"
                 >
                   {item.imageURL && (

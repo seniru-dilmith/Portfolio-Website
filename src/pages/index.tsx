@@ -29,7 +29,7 @@ const Home = () => {
       animate="visible"
     >
       <Head>
-        <title>Welcome to Seniru’s Place</title>
+        <title>Welcome to Seniru&rsquo;s Place</title>
         <meta name="description" content="Home Page" />
       </Head>
 

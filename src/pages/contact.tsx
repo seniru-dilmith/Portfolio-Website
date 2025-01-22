@@ -1,18 +1,11 @@
 import Head from 'next/head';
-import Hero from '../components/Hero';
+import HeroForContact from '../components/HeroForContact';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
-import AboutMe from '@/components/about/AboutMe';
-import Skills from '@/components/about/Skills';
 import Contact from '@/components/about/Contact';
 import { motion } from 'framer-motion';
 
-const Home = () => {
-  // Framer Motion Variants
-  const fadeIn = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 1, ease: 'easeOut' } },
-  };
+const ContactMe = () => {
 
   const staggerChildren = {
     hidden: { opacity: 0 },
@@ -20,11 +13,6 @@ const Home = () => {
       opacity: 1,
       transition: { staggerChildren: 0.3 },
     },
-  };
-
-  const slideIn = {
-    hidden: { x: '-100vw' },
-    visible: { x: 0, transition: { duration: 1, ease: 'easeOut' } },
   };
 
   const bounceIn = {
@@ -44,34 +32,18 @@ const Home = () => {
       className="bg-gradient-to-br from-primary/70 via-secondary/60 to-accent/50 min-h-screen"
     >
       <Head>
-        <title>Welcome to Seniru&rsquo;s Place</title>
+        <title>Contact Me</title>
         <meta
           name="description"
-          content="Seniru Dilmith - Computer Science Enthusiast and Creator"
+          content="Seniru Dilmith - Find my contact information here."
         />
       </Head>
-
-      {/* Navbar */}
-      <motion.div variants={slideIn}>
+      
         <Navbar />
-      </motion.div>
-
-      {/* Hero Section */}
-      <motion.div variants={fadeIn}>
-        <Hero />
-      </motion.div>
 
       {/* About Me */}
       <motion.div variants={bounceIn}>
-        <AboutMe />
-      </motion.div>
-
-      {/* Skills Section */}
-      <motion.div
-        variants={fadeIn}
-        className="transition duration-1000 hover:scale-105"
-      >
-        <Skills />
+        <HeroForContact />
       </motion.div>
 
       {/* Contact Section */}
@@ -96,4 +68,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default ContactMe;

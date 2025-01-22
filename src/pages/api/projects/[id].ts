@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const verifyToken = () => {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      throw new Error('Unauthorized! No token provided!');      
+      throw new Error('Unauthorized! No token provided!');
     }
 
     const token = authHeader.split(' ')[1];

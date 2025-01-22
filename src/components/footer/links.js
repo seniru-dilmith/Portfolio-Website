@@ -24,6 +24,11 @@ const links = [
     iconClass: "fab fa-linkedin",
     label: "LinkedIn",
   },
+  {
+    href: "https://wa.me/94714625671?text=Hi%20Seniru,%20",
+    iconClass: "fab fa-whatsapp",
+    label: "WhatsApp",
+  },
 ];
 
 export default links;

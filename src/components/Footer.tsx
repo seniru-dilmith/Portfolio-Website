@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
           className="w-full md:w-1/4 text-sm md:text-base text-center md:text-left"
           initial={{ x: '100vw' }}
           animate={{ x: 0 }}
-          transition={{ duration: 2, ease: 'easeOut' }}
+          transition={{ duration: 1, ease: 'easeOut', delay: 0.4 }}
         >
           <p className="text-lg font-semibold text-white">
             &copy; 2025 <span className="text-accent-content">Seniru Dilmith</span>.

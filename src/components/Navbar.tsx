@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/components/context/AuthContext';
+import { titleNames } from './navbar/titles';
 
 interface NavbarProps {
   pushContentDown?: boolean;
@@ -83,7 +84,7 @@ const Navbar: React.FC<NavbarProps> = ({pushContentDown = true}) => {
 
           {/* Desktop Menu */}
           <nav className="hidden lg:flex space-x-6">
-            {['Home', 'Features', 'Solutions', 'Pricing', 'Projects', 'About'].map((item, index) => (
+            {titleNames.map((item, index) => (
               <motion.div
                 key={index}
                 whileHover="hover"
@@ -117,7 +118,7 @@ const Navbar: React.FC<NavbarProps> = ({pushContentDown = true}) => {
           transition={{ duration: 0.3, ease: 'easeOut' }}
         >
           <nav className="flex flex-col items-center py-4 space-y-4">
-            {['Home', 'Features', 'Solutions', 'Pricing', 'Projects', 'About'].map((item, index) => (
+            {titleNames.map((item, index) => (
               <motion.div
                 key={index}
                 whileHover="hover"

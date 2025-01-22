@@ -68,7 +68,7 @@ function Contact() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn btn-circle btn-outline text-white hover:bg-white hover:text-red-500 hover:shadow-lg transition duration-300"
-                        whileHover={{ scale: 1.2, rotate: 10 }}
+                        whileHover={{ scale: 1.5, rotate: 20 }}
                         whileTap={{ scale: 0.9 }}
                     >
                         <i className="fab fa-youtube"></i>
@@ -78,7 +78,7 @@ function Contact() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn btn-circle btn-outline text-white hover:bg-white hover:text-black hover:shadow-lg transition duration-300"
-                        whileHover={{ scale: 1.2, rotate: -10 }}
+                        whileHover={{ scale: 1.5, rotate: -20 }}
                         whileTap={{ scale: 0.9 }}
                     >
                         <i className="fab fa-tiktok"></i>

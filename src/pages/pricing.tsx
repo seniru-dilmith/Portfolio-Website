@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
-import Link from 'next/link'; // Import Link for navigation
+import Link from 'next/link';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 
@@ -71,7 +71,7 @@ const SubscriptionPage: React.FC = () => {
             📬 Stay Updated!
           </h2>
           <p className="text-sm md:text-lg font-light text-gray-700 italic mb-4 md:mb-8 leading-relaxed">
-            I’m not currently accepting outside projects, but I will be soon. Stay informed by subscribing to my mailing list. Enter your email below, and I’ll notify you when I’m ready to take orders.
+            I&rsquo;m not currently accepting outside projects, but I will be soon. Stay informed by subscribing to my mailing list. Enter your email below, and I&rsquo;ll notify you when I&rsquo;m ready to take orders.
           </p>
           <form onSubmit={handleSubscribe} className="flex flex-col gap-4 w-full items-center">
             <motion.input
@@ -85,7 +85,7 @@ const SubscriptionPage: React.FC = () => {
             />
             <motion.button
               type="submit"
-              className="p-3 w-full bg-purple-600 text-white font-semibold text-lg shadow-lg hover:bg-purple-700 transition rounded-lg"
+              className="p-3 w-1/2 bg-purple-600 text-white font-semibold text-lg shadow-lg hover:bg-purple-700 transition rounded-lg"
               variants={buttonVariants}
               whileHover="hover"
               whileTap="tap"
