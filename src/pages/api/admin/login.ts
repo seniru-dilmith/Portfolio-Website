@@ -17,12 +17,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'POST') {
 
         const { email, password } = req.body;
-        console.log('====================================');
-        console.log(await bcrypt.hash('Seniru\'s Portfolio 2024', 10));
-        console.log('====================================');
 
         if (!email || !password) {
-            return res.status(405).json({ success: false, message: "Both email and password are required."})        
+            return res.status(405).json({ success: false, message: "Both email and password are required." })
         }
 
         try {

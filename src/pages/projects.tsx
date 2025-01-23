@@ -1,19 +1,22 @@
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { Project } from '@/types/Project';
 import ProjectForm from '@/components/projects/ProjectForm';
 import ProjectList from '@/components/projects/ProjectList';
 import Hero from '@/components/Hero';
-import Footer from '@/components/Footer';
 import { useAuth } from '@/components/context/AuthContext';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from '../../firebase';
+import { fetchProjects, addOrUpdateProject, deleteProject } from '@/controllers/projectController';
+import Head from 'next/head';
+import LoadingSpinnrer from '@/components/LoadingSpinner';
+import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
 
 const Projects = () => {
   const { isAuthenticated } = useAuth();
-  const [ projects, setProjects ] = useState<Project[]>([]);
-  const [ loading, setLoading ] = useState(true);
-  const [ error, setError ] = useState<string | null>(null);
-  const [ viewForm, setViewForm ] = useState(false);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [viewForm, setViewForm] = useState(false);
 
   const [formState, setFormState] = useState({
     title: '',
@@ -26,72 +29,34 @@ const Projects = () => {
   const [file, setFile] = useState<File | null>(null);
   const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
 
-  // Fetch projects on component mount
   useEffect(() => {
-    fetchProjects();
-  }, []);
-
-  const fetchProjects = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch('/api/projects');
-      const data = await res.json();
-      if (data.success) {
-        setProjects(data.data);
-        setError(null);
-      } else {
-        setError('Failed to fetch projects.');
-      }
-    } catch (err) {
-      setError('Failed to fetch projects.');
-      console.error('Fetch error:', err);
-    } finally {
+    const fetchData = async () => {
+      const { projects, error } = await fetchProjects();
+      setProjects(projects);
+      setError(error);
       setLoading(false);
-    }
-  };
+    };
+
+    fetchData();
+  }, []);
 
   const handleAddOrUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    const isEditing = !!editingProjectId;
 
     const token = localStorage.getItem('token');
-
     if (!token) {
-      alert('first login....');
+      alert('Please log in first.');
       return;
     }
 
-    try {
-      let imageURL = formState.imageURL;
-
-      if (file) {
-        const storageRef = ref(storage, `project-images/${file.name}`);
-        await uploadBytes(storageRef, file);
-        imageURL = await getDownloadURL(storageRef);
-      }
-      const res = await fetch(`/api/projects${isEditing ? `/${editingProjectId}` : ''}`, {
-        method: isEditing ? 'PUT' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ...formState,
-          imageURL,
-          technologies: formState.technologies.split(',').map((tech) => tech.trim()),
-        }),
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        fetchProjects(); // Refresh projects after add/update
-        resetForm();
-      } else {
-        alert(`Failed to ${isEditing ? 'update' : 'add'} project.`);
-      }
-    } catch (err) {
-      console.error(`Error ${isEditing ? 'updating' : 'adding'} project:`, err);
+    const { success, message } = await addOrUpdateProject(formState, file, editingProjectId, token);
+    if (success) {
+      const { projects } = await fetchProjects();
+      setProjects(projects);
+      resetForm();
+      alert(message);
+    } else {
+      alert(message);
     }
   };
 
@@ -99,28 +64,18 @@ const Projects = () => {
     if (!confirm('Are you sure you want to delete this project?')) return;
 
     const token = localStorage.getItem('token');
-
     if (!token) {
-      alert('First login...');
+      alert('Please log in first.');
       return;
     }
 
-    try {
-      const res = await fetch(`/api/projects/${id}`, { 
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      const data = await res.json();
-
-      if (data.success) {
-        fetchProjects();
-      } else {
-        alert('Failed to delete project.');
-      }
-    } catch (err) {
-      console.error('Error deleting project:', err);
+    const { success, message } = await deleteProject(id, token);
+    if (success) {
+      const { projects } = await fetchProjects();
+      setProjects(projects);
+      alert(message);
+    } else {
+      alert(message);
     }
   };
 
@@ -146,6 +101,7 @@ const Projects = () => {
     });
     setFile(null);
     setEditingProjectId(null);
+    setViewForm(false);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -154,46 +110,58 @@ const Projects = () => {
     }
   };
 
-  const handleFormView = () => {
-    setViewForm((prev) => !prev);
-  };
-
-  if (loading) {
-    return <div className="p-8 text-center animate-pulse text-gray-500">Loading projects...</div>;
-  }
-
-  if (error) {
-    return <div className="p-8 text-center text-red-500">{error}</div>;
-  }
-
   return (
-    <>
-      <Hero />
-      <div className="p-8">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold mb-4">Projects</h1>
-          {isAuthenticated && <button
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-            onClick={handleFormView}
-          >
-            {viewForm ? 'Hide Form' : 'View Form'}
-          </button>}
-        </div>
+    <div className="bg-gradient-to-br from-primary/70 via-secondary/60 to-accent/50 min-h-screen">
+      <Head>
+        <title>Projects</title>
+        <meta name="description" content="Explore the projects by Seniru Dilmith, showcasing expertise in software development and engineering." />
+      </Head>
+      <Navbar />
+      {loading ? <LoadingSpinnrer />
+        :
+        error ? <div className="p-8 text-center text-red-500">{error}</div>
+          :
+          <>
+            <Hero />
+            <motion.div
+              className="p-8 bg-base-100/90 rounded-lg shadow-lg mx-auto max-w-7xl mt-8"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h1 className="text-4xl font-bold text-primary-content">My Projects</h1>
+                {isAuthenticated && (
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => setViewForm((prev) => !prev)}
+                  >
+                    {viewForm ? 'Hide Form' : 'Add Project'}
+                  </button>
+                )}
+              </div>
 
-        {viewForm && (
-          <ProjectForm
-            handleAddOrUpdate={handleAddOrUpdate}
-            formState={formState}
-            setFormState={setFormState}
-            editingProjectId={editingProjectId}
-            resetForm={resetForm}
-            handleFileChange={handleFileChange}
-          />
-        )}
-        <ProjectList projects={projects} handleEdit={handleEdit} handleDelete={handleDelete} isAuthenticated={isAuthenticated} />
-      </div>
+              {viewForm && (
+                <ProjectForm
+                  handleAddOrUpdate={handleAddOrUpdate}
+                  formState={formState}
+                  setFormState={setFormState}
+                  editingProjectId={editingProjectId}
+                  resetForm={resetForm}
+                  handleFileChange={handleFileChange}
+                />
+              )}
+
+              <ProjectList
+                projects={projects}
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+                isAuthenticated={isAuthenticated}
+              />
+            </motion.div>
+          </>}
       <Footer />
-    </>
+    </div>
   );
 };
 

@@ -1,0 +1,71 @@
+import Head from 'next/head';
+import HeroForContact from '../components/HeroForContact';
+import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
+import Contact from '@/components/about/Contact';
+import { motion } from 'framer-motion';
+
+const ContactMe = () => {
+
+  const staggerChildren = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.3 },
+    },
+  };
+
+  const bounceIn = {
+    hidden: { scale: 0.8, opacity: 0 },
+    visible: {
+      scale: 1,
+      opacity: 1,
+      transition: { type: 'spring', stiffness: 120, damping: 10 },
+    },
+  };
+
+  return (
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={staggerChildren}
+      className="bg-gradient-to-br from-primary/70 via-secondary/60 to-accent/50 min-h-screen"
+    >
+      <Head>
+        <title>Contact Me</title>
+        <meta
+          name="description"
+          content="Seniru Dilmith - Find my contact information here."
+        />
+      </Head>
+      
+        <Navbar />
+
+      {/* About Me */}
+      <motion.div variants={bounceIn}>
+        <HeroForContact />
+      </motion.div>
+
+      {/* Contact Section */}
+      <motion.div
+        initial={{ y: 100, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        transition={{ duration: 1, ease: 'easeOut' }}
+        viewport={{ once: true }}
+      >
+        <Contact />
+      </motion.div>
+
+      {/* Footer */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.5, ease: 'easeOut' }}
+      >
+        <Footer />
+      </motion.div>
+    </motion.div>
+  );
+};
+
+export default ContactMe;
