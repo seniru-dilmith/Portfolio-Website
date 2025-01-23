@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import Link from 'next/link';
+import Head from 'next/head';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 
@@ -58,7 +59,13 @@ const SubscriptionPage: React.FC = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col">
+    <>
+    <Head>
+      <title>Subscribe</title>
+      <meta
+        name="description" content="Stay updated with the latest news and updates from Seniru Dilmith." />
+    </Head>
+    <div className="h-screen flex flex-col bg-gradient-to-br from-primary/50 via-secondary/40 to-accent/30">
       <Navbar />
       <div className="flex-grow flex items-center justify-center bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 p-4 overflow-auto">
         <motion.div
@@ -118,6 +125,7 @@ const SubscriptionPage: React.FC = () => {
       </div>
       <Footer />
     </div>
+    </>
   );
 };
 

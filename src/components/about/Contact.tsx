@@ -35,19 +35,6 @@ function Contact() {
                 animate="visible"
                 variants={staggerContainer}
             >
-                {/* Heading */}
-                <motion.h2
-                    className="text-4xl font-bold mb-6"
-                    variants={fadeInUp}
-                >
-                    Get in Touch
-                </motion.h2>
-                <motion.p
-                    className="text-lg mb-6 leading-relaxed"
-                    variants={fadeInUp}
-                >
-                    Have questions or want to collaborate? Feel free to reach out or connect with me on social media!
-                </motion.p>
 
                 {/* Contact Email */}
                 <motion.a

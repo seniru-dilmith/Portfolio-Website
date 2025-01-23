@@ -7,6 +7,7 @@ import Hero from '@/components/Hero';
 import { useAuth } from '@/components/context/AuthContext';
 import { fetchProjects, addOrUpdateProject, deleteProject } from '@/controllers/projectController';
 import Head from 'next/head';
+import LoadingSpinnrer from '@/components/LoadingSpinner';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 
@@ -116,7 +117,7 @@ const Projects = () => {
         <meta name="description" content="Explore the projects by Seniru Dilmith, showcasing expertise in software development and engineering." />
       </Head>
       <Navbar />
-      {loading ? <div className="p-8 text-center animate-pulse text-gray-500">Loading projects...</div>
+      {loading ? <LoadingSpinnrer />
         :
         error ? <div className="p-8 text-center text-red-500">{error}</div>
           :

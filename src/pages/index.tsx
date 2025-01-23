@@ -23,7 +23,7 @@ const Home = () => {
 
   return (
     <motion.div
-      className="min-h-screen flex flex-col bg-gradient-to-br from-primary/50 via-secondary/40 to-accent/30"
+      className="min-h-screen overflow-hidden flex flex-col bg-gradient-to-br from-primary/50 via-secondary/40 to-accent/30"
       variants={containerVariants}
       initial="hidden"
       animate="visible"

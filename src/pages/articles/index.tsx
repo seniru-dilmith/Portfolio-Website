@@ -6,6 +6,8 @@ import ArticleForm from '@/components/articles/ArticleForm';
 import ArticleList from '@/components/articles/ArticleList';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import { useAuth } from '@/components/context/AuthContext';
 
 const Articles = () => {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -15,9 +17,9 @@ const Articles = () => {
     tags: [],
   });
   const [editingArticleId, setEditingArticleId] = useState<string | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [showForm, setShowForm] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -29,7 +31,6 @@ const Articles = () => {
     };
 
     fetchArticles();
-    setIsLoggedIn(!!localStorage.getItem('token'));
   }, []);
 
   const handleSubmit = async () => {
@@ -71,29 +72,15 @@ const Articles = () => {
     <>
       <Head>
         <title>Articles</title>
-        <meta name="description" content="Articles written by Seniru" />
+        <meta name="description" content="Articles written by Seniru Dilmith" />
       </Head>
       <div className="bg-gradient-to-br from-primary via-secondary to-accent min-h-screen">
         <Navbar />
         <div className="container mx-auto py-8">
           <h1 className="text-4xl font-bold text-center">Articles</h1>
-          {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <motion.div
-                className="w-12 h-12 border-4 border-t-transparent border-primary rounded-full"
-                initial={{ opacity: 0, rotate: 0 }}
-                animate={{ opacity: 1, rotate: 360 }}
-                transition={{
-                  duration: 1,
-                  repeat: Infinity,
-                  ease: 'linear',
-                }}
-              ></motion.div>
-
-            </div>
-          ) : (
+          {loading ? <LoadingSpinner /> : (
             <>
-              {isLoggedIn && (
+              {isAuthenticated && (
                 <div className="flex justify-center mt-8">
                   <motion.button
                     className="btn btn-primary"
@@ -105,7 +92,7 @@ const Articles = () => {
                   </motion.button>
                 </div>
               )}
-              {showForm && isLoggedIn && (
+              {showForm && isAuthenticated && (
                 <motion.div
                   initial={{ opacity: 0, y: -50 }}
                   animate={{ opacity: 1, y: 0 }}
