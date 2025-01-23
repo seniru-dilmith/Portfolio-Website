@@ -35,11 +35,7 @@ export default function LoginPage() {
         console.log("Login Successful...");
         if (data.token) {
           localStorage.setItem('token', data.token);
-          console.log('====================================');
-          console.log('JWT stored in local storage...');
-          console.log('====================================');
           window.location.href= '/';
-          
         }
       } else {
         setError(data.message);
