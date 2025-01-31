@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Here's a customized **README.md** file for your website:
 
-## Getting Started
+# 🌍 Seniru Dilmith - Personal Portfolio
 
-First, run the development server:
+Welcome to my personal website! 🚀 This platform showcases my journey, projects, skills, and experiences as a **Computer Science and Engineering undergraduate** at the **University of Moratuwa**.
 
-```bash
+## 🏗️ Project Overview
+
+This website is built using:
+
+- **Next.js** - For fast and efficient server-side rendering.
+- **TypeScript** - Ensuring type safety and better development experience.
+- **Tailwind CSS** - For modern and responsive styling.
+- **Framer Motion** - Adding smooth animations to enhance user experience.
+
+## 📌 Features
+
+✅ **Interactive Timeline** – A dynamic showcase of my milestones and achievements.
+✅ **Projects Portfolio** – A collection of my best work, including **software development, machine learning, and web applications**.
+✅ **Blog Section (Coming Soon)** – Technical write-ups, tutorials, and insights.
+✅ **Smooth Animations** – Beautifully animated sections using **Framer Motion**.
+✅ **Fully Responsive** – Optimized for all screen sizes and devices.
+
+## 📸 Sneak Peek
+
+![Website Preview](./public/story/img-1.jpg)
+
+## 🚀 Getting Started
+
+### 1️⃣ Clone this repository:
+
+```sh
+git clone https://github.com/seniru-dilmith/portfolio.git
+cd portfolio
+```
+
+### 2️⃣ Install dependencies:
+
+```sh
+npm install
+# or
+yarn install
+```
+
+### 3️⃣ Run the development server:
+
+```sh
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the site in action.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📂 Folder Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```plaintext
+.
+├── src
+│   ├── components
+│   │   ├── Navbar.tsx
+│   │   ├── Footer.tsx
+│   │   ├── story
+│   │   │   ├── MilestoneList.tsx
+│   │   │   ├── JourneyContinues.tsx
+│   │   │   ├── AboutMe.tsx
+│   │   │   ├── UpperImageSection.tsx
+│   │   │   ├── animations.ts
+│   ├── pages
+│   │   ├── index.tsx
+│   │   ├── story.tsx
+│   ├── styles
+│   │   ├── globals.css
+│   ├── public
+│   │   ├── story/img-1.jpg
+│   │   ├── story/img-5.jpg
+│   ├── README.md
+├── package.json
+└── next.config.js
+```
 
-## Learn More
+## 🎯 Future Plans
 
-To learn more about Next.js, take a look at the following resources:
+- 📝 **Blog Integration** – Sharing my knowledge on **web development, AI, and problem-solving**.
+- 🎨 **Dark Mode** – Enhancing the UI/UX with a toggleable dark theme.
+- 🔍 **SEO Optimization** – Improving discoverability through proper metadata and performance enhancements.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠️ Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+![Next.js](https://img.shields.io/badge/Next.js-000?style=for-the-badge&logo=nextdotjs)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)
+![Vercel](https://img.shields.io/badge/Hosted_on-Vercel-black?style=for-the-badge&logo=vercel)
 
-## Deploy on Vercel
+## 📬 Connect with Me
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+🌐 **Website**: [senirudilmith.com](https://seniru.dev)
+💼 **LinkedIn**: [linkedin.com/in/seniru-dilmith](https://linkedin.com/in/seniru-dilmith)
+🐦 **Twitter**: [@SeniruDilmith](https://twitter.com/SeniruDilmith)
+📧 **Email**: [me@senirudilmith.com](mailto:me@senirudilmith.com)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+### 🔥 Thank you for visiting! Feel free to explore and contribute! 🚀✨
+
+```
+
+---
+
+### **What's Included?**
+- A structured overview of your website.
+- A detailed guide on how to set up and run the project.
+- Information about the tech stack and future plans.
+- A clean folder structure explanation.
+- Ways to connect with you.
+```

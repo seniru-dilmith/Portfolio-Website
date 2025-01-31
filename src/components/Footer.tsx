@@ -4,7 +4,7 @@ import links from '@/components/footer/links';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="z-9999 overflow-hidden bg-gradient-to-br from-primary via-secondary to-accent text-white py-10 rounded-t-lg shadow-inner">
+    <footer className={`z-9999 overflow-hidden bg-gradient-to-br from-primary via-secondary to-accent text-white py-10 rounded-t-lg shadow-inner`}>
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between px-6 space-y-8 md:space-y-0">
         {/* Left Section */}
         <motion.div
@@ -34,7 +34,7 @@ const Footer: React.FC = () => {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-circle btn-outline text-white hover:text-black hover:bg-white hover:shadow-lg"
+                className="btn btn-circle btn-outline text-secondary-content hover:text-black hover:bg-white hover:shadow-lg"
                 aria-label={link.label}
               >
                 <i className={link.iconClass}></i>
@@ -43,7 +43,7 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Bottom Section */}
-          <div className="text-sm text-gray-300">
+          <div className="text-sm text-base-300">
             Powered by innovation and passion to bring something new to the world!
           </div>
         </motion.div>
@@ -55,11 +55,11 @@ const Footer: React.FC = () => {
           animate={{ x: 0 }}
           transition={{ duration: 1, ease: 'easeOut', delay: 0.4 }}
         >
-          <p className="text-white">
+          <p className="text-base-300">
             Built using <span className="text-accent-content font-semibold">Next.js</span> and{' '}
             <span className="text-accent-content font-semibold">Daisy UI</span>.
           </p>
-          <p className="text-gray-200">Designed for excellence.</p>
+          <p className="text-base-300">Designed for excellence.</p>
         </motion.div>
       </div>
     </footer>

@@ -4,9 +4,11 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import { AppProps } from 'next/app';
 import { AuthProvider } from '@/components/context/AuthContext';
+import { ThemeProvider } from '@/components/context/ThemeContext';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
+    <ThemeProvider>
     <AuthProvider>
       <Head>
         <title>{process.env.NEXT_PUBLIC_SITE_NAME || 'My App'}</title>
@@ -20,6 +22,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         {/* Footer */}
       </div>
     </AuthProvider>
+    </ThemeProvider>
   );
 }
 

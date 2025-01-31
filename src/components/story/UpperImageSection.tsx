@@ -45,10 +45,10 @@ const UpperImageSection: React.FC = () => (
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.6, ease: "easeOut" }}
         >
-            <h2 className="text-2xl md:text-3xl font-semibold text-base-300">
+            <h2 className="text-2xl md:text-3xl font-semibold text-primary-content">
             &rdquo;Your Decisions make what you are&rdquo;
             </h2>
-            <p className="text-base italic md:text-lg text-white mt-2">
+            <p className="text-base italic md:text-lg text-secondary-content mt-2">
                 A journey of passion, perseverance, and purpose.
             </p>
         </motion.div>

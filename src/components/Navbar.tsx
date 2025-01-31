@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
+import { Sun, Moon } from "lucide-react";
 import { motion } from 'framer-motion';
 import { useAuth } from '@/components/context/AuthContext';
 import { titleNames } from './navbar/titles';
+import { ThemeContext } from './context/ThemeContext';
 
 interface NavbarProps {
   pushContentDown?: boolean;
@@ -13,6 +15,14 @@ const Navbar: React.FC<NavbarProps> = ({pushContentDown = true}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  
+  const themeContext = useContext(ThemeContext);
+
+  if (!themeContext) {
+    return null;
+  }
+
+  const { theme, toggleTheme } = themeContext;
 
   // Toggle visibility of navbar on scroll
   useEffect(() => {
@@ -105,6 +115,37 @@ const Navbar: React.FC<NavbarProps> = ({pushContentDown = true}) => {
                 </Link>
               </motion.div>
             )}
+            {/* Toggle Button */}
+      <motion.button
+        onClick={toggleTheme}
+        className="relative w-16 h-8 flex items-center bg-gray-300 dark:bg-gray-700 rounded-full p-1 transition-all"
+        whileTap={{ scale: 0.9 }}
+      >
+        {/* Moving Circle */}
+        <motion.div
+          className="absolute top-1 left-1 w-6 h-6 rounded-full bg-white dark:bg-black shadow-md"
+          animate={{ x: theme === "dark" ? 32 : 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 15 }}
+        />
+
+        {/* Sun Icon - Light Mode */}
+        <motion.div
+          className={`absolute left-2 w-5 h-5 text-yellow-400 ${
+            theme === "dark" ? "opacity-0" : "opacity-100"
+          } transition-opacity`}
+        >
+          <Sun className="w-full h-full" />
+        </motion.div>
+
+        {/* Moon Icon - Dark Mode */}
+        <motion.div
+          className={`absolute right-2 w-5 h-5 text-blue-400 ${
+            theme === "dark" ? "opacity-100" : "opacity-0"
+          } transition-opacity`}
+        >
+          <Moon className="w-full h-full" />
+        </motion.div>
+      </motion.button>
           </nav>
         </div>
 
@@ -142,6 +183,37 @@ const Navbar: React.FC<NavbarProps> = ({pushContentDown = true}) => {
                 Logout
               </motion.div>
             )}
+            {/* Toggle Button */}
+      <motion.button
+        onClick={toggleTheme}
+        className="relative w-16 h-8 flex items-center bg-gray-300 dark:bg-gray-700 rounded-full p-1 transition-all"
+        whileTap={{ scale: 0.9 }}
+      >
+        {/* Moving Circle */}
+        <motion.div
+          className="absolute top-1 left-1 w-6 h-6 rounded-full bg-white dark:bg-black shadow-md"
+          animate={{ x: theme === "dark" ? 32 : 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 15 }}
+        />
+
+        {/* Sun Icon - Light Mode */}
+        <motion.div
+          className={`absolute left-2 w-5 h-5 text-yellow-400 ${
+            theme === "dark" ? "opacity-0" : "opacity-100"
+          } transition-opacity`}
+        >
+          <Sun className="w-full h-full" />
+        </motion.div>
+
+        {/* Moon Icon - Dark Mode */}
+        <motion.div
+          className={`absolute right-2 w-5 h-5 text-blue-400 ${
+            theme === "dark" ? "opacity-100" : "opacity-0"
+          } transition-opacity`}
+        >
+          <Moon className="w-full h-full" />
+        </motion.div>
+      </motion.button>
           </nav>
         </motion.div>
       </motion.div>

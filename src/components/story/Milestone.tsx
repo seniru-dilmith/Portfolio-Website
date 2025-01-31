@@ -56,14 +56,14 @@ const Milestone: React.FC<MilestoneProps> = ({ milestone, reverse }) => {
         >
             {/* Content Section */}
             <motion.div
-                className="w-full lg:w-1/2 mt-9 p-4 md:p-6 bg-base-100 rounded-lg shadow-lg"
+                className="w-full lg:w-1/2 mt-9 p-4 md:p-6 bg-neutral rounded-lg shadow-lg"
                 whileHover={{
                     boxShadow: '0px 10px 20px rgba(0,0,0,0.2)',
                     transition: { duration: 0.3 },
                 }}
             >
                 <motion.h2
-                    className="text-2xl md:text-3xl font-bold mb-2 md:mb-4 text-primary"
+                    className="text-2xl md:text-3xl font-bold mb-2 md:mb-4 text-neutral-content"
                     initial={{ x: -50, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.2 }}
@@ -71,7 +71,7 @@ const Milestone: React.FC<MilestoneProps> = ({ milestone, reverse }) => {
                     {milestone.title}
                 </motion.h2>
                 <motion.p
-                    className="text-xs md:text-sm font-semibold mb-2 text-secondary"
+                    className="text-xs md:text-sm font-semibold mb-2 text-info"
                     initial={{ x: -30, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.3 }}
@@ -79,7 +79,7 @@ const Milestone: React.FC<MilestoneProps> = ({ milestone, reverse }) => {
                     {milestone.date}
                 </motion.p>
                 <motion.p
-                    className="text-sm md:text-base text-gray-600"
+                    className="text-sm md:text-base text-neutral-content"
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.4 }}
