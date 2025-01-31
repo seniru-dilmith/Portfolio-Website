@@ -4,7 +4,7 @@ import { Project } from '@/types/Project';
 import ProjectForm from '@/components/projects/ProjectForm';
 import ProjectList from '@/components/projects/ProjectList';
 import Hero from '@/components/Hero';
-import { useAuth } from '@/components/context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 import { fetchProjects, addOrUpdateProject, deleteProject } from '@/controllers/projectController';
 import Head from 'next/head';
 import LoadingSpinnrer from '@/components/LoadingSpinner';

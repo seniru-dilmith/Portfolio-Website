@@ -7,7 +7,7 @@ import ArticleList from '@/components/articles/ArticleList';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { useAuth } from '@/components/context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 
 const Articles = () => {
   const [articles, setArticles] = useState<Article[]>([]);

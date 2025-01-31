@@ -3,8 +3,8 @@ import '../styles/globals.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import { AppProps } from 'next/app';
-import { AuthProvider } from '@/components/context/AuthContext';
-import { ThemeProvider } from '@/components/context/ThemeContext';
+import { AuthProvider } from '@/context/AuthContext';
+import { ThemeProvider } from '@/context/ThemeContext';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

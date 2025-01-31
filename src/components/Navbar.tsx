@@ -1,96 +1,84 @@
-import { useState, useEffect, useContext } from 'react';
-import Link from 'next/link';
-import { Sun, Moon } from "lucide-react";
-import { motion } from 'framer-motion';
-import { useAuth } from '@/components/context/AuthContext';
-import { titleNames } from './navbar/titles';
-import { ThemeContext } from './context/ThemeContext';
+import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { useAuth } from "@/context/AuthContext";
+import { titleNames } from "./navbar/titles";
+import ThemeToggle from "./ThemeToggle";
 
 interface NavbarProps {
   pushContentDown?: boolean;
 }
 
-const Navbar: React.FC<NavbarProps> = ({pushContentDown = true}) => {
+const Navbar: React.FC<NavbarProps> = ({ pushContentDown = true }) => {
   const { isAuthenticated, handleLogout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  
-  const themeContext = useContext(ThemeContext);
 
-  if (!themeContext) {
-    return null;
-  }
-
-  const { theme, toggleTheme } = themeContext;
-
-  // Toggle visibility of navbar on scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > lastScrollY) {
-        setIsVisible(false); // Hide navbar on scroll down
-      } else {
-        setIsVisible(true); // Show navbar on scroll up
-      }
-      setLastScrollY(window.scrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+  // Optimize scroll event with useCallback
+  const handleScroll = useCallback(() => {
+    setIsVisible(window.scrollY < lastScrollY);
+    setLastScrollY(window.scrollY);
   }, [lastScrollY]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
   // Framer Motion Variants
   const navbarVariants = {
     hidden: { y: -100, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.5, ease: 'easeOut' } },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.5, ease: "easeOut" } },
   };
 
   const menuItemVariants = {
     hover: {
       scale: 1.1,
-      color: '#E91E63',
-      textShadow: '0px 0px 8px rgba(233, 30, 99, 0.8)',
+      color: "#E91E63",
+      textShadow: "0px 0px 8px rgba(233, 30, 99, 0.8)",
       transition: { duration: 0.3 },
     },
   };
 
-  const mobileMenuVariants = {
-    open: { height: 'auto', opacity: 1 },
-    closed: { height: 0, opacity: 0 },
-  };
-
   return (
-    <>
+    <div className="flex flex-col">
       {/* Navbar */}
       <motion.div
-        className={` ${!pushContentDown && 'fixed'} top-0 left-0 z-50 w-full bg-neutral-50 ${pushContentDown && 'bg-opacity-90'} text-gray-800 shadow-lg`}
+        className={`fixed top-0 left-0 z-50 w-full bg-neutral-50 ${
+          pushContentDown ? "bg-opacity-90" : ""
+        } text-gray-800 shadow-lg`}
         initial="hidden"
-        animate={isVisible ? 'visible' : 'hidden'}
+        animate={isVisible ? "visible" : "hidden"}
         variants={navbarVariants}
       >
         <div className="flex justify-between items-center p-4 max-w-7xl mx-auto">
           {/* Logo */}
-          <div className="text-xl font-bold tracking-wide">
+          <div className="text-xl font-bold">
             <Link href="/">Hi, It&rsquo;s me Seniru!</Link>
           </div>
 
-          {/* Hamburger Menu Button */}
-          <button
-            className="lg:hidden block focus:outline-none"
-            onClick={() => setIsMenuOpen((prev) => !prev)}
-          >
-            <motion.div
-              initial={{ rotate: 0 }}
-              animate={{ rotate: isMenuOpen ? 90 : 0 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
+          {/* Theme Toggle Centered in Navbar (Desktop) */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 hidden lg:block">
+            <ThemeToggle />
+          </div>
+
+          {/* Mobile Menu & Theme Toggle */}
+          <div className="lg:hidden flex items-center space-x-4">
+            <ThemeToggle />
+            <button
+              className="focus:outline-none"
+              onClick={() => setIsMenuOpen((prev) => !prev)}
             >
-              {isMenuOpen ? (
-                <i className="fa fa-times text-2xl text-gray-800 hover:text-gray-500"></i>
-              ) : (
-                <i className="fa fa-bars text-2xl text-gray-800 hover:text-gray-500"></i>
-              )}
-            </motion.div>
-          </button>
+              <motion.div
+                initial={{ rotate: 0 }}
+                animate={{ rotate: isMenuOpen ? 90 : 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+              >
+                <i className={`fa ${isMenuOpen ? "fa-times" : "fa-bars"} text-2xl text-gray-800 hover:text-gray-500`} />
+              </motion.div>
+            </button>
+          </div>
 
           {/* Desktop Menu */}
           <nav className="hidden lg:flex space-x-6">
@@ -101,7 +89,7 @@ const Navbar: React.FC<NavbarProps> = ({pushContentDown = true}) => {
                 variants={menuItemVariants}
                 className="text-lg font-medium cursor-pointer"
               >
-                <Link href={`/${item === 'Home' ? '' : item.toLowerCase()}`}>{item}</Link>
+                <Link href={`/${item === "Home" ? "" : item.toLowerCase()}`}>{item}</Link>
               </motion.div>
             ))}
             {isAuthenticated && (
@@ -115,48 +103,15 @@ const Navbar: React.FC<NavbarProps> = ({pushContentDown = true}) => {
                 </Link>
               </motion.div>
             )}
-            {/* Toggle Button */}
-      <motion.button
-        onClick={toggleTheme}
-        className="relative w-16 h-8 flex items-center bg-gray-300 dark:bg-gray-700 rounded-full p-1 transition-all"
-        whileTap={{ scale: 0.9 }}
-      >
-        {/* Moving Circle */}
-        <motion.div
-          className="absolute top-1 left-1 w-6 h-6 rounded-full bg-white dark:bg-black shadow-md"
-          animate={{ x: theme === "dark" ? 32 : 0 }}
-          transition={{ type: "spring", stiffness: 200, damping: 15 }}
-        />
-
-        {/* Sun Icon - Light Mode */}
-        <motion.div
-          className={`absolute left-2 w-5 h-5 text-yellow-400 ${
-            theme === "dark" ? "opacity-0" : "opacity-100"
-          } transition-opacity`}
-        >
-          <Sun className="w-full h-full" />
-        </motion.div>
-
-        {/* Moon Icon - Dark Mode */}
-        <motion.div
-          className={`absolute right-2 w-5 h-5 text-blue-400 ${
-            theme === "dark" ? "opacity-100" : "opacity-0"
-          } transition-opacity`}
-        >
-          <Moon className="w-full h-full" />
-        </motion.div>
-      </motion.button>
           </nav>
         </div>
 
         {/* Mobile Menu */}
         <motion.div
-          id="mobile-menu"
           className="lg:hidden bg-neutral-100 text-gray-800 overflow-hidden"
-          initial="closed"
-          animate={isMenuOpen ? 'open' : 'closed'}
-          variants={mobileMenuVariants}
-          transition={{ duration: 0.3, ease: 'easeOut' }}
+          initial={{ height: 0, opacity: 0 }}
+          animate={isMenuOpen ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
         >
           <nav className="flex flex-col items-center py-4 space-y-4">
             {titleNames.map((item, index) => (
@@ -167,7 +122,7 @@ const Navbar: React.FC<NavbarProps> = ({pushContentDown = true}) => {
                 className="text-lg font-medium cursor-pointer"
                 onClick={() => setIsMenuOpen(false)}
               >
-                <Link href={`/${item === 'Home' ? '' : item.toLowerCase()}`}>{item}</Link>
+                <Link href={`/${item === "Home" ? "" : item.toLowerCase()}`}>{item}</Link>
               </motion.div>
             ))}
             {isAuthenticated && (
@@ -183,44 +138,10 @@ const Navbar: React.FC<NavbarProps> = ({pushContentDown = true}) => {
                 Logout
               </motion.div>
             )}
-            {/* Toggle Button */}
-      <motion.button
-        onClick={toggleTheme}
-        className="relative w-16 h-8 flex items-center bg-gray-300 dark:bg-gray-700 rounded-full p-1 transition-all"
-        whileTap={{ scale: 0.9 }}
-      >
-        {/* Moving Circle */}
-        <motion.div
-          className="absolute top-1 left-1 w-6 h-6 rounded-full bg-white dark:bg-black shadow-md"
-          animate={{ x: theme === "dark" ? 32 : 0 }}
-          transition={{ type: "spring", stiffness: 200, damping: 15 }}
-        />
-
-        {/* Sun Icon - Light Mode */}
-        <motion.div
-          className={`absolute left-2 w-5 h-5 text-yellow-400 ${
-            theme === "dark" ? "opacity-0" : "opacity-100"
-          } transition-opacity`}
-        >
-          <Sun className="w-full h-full" />
-        </motion.div>
-
-        {/* Moon Icon - Dark Mode */}
-        <motion.div
-          className={`absolute right-2 w-5 h-5 text-blue-400 ${
-            theme === "dark" ? "opacity-100" : "opacity-0"
-          } transition-opacity`}
-        >
-          <Moon className="w-full h-full" />
-        </motion.div>
-      </motion.button>
           </nav>
         </motion.div>
       </motion.div>
-
-      {/* Content below navbar */}
-      
-    </>
+    </div>
   );
 };
 

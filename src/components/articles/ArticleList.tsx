@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArticleListProps } from '@/types/Article';
-import { useAuth } from '@/components/context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 
 const ArticleList: React.FC<ArticleListProps> = ({ articles, onEdit, onDelete }) => {
     const { isAuthenticated } = useAuth();
