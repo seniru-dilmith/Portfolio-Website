@@ -1,29 +1,7 @@
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import React, { useState } from 'react';
 import { storage } from '../../../firebase';
-
-interface ProjectFormProps {
-  formState: {
-    title: string;
-    description: string;
-    technologies: string;
-    githubURL: string;
-    imageURL: string;
-  };
-  setFormState: React.Dispatch<
-    React.SetStateAction<{
-      title: string;
-      description: string;
-      technologies: string;
-      githubURL: string;
-      imageURL: string;
-    }>
-  >;
-  handleAddOrUpdate: (e: React.FormEvent) => void;
-  handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  editingProjectId: string | null;
-  resetForm: () => void;
-}
+import { ProjectFormProps } from '@/types/Project';
 
 const ProjectForm: React.FC<ProjectFormProps> = ({
   formState,

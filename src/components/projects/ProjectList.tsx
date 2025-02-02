@@ -2,13 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Project } from '@/types/Project';
-
-interface ProjectListProps {
-  projects: Project[];
-  handleEdit: (project: Project) => void;
-  handleDelete: (id: string) => void;
-  isAuthenticated: boolean;
-}
+import { ProjectListProps } from '@/types/Project';
 
 const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleDelete, isAuthenticated }) => {
   const [visibleRows, setVisibleRows] = useState<number>(1); // Number of visible rows

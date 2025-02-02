@@ -4,10 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import { titleNames } from "./navbar/titles";
 import ThemeToggle from "./ThemeToggle";
-
-interface NavbarProps {
-  pushContentDown?: boolean;
-}
+import { NavbarProps } from "@/types/Navbar";
 
 const Navbar: React.FC<NavbarProps> = ({ pushContentDown = true }) => {
   const { isAuthenticated, handleLogout } = useAuth();
@@ -157,7 +154,7 @@ const Navbar: React.FC<NavbarProps> = ({ pushContentDown = true }) => {
                     key={index}
                     whileHover="hover"
                     variants={menuItemVariants}
-                    className="text-lg font-medium cursor-pointer text-base-content"
+                    className="text-lg font-medium cursor-pointer text-neutral-content"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <Link

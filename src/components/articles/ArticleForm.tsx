@@ -1,11 +1,5 @@
-import React, { Dispatch, SetStateAction } from 'react';
 import { motion } from 'framer-motion';
-
-interface ArticleFormProps {
-    formState: { title: string; content: string; tags: string[] };
-    setFormState: Dispatch<SetStateAction<{ title: string; content: string; tags: string[] }>>;
-    onSubmit: () => void;
-}
+import { ArticleFormProps } from '@/types/Article';
 
 const ArticleForm: React.FC<ArticleFormProps> = ({ formState, setFormState, onSubmit }) => {
     return (

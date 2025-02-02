@@ -1,10 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-
-interface AuthContextProps {
-  isAuthenticated: boolean;
-  handleLogin: (token: string) => void;
-  handleLogout: () => void;
-}
+import { AuthContextProps } from '@/types/AuthContext';
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
