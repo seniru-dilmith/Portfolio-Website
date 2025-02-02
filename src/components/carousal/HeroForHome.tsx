@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { carouselItems } from './carousal/data';
+import { carouselItems } from './data';
 import { CarouselItem } from '@/types/carousal_item';
 import React from 'react';
 
@@ -53,7 +53,7 @@ const HeroForHome: React.FC = () => {
             initial={{ scale: 0.8, opacity: 0 }} // Start state
             animate={{ scale: 1, opacity: 1 }} // End state
             transition={{ duration: 0.8, ease: 'easeOut' }} // Smooth transition
-            className="flex items-center justify-center w-full flex-grow bg-gradient-to-r from-green-400 to-blue-500 text-white"
+            className="flex items-center justify-center w-full flex-grow bg-gradient-to-r from-primary to-secondary text-primary-content"
         >
             <div className="relative w-full h-full max-h-[calc(100vh-4rem)]">
                 {/* Carousel Content */}

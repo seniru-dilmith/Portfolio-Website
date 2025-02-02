@@ -2,13 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Project } from '@/types/Project';
-
-interface ProjectListProps {
-  projects: Project[];
-  handleEdit: (project: Project) => void;
-  handleDelete: (id: string) => void;
-  isAuthenticated: boolean;
-}
+import { ProjectListProps } from '@/types/Project';
 
 const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleDelete, isAuthenticated }) => {
   const [visibleRows, setVisibleRows] = useState<number>(1); // Number of visible rows
@@ -110,7 +104,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleD
                   exit="hidden"
                   whileHover="hover"
                   variants={cardVariants()} // Calculate globalIndex inline
-                  className="card bg-base-100 shadow-xl p-4 rounded-lg"
+                  className="card bg-base-100 text-base-content shadow-xl p-4 rounded-lg"
                 >
                   {item.imageURL && (
                     <motion.div

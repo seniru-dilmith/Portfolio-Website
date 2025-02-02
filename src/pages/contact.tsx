@@ -1,8 +1,8 @@
 import Head from 'next/head';
-import HeroForContact from '../components/HeroForContact';
-import Footer from '@/components/Footer';
-import Navbar from '@/components/Navbar';
-import Contact from '@/components/about/Contact';
+import HeroForContact from '../components/contact/HeroForContact';
+import Footer from '@/components/footer/Footer';
+import Navbar from '@/components/navbar/Navbar';
+import Contact from '@/components/contact/Contact';
 import { motion } from 'framer-motion';
 
 const ContactMe = () => {
@@ -29,7 +29,7 @@ const ContactMe = () => {
       initial="hidden"
       animate="visible"
       variants={staggerChildren}
-      className="bg-gradient-to-br from-primary/70 via-secondary/60 to-accent/50 min-h-screen"
+      className="bg-gradient-to-br from-primary/70 via-secondary/60 to-primary/70 min-h-screen"
     >
       <Head>
         <title>Contact Me</title>

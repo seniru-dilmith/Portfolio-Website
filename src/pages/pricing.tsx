@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 import Link from 'next/link';
 import Head from 'next/head';
-import Footer from '@/components/Footer';
-import Navbar from '@/components/Navbar';
+import Footer from '@/components/footer/Footer';
+import Navbar from '@/components/navbar/Navbar';
 
 const SubscriptionPage: React.FC = () => {
   const [email, setEmail] = useState<string>('');

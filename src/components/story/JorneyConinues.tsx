@@ -35,7 +35,7 @@ const JourneyContinues = () => {
                     The Journey Continues
                 </motion.h2>
                 <motion.p
-                    className="text-sm md:text-base text-gray-600"
+                    className="text-sm md:text-base text-info"
                     variants={textVariants}
                 >
                     The story of growth, learning, and adventure is far from over. With every step forward, new opportunities await, and the journey continues toward an even brighter future.
@@ -46,7 +46,7 @@ const JourneyContinues = () => {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ type: 'spring', stiffness: 100, damping: 15 }}
                 >
-                    <p className="text-white text-lg md:text-xl lg:text-2xl font-semibold">
+                    <p className="text-warning text-lg md:text-xl lg:text-2xl font-semibold">
                         “Keep moving forward; the best is yet to come.”
                     </p>
                 </motion.div>

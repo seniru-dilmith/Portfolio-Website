@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Article } from '@/types/Article';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import Navbar from '@/components/navbar/Navbar';
+import Footer from '@/components/footer/Footer';
 import ArticleForm from '@/components/articles/ArticleForm';
 import ArticleList from '@/components/articles/ArticleList';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { useAuth } from '@/components/context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 
 const Articles = () => {
   const [articles, setArticles] = useState<Article[]>([]);
