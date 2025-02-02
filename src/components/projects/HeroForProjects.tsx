@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 
 const HeroForProjects = () => (
   <motion.div 
-    className="text-center py-20 bg-gradient-to-r from-green-400 to-blue-500 text-white"
+    className="text-center py-20 bg-gradient-to-r from-primary to-secondary text-white"
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     transition={{ duration: 1 }}
