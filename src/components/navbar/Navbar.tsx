@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
-import { titleNames } from "./navbar/titles";
+import { titleNames } from "./titles";
 import ThemeToggle from "./ThemeToggle";
 import { NavbarProps } from "@/types/Navbar";
 

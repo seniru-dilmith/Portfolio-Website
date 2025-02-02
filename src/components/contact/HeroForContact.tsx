@@ -19,7 +19,7 @@ const HeroForContact: React.FC = () => {
           Get in Touch
         </motion.h1>
         <motion.p
-          className="text-lg md:text-xl font-light mb-8 max-w-2xl text-secondary"
+          className="text-lg font-sans italic font-bold md:text-xl  mb-8 max-w-2xl text-secondary"
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}

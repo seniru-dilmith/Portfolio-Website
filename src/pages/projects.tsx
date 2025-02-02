@@ -3,13 +3,13 @@ import { motion } from 'framer-motion';
 import { Project } from '@/types/Project';
 import ProjectForm from '@/components/projects/ProjectForm';
 import ProjectList from '@/components/projects/ProjectList';
-import HeroForProjects from '@/components/HeroForProjects';
+import HeroForProjects from '@/components/projects/HeroForProjects';
 import { useAuth } from '@/context/AuthContext';
 import { fetchProjects, addOrUpdateProject, deleteProject } from '@/controllers/projectController';
 import Head from 'next/head';
 import LoadingSpinnrer from '@/components/LoadingSpinner';
-import Footer from '@/components/Footer';
-import Navbar from '@/components/Navbar';
+import Footer from '@/components/footer/Footer';
+import Navbar from '@/components/navbar/Navbar';
 
 const Projects = () => {
   const { isAuthenticated } = useAuth();

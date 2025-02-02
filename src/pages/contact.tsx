@@ -1,8 +1,8 @@
 import Head from 'next/head';
-import HeroForContact from '../components/HeroForContact';
-import Footer from '@/components/Footer';
-import Navbar from '@/components/Navbar';
-import Contact from '@/components/about/Contact';
+import HeroForContact from '../components/contact/HeroForContact';
+import Footer from '@/components/footer/Footer';
+import Navbar from '@/components/navbar/Navbar';
+import Contact from '@/components/contact/Contact';
 import { motion } from 'framer-motion';
 
 const ContactMe = () => {

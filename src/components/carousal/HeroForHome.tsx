@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { carouselItems } from './carousal/data';
+import { carouselItems } from './data';
 import { CarouselItem } from '@/types/carousal_item';
 import React from 'react';
 

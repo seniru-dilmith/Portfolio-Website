@@ -1,8 +1,8 @@
 import React from 'react';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import Navbar from '@/components/navbar/Navbar';
+import Footer from '@/components/footer/Footer';
 import UpperImageSection from '@/components/story/UpperImageSection';
 import MilestoneList from '@/components/story/MilestoneList';
 import AboutMe from '@/components/story/AboutMe';
