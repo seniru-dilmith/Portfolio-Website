@@ -27,8 +27,8 @@ const ArticleList: React.FC<ArticleListProps> = ({ articles, onEdit, onDelete })
                     </div>
 
                     {/* Card Body */}
-                    <div className="card-body p-4">
-                        <p className="text-gray-700 text-sm line-clamp-3">
+                    <div className="card-body p-4 bg-neutral">
+                        <p className="text-neutral-content text-sm line-clamp-3">
                             {article.content}
                         </p>
                     </div>

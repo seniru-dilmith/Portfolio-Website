@@ -1,8 +1,8 @@
 import Head from 'next/head';
 import { motion } from 'framer-motion';
-import HeroForHome from '@/components/HeroForHome';
-import Footer from '@/components/Footer';
-import Navbar from '@/components/Navbar';
+import HeroForHome from '@/components/carousal/HeroForHome';
+import Footer from '@/components/footer/Footer';
+import Navbar from '@/components/navbar/Navbar';
 
 const Home = () => {
   const containerVariants = {

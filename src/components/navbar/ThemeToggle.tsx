@@ -10,7 +10,7 @@ const ThemeToggle = () => {
 
     return (
         <button
-            className="theme-toggle flex items-center justify-center p-2 rounded-full transition-all shadow-lg bg-gray-200 dark:bg-gray-800"
+            className="theme-toggle flex items-center justify-center p-2 rounded-full transition-all"
             type="button"
             title="Toggle theme"
             aria-label="Toggle theme"
@@ -22,12 +22,12 @@ const ThemeToggle = () => {
                 width="32"
                 height="32"
                 fill="currentColor"
-                className="theme-toggle__icon text-gray-800 dark:text-yellow-400"
+                className="theme-toggle__icon"
                 viewBox="0 0 32 32"
                 initial={{ rotate: 0, scale: 1 }}
                 animate={{
                     rotate: theme === "dark" ? 180 : 0,
-                    scale: theme === "dark" ? 1.2 : 1,
+                    scale: theme === "dark" ? 1 : 0.9,
                 }}
                 transition={{ duration: 0.4, ease: "easeInOut" }}
             >
@@ -54,7 +54,7 @@ const ThemeToggle = () => {
                         initial={{ opacity: 1, scale: 1 }}
                         animate={{
                             opacity: theme === "dark" ? 0 : 1,
-                            scale: theme === "dark" ? 0.8 : 1.2,
+                            scale: theme === "dark" ? 0.9 : 1.0,
                         }}
                         transition={{ duration: 0.3 }}
                     >

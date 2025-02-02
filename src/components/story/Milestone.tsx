@@ -2,6 +2,7 @@ import { motion, useAnimation } from 'framer-motion';
 import Image from 'next/image';
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { MilestoneProps } from '@/types/Story';
 
 const milestoneVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -15,16 +16,6 @@ const milestoneVariants = {
         },
     },
 };
-
-interface MilestoneProps {
-    milestone: {
-        title: string;
-        date: string;
-        description: string;
-        image: string;
-    };
-    reverse: boolean;
-}
 
 const Milestone: React.FC<MilestoneProps> = ({ milestone, reverse }) => {
     const [ref, inView] = useInView({
