@@ -69,7 +69,7 @@ const Navbar: React.FC<NavbarProps> = ({ pushContentDown = true }) => {
     >
       {/* Navbar */}
       <motion.div
-        className={`fixed top-0 left-0 z-50 w-full bg-base-100 text-neutral shadow-lg`}
+        className={`fixed top-0 left-0 z-50 w-full bg-base-200 text-neutral shadow-lg`}
         initial="hidden"
         animate={isVisible ? "visible" : "hidden"}
         variants={navbarVariants}
@@ -77,26 +77,26 @@ const Navbar: React.FC<NavbarProps> = ({ pushContentDown = true }) => {
         <div className="flex justify-between items-center p-4 max-w-7xl mx-auto">
           {/* Logo */}
           <div className="text-xl font-bold text-primary hover:text-primary-focus transition-all duration-300">
-            <Link href="/" className="flex items-center gap-2">
-              <span className="hidden sm:block">Hi, It&rsquo;s me Seniru!</span>
+            <Link href="/" className="flex items-start gap-2">
+              🏠
             </Link>
           </div>
 
           {/* Theme Toggle Centered in Navbar (Desktop) */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 hidden lg:block">
+          <div className="absolute text-warning left-1/2 transform -translate-x-1/2 hidden lg:block">
             <ThemeToggle />
           </div>
 
           {/* Mobile Menu & Theme Toggle */}
           <div className="lg:hidden flex items-center space-x-4">
             {/* Theme Toggle Button */}
-            <div className="p-2 rounded-full bg-base-300 hover:bg-primary transition-all duration-300">
+            <div className="rounded-full text-warning transition-all duration-300">
               <ThemeToggle />
             </div>
 
             {/* Hamburger Menu Button */}
             <button
-              className="p-2 rounded-lg bg-base-300 hover:bg-primary transition-all duration-300 focus:outline-none"
+              className="rounded-lg text-error transition-all duration-300 focus:outline-none"
               onClick={() => setIsMenuOpen((prev) => !prev)}
             >
               <motion.div
@@ -107,7 +107,7 @@ const Navbar: React.FC<NavbarProps> = ({ pushContentDown = true }) => {
                 <i
                   className={`fa ${
                     isMenuOpen ? "fa-times" : "fa-bars"
-                  } text-2xl text-primary-content`}
+                  } text-2xl`}
                 />
               </motion.div>
             </button>
@@ -145,7 +145,7 @@ const Navbar: React.FC<NavbarProps> = ({ pushContentDown = true }) => {
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div
-              className="lg:hidden bg-base-200 text-neutral-content"
+              className="lg:hidden bg-base-200 shadow-lg"
               initial="hidden"
               animate="visible"
               exit="exit"
@@ -157,7 +157,7 @@ const Navbar: React.FC<NavbarProps> = ({ pushContentDown = true }) => {
                     key={index}
                     whileHover="hover"
                     variants={menuItemVariants}
-                    className="text-lg font-medium cursor-pointer"
+                    className="text-lg font-medium cursor-pointer text-base-content"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <Link

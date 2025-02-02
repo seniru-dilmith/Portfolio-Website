@@ -32,13 +32,13 @@ const Story: React.FC = () => {
                         className="container mx-auto py-8 md:py-16 px-4 sm:px-6 lg:px-8"
                         initial="hidden"
                         animate="visible"
-                        variants={containerVariants} // Replace require() with ES6 import
+                        variants={containerVariants}
                     >
                         <UpperImageSection />
                         <MilestoneList />
                         <JourneyContinues />
                     </motion.div>
-                    <motion.div variants={bounceIn}> {/* Replace require() with ES6 import */}
+                    <motion.div variants={bounceIn}>
                         <AboutMe />
                     </motion.div>
                     <Footer />

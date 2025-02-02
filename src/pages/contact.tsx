@@ -29,7 +29,7 @@ const ContactMe = () => {
       initial="hidden"
       animate="visible"
       variants={staggerChildren}
-      className="bg-gradient-to-br from-primary/70 via-secondary/60 to-accent/50 min-h-screen"
+      className="bg-gradient-to-br from-primary/70 via-secondary/60 to-primary/70 min-h-screen"
     >
       <Head>
         <title>Contact Me</title>

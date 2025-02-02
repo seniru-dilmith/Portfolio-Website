@@ -110,7 +110,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleD
                   exit="hidden"
                   whileHover="hover"
                   variants={cardVariants()} // Calculate globalIndex inline
-                  className="card bg-base-100 shadow-xl p-4 rounded-lg"
+                  className="card bg-base-100 text-base-content shadow-xl p-4 rounded-lg"
                 >
                   {item.imageURL && (
                     <motion.div

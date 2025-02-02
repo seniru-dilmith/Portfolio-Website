@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Project } from '@/types/Project';
 import ProjectForm from '@/components/projects/ProjectForm';
 import ProjectList from '@/components/projects/ProjectList';
-import Hero from '@/components/Hero';
+import HeroForProjects from '@/components/HeroForProjects';
 import { useAuth } from '@/context/AuthContext';
 import { fetchProjects, addOrUpdateProject, deleteProject } from '@/controllers/projectController';
 import Head from 'next/head';
@@ -122,15 +122,14 @@ const Projects = () => {
         error ? <div className="p-8 text-center text-red-500">{error}</div>
           :
           <>
-            <Hero />
+            <HeroForProjects />
             <motion.div
-              className="p-8 bg-base-100/90 rounded-lg shadow-lg mx-auto max-w-7xl mt-8"
+              className="mx-auto max-w-7xl mt-8"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8 }}
             >
               <div className="flex justify-between items-center mb-6">
-                <h1 className="text-4xl font-bold text-primary-content">My Projects</h1>
                 {isAuthenticated && (
                   <button
                     className="btn btn-primary"

@@ -14,8 +14,8 @@ const Footer: React.FC = () => {
           animate={{ x: 0 }}
           transition={{ duration: 1, ease: 'easeOut', delay: 0.4 }}
         >
-          <p className="text-lg font-semibold text-accent-content">
-            &copy; 2025 <span>Seniru Dilmith</span>.
+          <p className="text-lg font-semibold text-accent">
+            &copy; 2025 Seniru Dilmith.
           </p>
           <p className="text-base-content">Made with ❤️ and creativity.</p>
         </motion.div>
@@ -35,7 +35,7 @@ const Footer: React.FC = () => {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-circle btn-outline text-primary-content hover:text-white hover:bg-primary hover:shadow-md transition-all duration-300"
+                className="btn btn-circle btn-outline text-accent hover:text-white hover:bg-primary hover:shadow-md transition-all duration-300"
                 aria-label={link.label}
               >
                 <i className={link.iconClass}></i>
@@ -57,8 +57,8 @@ const Footer: React.FC = () => {
           transition={{ duration: 1, ease: 'easeOut', delay: 0.4 }}
         >
           <p>
-            Built using <span className="text-primary-content font-semibold">Next.js</span> and{' '}
-            <span className="text-primary-content font-semibold">Daisy UI</span>.
+            Built using <span className="text-accent font-semibold">Next.js</span> and{' '}
+            <span className="text-accent font-semibold">Daisy UI</span>.
           </p>
           <p className="text-base-content">Designed for excellence.</p>
         </motion.div>

@@ -52,7 +52,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
   }
   return (
     <form onSubmit={handleAddOrUpdate} className="mb-8">
-      <h2 className="text-xl font-semibold mb-4">
+      <h2 className="text-xl font-semibold mb-4 text-primary">
         {editingProjectId ? 'Update Project' : 'Add New Project'}
       </h2>
       <input
