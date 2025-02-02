@@ -101,11 +101,3 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the s
 ### 🔥 Thank you for visiting! Feel free to explore and contribute! 🚀✨
 
 ---
-
-### **What's Included?**
-
-- A structured overview of your website.
-- A detailed guide on how to set up and run the project.
-- Information about the tech stack and future plans.
-- A clean folder structure explanation.
-- Ways to connect with you.
