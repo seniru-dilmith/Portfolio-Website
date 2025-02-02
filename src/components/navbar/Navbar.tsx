@@ -154,7 +154,7 @@ const Navbar: React.FC<NavbarProps> = ({ pushContentDown = true }) => {
                     key={index}
                     whileHover="hover"
                     variants={menuItemVariants}
-                    className="text-lg font-medium cursor-pointer text-neutral-content"
+                    className="text-lg font-medium cursor-pointer text-base-content"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <Link
