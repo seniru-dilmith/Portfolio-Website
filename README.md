@@ -1,5 +1,3 @@
-Here's a customized **README.md** file for your website:
-
 # 🌍 Seniru Dilmith - Personal Portfolio
 
 Welcome to my personal website! 🚀 This platform showcases my journey, projects, skills, and experiences as a **Computer Science and Engineering undergraduate** at the **University of Moratuwa**.
@@ -27,14 +25,14 @@ This website is built using:
 
 ## 🚀 Getting Started
 
-### 1️⃣ Clone this repository:
+### 1️⃣ Clone this repository
 
 ```sh
 git clone https://github.com/seniru-dilmith/portfolio.git
 cd portfolio
 ```
 
-### 2️⃣ Install dependencies:
+### 2️⃣ Install dependencies
 
 ```sh
 npm install
@@ -42,7 +40,7 @@ npm install
 yarn install
 ```
 
-### 3️⃣ Run the development server:
+### 3️⃣ Run the development server
 
 ```sh
 npm run dev
@@ -100,18 +98,14 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the s
 🐦 **Twitter**: [@SeniruDilmith](https://twitter.com/SeniruDilmith)
 📧 **Email**: [me@senirudilmith.com](mailto:me@senirudilmith.com)
 
----
-
 ### 🔥 Thank you for visiting! Feel free to explore and contribute! 🚀✨
-
-```
 
 ---
 
 ### **What's Included?**
+
 - A structured overview of your website.
 - A detailed guide on how to set up and run the project.
 - Information about the tech stack and future plans.
 - A clean folder structure explanation.
 - Ways to connect with you.
-```
