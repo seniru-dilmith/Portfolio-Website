@@ -74,7 +74,7 @@ const Articles = () => {
         <title>Articles</title>
         <meta name="description" content="Articles written by Seniru Dilmith" />
       </Head>
-      <div className="bg-gradient-to-br from-primary via-secondary to-accent min-h-screen">
+      <div className="bg-gradient-to-br from-primary via-secondary to-accent">
         <Navbar />
         <div className="container mx-auto py-8">
           <h1 className="text-4xl font-bold text-center">Articles</h1>

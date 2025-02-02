@@ -5,7 +5,7 @@ import links from '@/components/footer/links';
 const Footer: React.FC = () => {
   return (
     <footer className="z-50 overflow-hidden bg-base-200 py-10 rounded-t-lg shadow-inner">
-      <div className="container mx-auto flex flex-col md:flex-row items-center justify-between px-6 space-y-8 md:space-y-0">
+      <div className="w-screen flex flex-col md:flex-row items-center justify-between px-6 space-y-6 md:space-y-0 md:space-x-6">
         
         {/* Left Section */}
         <motion.div
