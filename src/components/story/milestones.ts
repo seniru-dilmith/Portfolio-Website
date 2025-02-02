@@ -20,7 +20,7 @@ export const milestones = [
     {
         title: 'G.C.E. A/L Examination',
         date: 'January 2021',
-        description: 'The results just made me go boom. I did not expect that. I was able to enter the University of Moratuwa.',
+        description: 'The results exceeded my expectations and left me completely astonished. I never anticipated such an outcome, but I am thrilled to share that I have secured admission to the University of Moratuwa.',
         image: '/story/img-4.jpg',
     },
     {
