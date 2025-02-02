@@ -76,7 +76,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleD
   });
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-8 min-h-screen">
+    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 p-3 min-h-screen">
       {gridData.map((row, rowIndex) => (
         <React.Fragment key={rowIndex}>
           {rowIndex < visibleRows && // Only render visible rows
