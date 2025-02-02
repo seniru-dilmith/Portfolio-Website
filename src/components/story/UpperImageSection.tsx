@@ -4,7 +4,7 @@ import Image from "next/image";
 const UpperImageSection: React.FC = () => (
   <>
     <motion.div
-      className="flex flex-col items-center w-full sm:w-1/2 md:w-1/3 lg:w-1/4 pb-4 mx-auto"
+      className="flex flex-col items-center pt-8 mx-auto sm:pt-8"
       whileHover={{
         scale: 1.05,
         transition: { duration: 0.4 },
@@ -12,7 +12,7 @@ const UpperImageSection: React.FC = () => (
     >
       {/* Image Container */}
       <motion.div
-        className="relative w-full aspect-square sm:aspect-video lg:aspect-[1/1]"
+        className="relative w-2/3 md:w-1/3 lg:w-1/4 sm:w-2/3 aspect-square"
         initial={{
           opacity: 0,
           scale: 0.8,
