@@ -5,7 +5,7 @@ import Navbar from '@/components/navbar/Navbar';
 import Footer from '@/components/footer/Footer';
 import UpperImageSection from '@/components/story/UpperImageSection';
 import MilestoneList from '@/components/story/MilestoneList';
-import AboutMe from '@/components/story/AboutMe';
+import AboutMe from '@/components/story/MyStory';
 import JourneyContinues from '@/components/story/JorneyConinues';
 import { containerVariants, bounceIn } from '@/components/story/animations';
 
