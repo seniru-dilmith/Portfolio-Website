@@ -1,9 +1,7 @@
 import { createContext, useEffect, useState, ReactNode } from "react";
 import { ThemeContextType } from "@/types/ThemeContext";
 
-export const ThemeContext = createContext<ThemeContextType | undefined>(
-    undefined
-);
+export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     const [theme, setTheme] = useState("emerald");
