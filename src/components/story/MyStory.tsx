@@ -18,7 +18,7 @@ const MyStory = () => {
     };
 
     return (
-        <section className="py-16 px-6 sm:px-12 lg:px-24 mx-4 sm:mx-8 lg:mx-16 bg-gradient-to-br from-primary via-secondary to-accent text-primary-content rounded-lg shadow-lg">
+        <section className="py-16 px-8 bg-gradient-to-br from-primary via-secondary to-accent text-primary-content rounded-lg shadow-2xl">
             {/* Heading */}
             <motion.h2
                 className="text-5xl font-bold text-white mb-12 text-center"
