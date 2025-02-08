@@ -1,13 +1,9 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
-interface LoginResponse {
-  success: boolean;
-  message: string;
-  token?: string;
-}
+import { LoginResponse } from "@/types/Login";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -21,27 +17,20 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      const res = await fetch("/api/admin/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+      const { data } = await axios.post<LoginResponse>("/api/admin/login", {
+        email,
+        password,
       });
 
-      const data: LoginResponse = await res.json();
-      
-      if (res.ok && data.success) {
+      if (data.success && data.token) {
         console.log("Login Successful...");
-        if (data.token) {
-          localStorage.setItem('token', data.token);
-          window.location.href= '/';
-        }
+        localStorage.setItem("token", data.token);
+        window.location.href = "/";
       } else {
-        setError(data.message);
+        setError(data.message || "Invalid credentials. Please try again.");
       }
     } catch (error) {
-      console.error("Error Login:", error);
+      console.error("Login Error:", error);
       setError("Something went wrong. Please try again...");
     } finally {
       setLoading(false);
@@ -53,10 +42,14 @@ export default function LoginPage() {
       <div className="w-full max-w-md bg-info rounded-lg shadow-md p-6">
         <h2 className="text-2xl font-semibold text-white text-center">Login</h2>
         <p className="mt-2 text-center text-gray-400">Access your account</p>
+        
         {error && (
-          <div className="bg-error text-error-content p-2 text-center mb-4">{error}</div>
+          <div className="bg-error text-error-content p-2 text-center mb-4 rounded-md">
+            {error}
+          </div>
         )}
-        <form method="POST" className="mt-4" onSubmit={handleSubmit}>
+
+        <form className="mt-4" onSubmit={handleSubmit}>
           <div className="flex flex-col mb-4">
             <Label htmlFor="email" className="text-gray-300">
               Email
@@ -71,6 +64,7 @@ export default function LoginPage() {
               required
             />
           </div>
+
           <div className="flex flex-col mb-6">
             <Label htmlFor="password" className="text-gray-300">
               Password
@@ -85,9 +79,10 @@ export default function LoginPage() {
               required
             />
           </div>
+
           <Button
             type="submit"
-            className="w-full py-2 px-4 bg-accent text-white rounded-md hover:bg-success"
+            className="w-full py-2 px-4 bg-accent text-white rounded-md hover:bg-success transition-all duration-300"
             disabled={loading}
           >
             {loading ? "Signing in..." : "Sign in"}
