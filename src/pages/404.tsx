@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function Custom404() {
   return (
@@ -14,7 +15,7 @@ export default function Custom404() {
         <h1 className="text-7xl font-extrabold text-accent">404</h1>
         <p className="text-xl md:text-2xl font-semibold mt-4">Oops! Page not found</p>
         <p className="text-gray-500 mt-2">
-          The page you're looking for doesn't exist or has been moved.
+          The page you&rsquo;re looking for doesn&rsquo;t exist or has been moved.
         </p>
 
         {/* Illustration */}
@@ -24,10 +25,12 @@ export default function Custom404() {
           transition={{ delay: 0.3, duration: 0.5 }}
           className="mt-8"
         >
-          <img
+          <Image
             src="/404-illustration.svg"
             alt="Lost astronaut illustration"
-            className="w-64 md:w-80 mx-auto"
+            fill
+            className="object-contain"
+            priority
           />
         </motion.div>
 
