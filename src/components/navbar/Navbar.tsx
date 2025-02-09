@@ -80,14 +80,14 @@ const Navbar: React.FC<NavbarProps> = ({ pushContentDown = true }) => {
           </div>
 
           {/* Theme Toggle Centered in Navbar (Desktop) */}
-          <div className="absolute text-warning left-1/2 transform -translate-x-1/2 hidden lg:block">
+          <div className="absolute text-warning left-1/2 transform -translate-x-1/2 hidden lg:block scale-50">
             <ThemeToggle />
           </div>
 
           {/* Mobile Menu & Theme Toggle */}
           <div className="lg:hidden flex items-center space-x-4">
             {/* Theme Toggle Button */}
-            <div className="rounded-full text-warning transition-all duration-300">
+            <div className="rounded-full text-warning transition-all duration-300 scale-50">
               <ThemeToggle />
             </div>
 
