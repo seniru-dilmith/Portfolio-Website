@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import React from 'react';
 
-const AboutMe = () => {
+const MyStory = () => {
     const textVariants = {
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
@@ -18,7 +18,7 @@ const AboutMe = () => {
     };
 
     return (
-        <section className="py-16 px-6 sm:px-12 lg:px-24 mx-4 sm:mx-8 lg:mx-16 bg-gradient-to-br from-primary via-secondary to-accent text-primary-content rounded-lg shadow-lg">
+        <section className="py-16 px-8 bg-gradient-to-br from-primary via-secondary to-accent text-primary-content rounded-lg shadow-2xl">
             {/* Heading */}
             <motion.h2
                 className="text-5xl font-bold text-white mb-12 text-center"
@@ -53,7 +53,7 @@ const AboutMe = () => {
 
             {/* Decorative Elements */}
             <motion.div
-                className="mt-12 flex justify-center gap-60"
+                className="mt-12 flex justify-center gap-16 md:gap-60"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.6 }}
@@ -79,4 +79,4 @@ const AboutMe = () => {
     );
 };
 
-export default AboutMe;
+export default MyStory;
