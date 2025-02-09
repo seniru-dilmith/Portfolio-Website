@@ -1,10 +1,11 @@
-import Head from 'next/head';
-import { motion } from 'framer-motion';
-import HeroForHome from '@/components/carousal/HeroForHome';
-import Footer from '@/components/footer/Footer';
-import Navbar from '@/components/navbar/Navbar';
+import Head from "next/head";
+import { motion } from "framer-motion";
+import HeroForHome from "@/components/carousal/HeroForHome";
+import Footer from "@/components/footer/Footer";
+import Navbar from "@/components/navbar/Navbar";
 
 const Home = () => {
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -30,7 +31,35 @@ const Home = () => {
     >
       <Head>
         <title>Welcome to Seniru&rsquo;s Place</title>
-        <meta name="description" content="Home Page" />
+        <meta
+          name="description"
+          content="Welcome to my personal website. I'm Seniru Dilmith, a passionate full stack developer specializing in web development, cyber security, and cloud computing."
+        />
+        <meta
+          name="keywords"
+          content="Seniru Dilmith, Full Stack Developer, Web Developer, AI, Cloud, Portfolio, React, Next.js"
+        />
+        <meta name="author" content="Seniru Dilmith" />
+        <meta
+          property="og:title"
+          content="Seniru Dilmith - Full Stack Developer | Portfolio"
+        />
+        <meta
+          property="og:description"
+          content="Explore my projects, skills, and experience in software development and cloud computing."
+        />
+        <meta property="og:image" content="/favicon.ico" />
+        <meta property="og:url" content="https://seniru.dev" />
+        <meta
+          name="twitter:title"
+          content="Seniru Dilmith - Full Stack Developer"
+        />
+        <meta
+          name="twitter:description"
+          content="Explore my portfolio and projects in AI, Web, and Cloud Computing."
+        />
+        <meta name="twitter:image" content="/favicon.ico" />
+        <meta name="robots" content="index, follow" />
       </Head>
 
       {/* Navbar with Animation */}

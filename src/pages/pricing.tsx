@@ -61,7 +61,7 @@ const SubscriptionPage: React.FC = () => {
   return (
     <>
     <Head>
-      <title>Subscribe</title>
+      <title>Subscribe - Seniru Dilmith</title>
       <meta
         name="description" content="Stay updated with the latest news and updates from Seniru Dilmith." />
     </Head>

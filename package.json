@@ -20,7 +20,7 @@
     "clsx": "^2.1.1",
     "dotenv": "^16.4.7",
     "firebase": "^11.1.0",
-    "framer-motion": "^11.13.1",
+    "framer-motion": "^11.18.2",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.468.0",
     "mongodb": "^6.11.0",
