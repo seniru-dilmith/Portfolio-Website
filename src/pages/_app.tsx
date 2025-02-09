@@ -46,6 +46,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Head>
           <title>{process.env.NEXT_PUBLIC_SITE_NAME || "My App"}</title>
           <link rel="canonical" href={canonicalUrl} />
+          <link rel="icon" href="/favicon.ico" type="image/x-icon"></link>
         </Head>
         <div className="flex flex-col min-h-screen">
           {/* Navbar */}
