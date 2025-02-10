@@ -12,7 +12,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   const canonicalUrl = `https://seniru.dev${router.asPath.split("?")[0]}`;
 
   useEffect(() => {
-
     const schemaData = {
       "@context": "https://schema.org",
       "@type": "Person",
@@ -46,7 +45,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Head>
           <title>{process.env.NEXT_PUBLIC_SITE_NAME || "My App"}</title>
           <link rel="canonical" href={canonicalUrl} />
-          <link rel="icon" href="/favicon.ico" type="image/x-icon"></link>
+          <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+          <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
         </Head>
         <div className="flex flex-col min-h-screen">
           {/* Navbar */}

@@ -8,6 +8,7 @@ import Head from 'next/head';
 import { motion } from 'framer-motion';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { useAuth } from '@/context/AuthContext';
+import HeroForArticles from '@/components/articles/HeroForArticles';
 
 const Articles = () => {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -77,7 +78,7 @@ const Articles = () => {
       <div className="bg-gradient-to-br from-primary via-secondary to-accent">
         <Navbar />
         <div className="container mx-auto py-8">
-          <h1 className="text-4xl font-bold text-center">Articles</h1>
+          <HeroForArticles />
           {loading ? <LoadingSpinner /> : (
             <>
               {isAuthenticated && (
