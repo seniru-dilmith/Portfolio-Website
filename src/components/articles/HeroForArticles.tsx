@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
-import Lottie from "lottie-react";
 
-const HeroForProjects = () => {
+const HeroForArticles = () => {
   return (
     <motion.div
       className="text-center py-20 bg-gradient-to-r from-primary to-secondary text-white"
@@ -16,7 +15,7 @@ const HeroForProjects = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 1 }}
       >
-        Hi! Check Out My Projects! 🚀
+        Explore My Articles ✍️
       </motion.h1>
 
       {/* Subtitle */}
@@ -26,9 +25,8 @@ const HeroForProjects = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 1 }}
       >
-        Explore my portfolio of web development, AI, and software engineering
-        projects. From full-stack applications to machine learning models,
-        here's what I&#39;ve built!
+        Read my insights on web development, programming, and tech trends.
+        Stay updated with the latest innovations and best practices in software engineering!
       </motion.p>
 
       {/* Animated Call-to-Action */}
@@ -58,4 +56,4 @@ const HeroForProjects = () => {
   );
 };
 
-export default HeroForProjects;
+export default HeroForArticles;

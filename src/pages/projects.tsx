@@ -146,13 +146,13 @@ const Projects = () => {
         <meta name="robots" content="index, follow" />
       </Head>
       <Navbar />
+      <HeroForProjects />
       {loading ? (
         <LoadingSpinnrer />
       ) : error ? (
         <div className="p-8 text-center text-red-500">{error}</div>
       ) : (
         <>
-          <HeroForProjects />
           <motion.div
             className="mx-auto max-w-7xl mt-8"
             initial={{ opacity: 0, scale: 0.9 }}
