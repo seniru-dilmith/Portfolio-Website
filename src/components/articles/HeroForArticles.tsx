@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const HeroForArticles = () => {
   return (
@@ -36,12 +37,12 @@ const HeroForArticles = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
       >
-        <a
+        <Link
           href="/contact"
           className="px-6 py-3 bg-base-100 text-primary font-semibold rounded-lg shadow-md hover:bg-primary hover:text-secondary transition-all"
         >
           Contact Me
-        </a>
+        </Link>
       </motion.div>
 
       {/* Floating Icons Animation */}

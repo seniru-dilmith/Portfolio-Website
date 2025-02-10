@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import Lottie from "lottie-react";
+import Link from "next/link";
 
 const HeroForProjects = () => {
   return (
@@ -28,7 +28,7 @@ const HeroForProjects = () => {
       >
         Explore my portfolio of web development, AI, and software engineering
         projects. From full-stack applications to machine learning models,
-        here's what I&#39;ve built!
+        here&#39;s what I&#39;ve built!
       </motion.p>
 
       {/* Animated Call-to-Action */}
@@ -38,12 +38,12 @@ const HeroForProjects = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
       >
-        <a
+        <Link
           href="/contact"
           className="px-6 py-3 bg-base-100 text-primary font-semibold rounded-lg shadow-md hover:bg-primary hover:text-secondary transition-all"
         >
           Contact Me
-        </a>
+        </Link>
       </motion.div>
 
       {/* Floating Icons Animation */}
