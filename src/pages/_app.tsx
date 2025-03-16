@@ -6,6 +6,7 @@ import { AppProps } from "next/app";
 import { AuthProvider } from "@/context/AuthContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { useRouter } from "next/router";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -48,6 +49,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <link rel="icon" href="/favicon.ico" type="image/x-icon" />
           <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
         </Head>
+        <GoogleAnalytics />
         <div className="flex flex-col min-h-screen">
           {/* Navbar */}
           {/* Main Content */}
