@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
         pathname: '/v0/b/**', // Match all Firebase storage paths
       },
     ],
+    domains: ['cdn.buymeacoffee.com'],
   },
 };
 
