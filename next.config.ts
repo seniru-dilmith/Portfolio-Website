@@ -10,8 +10,13 @@ const nextConfig: NextConfig = {
         port: '', // Leave empty for default ports
         pathname: '/v0/b/**', // Match all Firebase storage paths
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn.buymeacoffee.com',
+        port: '', // Leave empty for default ports
+        pathname: '/buttons/v2/**', // Match all Buy Me A Coffee buttons
+      }
     ],
-    domains: ['cdn.buymeacoffee.com'],
   },
 };
 
