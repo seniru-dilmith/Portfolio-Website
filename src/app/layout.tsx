@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import Script from "next/script";
 
-import "../styles/globals.css";
+import "@/styles/globals.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 import { ThemeProvider } from "@/context/ThemeContext";
