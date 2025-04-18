@@ -1,5 +1,6 @@
+"use client";
 import Head from "next/head";
-import HeroForContact from "../components/contact/HeroForContact";
+import HeroForContact from "@/components/contact/HeroForContact";
 import Footer from "@/components/footer/Footer";
 import Navbar from "@/components/navbar/Navbar";
 import Contact from "@/components/contact/Contact";

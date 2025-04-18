@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from 'react';
 import { Article } from '@/types/Article';
 import Navbar from '@/components/navbar/Navbar';
