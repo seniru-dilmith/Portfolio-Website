@@ -1,9 +1,5 @@
-"use client";
-
-import { ReactNode, useEffect } from "react";
-import Head from "next/head";
+import { ReactNode } from "react";
 import Script from "next/script";
-import { usePathname } from "next/navigation";
 
 import "../styles/globals.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -18,72 +14,38 @@ interface LayoutProps {
 }
 
 export default function RootLayout({ children }: LayoutProps) {
-  const pathname = usePathname();
-  const canonicalUrl = `https://seniru.dev${pathname}`;
-
-  useEffect(() => {
-    const schemaData = {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      name: "Seniru Dilmith",
-      jobTitle: "Full Stack Developer",
-      url: "https://seniru.dev",
-      sameAs: [
-        "https://linkedin.com/in/seniru-dilmith",
-        "https://github.com/seniru-dilmith",
-        "https://twitter.com/seniru_dilmith",
-      ],
-      worksFor: {
-        "@type": "Organization",
-        name: "Moraspirit",
-      },
-      studiesAt: {
-        "@type": "University",
-        name: "University of Moratuwa",
-      },
-    };
-
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
-    script.textContent = JSON.stringify(schemaData);
-    document.head.appendChild(script);
-  }, []);
+  const canonicalUrl = `https://seniru.dev${process.env.NEXT_PUBLIC_PATHNAME || ""}`;
 
   return (
-    <html lang="en">
-      <Head>
+    // 1) Static theme on <html>
+    <html lang="en" data-theme="emerald" data-arp="">
+      <head>
         <title>{process.env.NEXT_PUBLIC_SITE_NAME || "My App"}</title>
         <link rel="canonical" href={canonicalUrl} />
         <link rel="icon" href="/favicon.ico" />
         <link rel="shortcut icon" href="/favicon.ico" />
-      </Head>
-
-      {/* Initialize theme as early as possible to avoid FOUC */}
-      <Script id="theme-init" strategy="beforeInteractive">
-        {`
-          (function() {
-            const theme = localStorage.getItem("theme") || "emerald";
-            document.documentElement.setAttribute("data-theme", theme);
-          })();
-        `}
-      </Script>
-
+      </head>
+      {/* 2) No data-theme on body */}
       <body>
+        {/* 3) After hydration, pick up stored theme from localStorage */}
+        <Script id="theme-init" strategy="afterInteractive">
+          {`
+            (function() {
+              const theme = localStorage.getItem("theme") || "emerald";
+              document.documentElement.setAttribute("data-theme", theme);
+            })();
+          `}
+        </Script>
+
         <ThemeProvider>
           <AuthProvider>
             <GoogleAnalytics />
-
             <div className="flex flex-col min-h-screen">
               <Navbar />
-
-              <main className="flex-grow">
-                {children}
-              </main>
+              <main className="flex-grow">{children}</main>
             </div>
           </AuthProvider>
         </ThemeProvider>
-
-        <Script src="/_next/script" strategy="afterInteractive" />
       </body>
     </html>
   );
