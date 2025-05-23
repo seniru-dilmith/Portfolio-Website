@@ -22,7 +22,7 @@ onAuthStateChanged(auth, (user) => {
   if (user) {
     console.log("User is authenticated:", user);
   } else {
-    console.error("No user is logged in.");
+    console.log("No user is logged in.");
   }
 });
 

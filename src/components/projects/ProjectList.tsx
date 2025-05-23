@@ -1,31 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { Project } from '@/types/Project';
-import { ProjectListProps } from '@/types/Project';
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { Project, ProjectListProps } from "@/types/Project";
 
-const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleDelete, isAuthenticated }) => {
-  const [visibleRows, setVisibleRows] = useState<number>(1); // Number of visible rows
-  const [gridData, setGridData] = useState<(Project | null)[][]>([]); // 2D grid of projects and blank cells
-  const ROWS_PER_LOAD = 1; // Number of rows to load/unload per scroll
+const ProjectList: React.FC<ProjectListProps> = ({
+  projects,
+  handleEdit,
+  handleDelete,
+  isAuthenticated,
+}) => {
+  const [visibleRows, setVisibleRows] = useState(1); // Number of visible rows
+  const [gridData, setGridData] = useState<(Project | null)[][]>([]);
+  const ROWS_PER_LOAD = 1;
 
   useEffect(() => {
-    // Create a 2D grid with alternating projects and blank cells
     const grid: (Project | null)[][] = [];
     let currentRow: (Project | null)[] = [];
 
     projects.forEach((project) => {
       currentRow.push(project);
-      currentRow.push(null); // Add a blank cell
+      currentRow.push(null); // blank cell
 
-      // Break into a new row after every 3 cells
       if (currentRow.length >= 3) {
         grid.push(currentRow);
         currentRow = [];
       }
     });
 
-    // Add the last row if not complete
     if (currentRow.length > 0) grid.push(currentRow);
 
     setGridData(grid);
@@ -38,72 +39,56 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleD
       const currentScrollY = window.scrollY;
 
       if (currentScrollY > lastScrollY) {
-        // Scrolling down
-        if (window.innerHeight + currentScrollY >= document.body.offsetHeight - 500) {
+        if (
+          window.innerHeight + currentScrollY >=
+          document.body.offsetHeight - 500
+        ) {
           setVisibleRows((prev) => Math.min(prev + ROWS_PER_LOAD, gridData.length));
         }
       } else {
-        // Scrolling up
         if (currentScrollY < lastScrollY - 50) {
           setVisibleRows((prev) => Math.max(prev - ROWS_PER_LOAD, 1));
         }
       }
-
       lastScrollY = currentScrollY;
     };
 
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, [gridData.length]);
 
-  // Variants for animations with delay
-  const cardVariants = () => ({
+  const cardVariants = {
     hidden: { opacity: 0, y: 20, scale: 0.9 },
     visible: {
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: { duration: 0.7, ease: 'easeOut' },
+      transition: { duration: 0.7, ease: "easeOut" },
     },
-    hover: { scale: 1.1, rotate: 1, boxShadow: '0px 8px 15px rgba(0, 0, 0, 0.2)' },
-  });
+    hover: { scale: 1.1, rotate: 1, boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.2)" },
+  };
 
-  const emptyCellVariants = () => ({
+  const emptyCellVariants = {
     hidden: { opacity: 0, scale: 0.9 },
     visible: {
       opacity: 0,
     },
-  });
+  };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 p-3 min-h-screen">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-3 min-h-screen">
       {gridData.map((row, rowIndex) => (
         <React.Fragment key={rowIndex}>
-          {rowIndex < visibleRows && // Only render visible rows
-            row.map((item, cellIndex) => {
-              if (!item) {
-                // Render blank cell with hover animation
-                return (
-                  <motion.div
-                    key={`empty-${rowIndex}-${cellIndex}`}
-                    initial="hidden"
-                    animate="visible"
-                    exit="hidden"
-                    whileHover="hover"
-                    variants={emptyCellVariants()} // Calculate globalIndex inline
-                    className="h-40 bg-gray-200 rounded-lg shadow-md"
-                  />
-                );
-              }
-
-              return (
+          {rowIndex < visibleRows &&
+            row.map((item, cellIndex) =>
+              item ? (
                 <motion.div
                   key={item._id}
                   initial="hidden"
                   animate="visible"
                   exit="hidden"
                   whileHover="hover"
-                  variants={cardVariants()} // Calculate globalIndex inline
+                  variants={cardVariants}
                   className="card bg-base-100 text-base-content shadow-xl p-4 rounded-lg"
                 >
                   {item.imageURL && (
@@ -124,7 +109,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleD
                   <h2 className="card-title text-lg font-bold text-center">{item.title}</h2>
                   <p className="text-gray-500 text-sm mt-2 line-clamp-3">{item.description}</p>
                   <p className="text-sm mt-1">
-                    <span className="font-semibold">Technologies:</span> {item.technologies.join(', ')}
+                    <span className="font-semibold">Technologies:</span> {item.technologies.join(", ")}
                   </p>
                   <motion.a
                     href={item.githubURL}
@@ -154,8 +139,18 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, handleEdit, handleD
                     </div>
                   )}
                 </motion.div>
-              );
-            })}
+              ) : (
+                <motion.div
+                  key={`empty-${rowIndex}-${cellIndex}`}
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                  whileHover="hover"
+                  variants={emptyCellVariants}
+                  className="h-40 bg-gray-200 rounded-lg shadow-md"
+                />
+              )
+            )}
         </React.Fragment>
       ))}
     </div>

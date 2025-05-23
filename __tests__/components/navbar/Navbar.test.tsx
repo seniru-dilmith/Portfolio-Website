@@ -5,7 +5,11 @@ import { titleNames } from "@/components/navbar/titles";
 import "@testing-library/jest-dom";
 
 // Mock the ThemeToggle component to avoid rendering it
-jest.mock("@/components/navbar/ThemeToggle", () => () => <div data-testid="theme-toggle" />);
+jest.mock("@/components/navbar/ThemeToggle", () => {
+  const ThemeToggleMock = () => <div data-testid="theme-toggle" />;
+  ThemeToggleMock.displayName = "ThemeToggle";
+  return ThemeToggleMock;
+});
 
 describe("Navbar", () => {
   const mockLogout = jest.fn();
