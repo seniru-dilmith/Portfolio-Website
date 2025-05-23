@@ -56,7 +56,7 @@ const HeroForHome: React.FC = () => {
             transition={{ duration: 0.8, ease: 'easeOut' }} // Smooth transition
             className="flex items-center justify-center w-full flex-grow bg-gradient-to-r from-primary to-secondary text-primary-content"
         >
-            <div className="relative w-full h-full max-h-[calc(100vh-4rem)]">
+            <div className="relative w-full h-full">
                 {/* Carousel Content */}
                 <div className="relative h-full">
                     {carouselItems.map((item: CarouselItem, idx: number) => (
@@ -136,6 +136,8 @@ const HeroForHome: React.FC = () => {
                                     ? 'bg-primary border-primary scale-150'
                                     : 'bg-base border-base'
                             }`}
+                            title={`Go to slide ${idx + 1}`}
+                            aria-label={`Go to slide ${idx + 1}`}
                         />
                     ))}
                 </div>
@@ -145,6 +147,7 @@ const HeroForHome: React.FC = () => {
                     onClick={handlePrev}
                     className="absolute bg-neutral-200 left-2 top-1/2 -translate-y-1/2 z-30 btn btn-circle btn-outline bg-transparent hover:bg-opacity-800 border-white text-white hover:text-white transition duration-300"
                     aria-label="Previous"
+                    title="Previous"
                 >
                     <i className="fa fa-chevron-left"></i>
                 </button>
@@ -152,6 +155,7 @@ const HeroForHome: React.FC = () => {
                     onClick={handleNext}
                     className="absolute bg-neutral-200 right-2 top-1/2 -translate-y-1/2 z-30 btn btn-circle btn-outline bg-transparent hover:bg-opacity-800 border-white text-white hover:text-white transition duration-300"
                     aria-label="Next"
+                    title="Next"
                 >
                     <i className="fa fa-chevron-right"></i>
                 </button>

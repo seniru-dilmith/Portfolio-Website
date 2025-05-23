@@ -6,8 +6,8 @@ import Link from "next/link";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="z-50 overflow-hidden bg-base-200 py-10 rounded-t-lg shadow-inner">
-      <div className="w-screen flex flex-col md:flex-row items-center justify-between px-6 space-y-6 md:space-y-0 md:space-x-6">
+    <footer className="z-50 overflow-hidden bg-base-200 py-5 rounded-t-lg shadow-inner">
+      <div className="w-screen flex flex-col md:flex-row items-center justify-between px-6 md:space-x-6">
         {/* Left Section */}
         <motion.div
           className="w-full md:w-1/4 text-sm text-center md:text-left text-base-content"
@@ -23,7 +23,7 @@ const Footer: React.FC = () => {
 
         {/* Center Section */}
         <motion.div
-          className="w-full md:w-1/2 flex flex-col items-center space-y-4 text-center"
+          className="w-full md:w-1/2 flex flex-col items-center text-center"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}

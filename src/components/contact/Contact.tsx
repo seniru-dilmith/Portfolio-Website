@@ -89,7 +89,7 @@ function Contact() {
 
         {/* Personal Details */}
         <motion.div
-          className="mt-10 text-left bg-base-100 text-base-content p-6 rounded-lg shadow-lg"
+          className="mt-10 text-left bg-base-100 text-base-content p-6 rounded-lg shadow-2xl"
           variants={fadeInUp}
         >
           <h3 className="text-2xl font-semibold mb-4 text-center">
