@@ -50,38 +50,9 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to see the site in action.
 
-## 📂 Folder Structure
-
-```plaintext
-.
-├── src
-│   ├── components
-│   │   ├── Navbar.tsx
-│   │   ├── Footer.tsx
-│   │   ├── story
-│   │   │   ├── MilestoneList.tsx
-│   │   │   ├── JourneyContinues.tsx
-│   │   │   ├── AboutMe.tsx
-│   │   │   ├── UpperImageSection.tsx
-│   │   │   ├── animations.ts
-│   ├── pages
-│   │   ├── index.tsx
-│   │   ├── story.tsx
-│   ├── styles
-│   │   ├── globals.css
-│   ├── public
-│   │   ├── story/img-1.jpg
-│   │   ├── story/img-5.jpg
-│   ├── README.md
-├── package.json
-└── next.config.js
-```
-
 ## 🎯 Future Plans
 
 - 📝 **Blog Integration** – Sharing my knowledge on **web development, AI, and problem-solving**.
-- 🎨 **Dark Mode** – Enhancing the UI/UX with a toggleable dark theme.
-- 🔍 **SEO Optimization** – Improving discoverability through proper metadata and performance enhancements.
 
 ## 🛠️ Tech Stack
 
