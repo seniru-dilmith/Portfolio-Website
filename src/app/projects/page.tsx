@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Project } from "@/types/Project";
@@ -6,15 +7,18 @@ import ProjectForm from "@/components/projects/ProjectForm";
 import ProjectList from "@/components/projects/ProjectList";
 import HeroForProjects from "@/components/projects/HeroForProjects";
 import { useAuth } from "@/context/AuthContext";
-import {
-  fetchProjects,
-  addOrUpdateProject,
-  deleteProject,
-} from "@/controllers/projectController";
 import Head from "next/head";
-import LoadingSpinnrer from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import Footer from "@/components/footer/Footer";
 import Navbar from "@/components/navbar/Navbar";
+
+interface FormState {
+  title: string;
+  description: string;
+  technologies: string;
+  githubURL: string;
+  imageURL: string;
+}
 
 const Projects = () => {
   const { isAuthenticated } = useAuth();
@@ -23,7 +27,7 @@ const Projects = () => {
   const [error, setError] = useState<string | null>(null);
   const [viewForm, setViewForm] = useState(false);
 
-  const [formState, setFormState] = useState({
+  const [formState, setFormState] = useState<FormState>({
     title: "",
     description: "",
     technologies: "",
@@ -34,16 +38,99 @@ const Projects = () => {
   const [file, setFile] = useState<File | null>(null);
   const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
 
+  // Fetch projects from API
+  const fetchProjects = async (): Promise<Project[]> => {
+    const res = await fetch("/api/projects");
+    if (!res.ok) throw new Error("Failed to fetch projects");
+    const data = await res.json();
+    if (!data.success) throw new Error("Failed to fetch projects");
+    return data.data as Project[];
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      const { projects, error } = await fetchProjects();
-      setProjects(projects);
-      setError(error);
+      setLoading(true);
+      try {
+        const projectsData = await fetchProjects();
+        setProjects(projectsData);
+        setError(null);
+      } catch {
+        setError("Failed to fetch projects");
+      }
       setLoading(false);
     };
 
     fetchData();
   }, []);
+
+  const resetForm = () => {
+    setFormState({
+      title: "",
+      description: "",
+      technologies: "",
+      githubURL: "",
+      imageURL: "",
+    });
+    setFile(null);
+    setEditingProjectId(null);
+    setViewForm(false);
+  };
+
+  // Helper for add or update project via API
+  const addOrUpdateProject = async (
+    formState: FormState,
+    file: File | null,
+    editingProjectId: string | null,
+    token: string
+  ): Promise<{ success: boolean; message: string }> => {
+    try {
+      const imageURL = formState.imageURL;
+
+      if (file) {
+        // TODO: Add your file upload logic here (e.g., Firebase Storage)
+        console.warn("File upload not implemented - set imageURL manually.");
+      }
+
+      const url = editingProjectId
+        ? `/api/projects?id=${editingProjectId}`
+        : "/api/projects";
+      const method = editingProjectId ? "PUT" : "POST";
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          ...formState,
+          imageURL,
+          technologies: formState.technologies
+            ? formState.technologies.split(",").map((tech: string) => tech.trim())
+            : [],
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        return {
+          success: true,
+          message: editingProjectId
+            ? "Project updated successfully!"
+            : "Project added successfully!",
+        };
+      } else {
+        return { success: false, message: "Failed to add/update project." };
+      }
+    } catch (error) {
+      console.error("Error adding/updating project:", error);
+      return {
+        success: false,
+        message: "An error occurred while adding/updating the project.",
+      };
+    }
+  };
 
   const handleAddOrUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,11 +147,16 @@ const Projects = () => {
       editingProjectId,
       token
     );
+
     if (success) {
-      const { projects } = await fetchProjects();
-      setProjects(projects);
-      resetForm();
-      alert(message);
+      try {
+        const projectsData = await fetchProjects();
+        setProjects(projectsData);
+        resetForm();
+        alert(message);
+      } catch {
+        alert("Failed to refresh projects after update.");
+      }
     } else {
       alert(message);
     }
@@ -79,13 +171,24 @@ const Projects = () => {
       return;
     }
 
-    const { success, message } = await deleteProject(id, token);
-    if (success) {
-      const { projects } = await fetchProjects();
-      setProjects(projects);
-      alert(message);
-    } else {
-      alert(message);
+    try {
+      const res = await fetch(`/api/projects?id=${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      if (data.success) {
+        const projectsData = await fetchProjects();
+        setProjects(projectsData);
+        alert("Project deleted successfully!");
+      } else {
+        alert("Failed to delete project.");
+      }
+    } catch (error) {
+      console.error("Error deleting project:", error);
+      alert("An error occurred while deleting the project.");
     }
   };
 
@@ -101,21 +204,8 @@ const Projects = () => {
     setViewForm(true);
   };
 
-  const resetForm = () => {
-    setFormState({
-      title: "",
-      description: "",
-      technologies: "",
-      githubURL: "",
-      imageURL: "",
-    });
-    setFile(null);
-    setEditingProjectId(null);
-    setViewForm(false);
-  };
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
+    if (e.target.files && e.target.files.length > 0) {
       setFile(e.target.files[0]);
     }
   };
@@ -132,64 +222,53 @@ const Projects = () => {
           name="keywords"
           content="Projects, AI, Web Development, Cloud, Open Source, Next.js, React"
         />
-        <meta property="og:title" content="My Projects - Seniru Dilmith" />
-        <meta
-          property="og:description"
-          content="Discover my software engineering projects in AI, Web, and Cloud Computing."
-        />
-        <meta property="og:image" content="/images/projects-thumbnail.jpg" />
-        <meta property="og:url" content="https://yourwebsite.com/projects" />
-        <meta name="twitter:title" content="My Projects - Seniru Dilmith" />
-        <meta
-          name="twitter:description"
-          content="Explore my coding projects and open-source contributions."
-        />
-        <meta name="robots" content="index, follow" />
       </Head>
       <Navbar />
       <HeroForProjects />
       {loading ? (
-        <LoadingSpinnrer />
+        <LoadingSpinner />
       ) : error ? (
         <div className="p-8 text-center text-red-500">{error}</div>
       ) : (
-        <>
-          <motion.div
-            className="mx-auto max-w-7xl mt-8"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="flex justify-between items-center mb-6">
-              {isAuthenticated && (
-                <button
-                  className="btn btn-primary"
-                  onClick={() => setViewForm((prev) => !prev)}
-                >
-                  {viewForm ? "Hide Form" : "Add Project"}
-                </button>
-              )}
-            </div>
-
-            {viewForm && (
-              <ProjectForm
-                handleAddOrUpdate={handleAddOrUpdate}
-                formState={formState}
-                setFormState={setFormState}
-                editingProjectId={editingProjectId}
-                resetForm={resetForm}
-                handleFileChange={handleFileChange}
-              />
+        <motion.div
+          className="mx-auto max-w-7xl mt-8"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="flex justify-between items-center mb-6">
+            {isAuthenticated && (
+              <button
+                className="btn btn-primary"
+                onClick={() => setViewForm((prev) => !prev)}
+              >
+                {viewForm
+                  ? "Hide Form"
+                  : editingProjectId
+                  ? "Edit Project"
+                  : "Add Project"}
+              </button>
             )}
+          </div>
 
-            <ProjectList
-              projects={projects}
-              handleEdit={handleEdit}
-              handleDelete={handleDelete}
-              isAuthenticated={isAuthenticated}
+          {viewForm && isAuthenticated && (
+            <ProjectForm
+              handleAddOrUpdate={handleAddOrUpdate}
+              formState={formState}
+              setFormState={setFormState}
+              editingProjectId={editingProjectId}
+              resetForm={resetForm}
+              handleFileChange={handleFileChange}
             />
-          </motion.div>
-        </>
+          )}
+
+          <ProjectList
+            projects={projects}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+            isAuthenticated={isAuthenticated}
+          />
+        </motion.div>
       )}
       <Footer />
     </div>
