@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+"use client";
+
+import { useState } from "react";
 import axios from "axios";
+import Head from "next/head";
+import { useRouter, usePathname } from "next/navigation";
+
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { LoginResponse } from "@/types/Login";
-import Head from "next/head";
-import { useRouter } from "next/router";
 
 export default function LoginPage() {
   const router = useRouter();
-  const isAdminRoute = router.pathname.startsWith("/admin");
+  const pathname = usePathname() ?? "";
+  const isAdminRoute = pathname.startsWith("/admin");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,14 +32,14 @@ export default function LoginPage() {
       });
 
       if (data.success && data.token) {
-        console.log("Login Successful...");
         localStorage.setItem("token", data.token);
-        window.location.href = "/";
+        // navigate via App‑Router
+        router.push("/");
       } else {
         setError(data.message || "Invalid credentials. Please try again.");
       }
-    } catch (error) {
-      console.error("Login Error:", error);
+    } catch (err) {
+      console.error("Login Error:", err);
       setError("Something went wrong. Please try again...");
     } finally {
       setLoading(false);
@@ -45,15 +49,21 @@ export default function LoginPage() {
   return (
     <>
       <Head>
-        {isAdminRoute && <meta name="robots" content="noindex, nofollow" />}
-        <link rel="canonical" href={`https://seniru.dev${router.asPath.split("?")[0]}`} />
+        {isAdminRoute && <meta name="robots" content="noindex,nofollow" />}
+        <link
+          rel="canonical"
+          href={`https://seniru.dev${pathname.split("?")[0]}`}
+        />
       </Head>
+
       <div className="min-h-screen flex items-center justify-center">
         <div className="w-full max-w-md bg-info rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-semibold text-white text-center">
             Login
           </h2>
-          <p className="mt-2 text-center text-gray-400">Access your account</p>
+          <p className="mt-2 text-center text-gray-400">
+            Access your account
+          </p>
 
           {error && (
             <div className="bg-error text-error-content p-2 text-center mb-4 rounded-md">
@@ -71,9 +81,9 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="px-3 py-2 my-2 bg-base-100 text-base-content placeholder-base-content/60 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 placeholder="Enter your email"
                 required
+                className="px-3 py-2 my-2 bg-base-100 text-base-content rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
               />
             </div>
 
@@ -86,9 +96,9 @@ export default function LoginPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="px-3 py-2 my-2 bg-base-100 text-base-content placeholder-base-content/60 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 placeholder="Enter your password"
                 required
+                className="px-3 py-2 my-2 bg-base-100 text-base-content rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
               />
             </div>
 
