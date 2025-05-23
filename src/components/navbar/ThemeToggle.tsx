@@ -16,6 +16,7 @@ const Switch = () => {
           checked={theme === "dark"} 
           onChange={toggleTheme}
           className="h-0 w-0 opacity-0"
+          aria-label="Toggle dark mode"
         />
         <svg 
           viewBox="0 0 69.667 44" 

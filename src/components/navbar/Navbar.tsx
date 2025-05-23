@@ -7,7 +7,7 @@ import { titleNames } from "./titles";
 import ThemeToggle from "./ThemeToggle";
 import { NavbarProps } from "@/types/Navbar";
 
-const Navbar: React.FC<NavbarProps> = ({ pushContentDown = true }) => {
+const Navbar: React.FC<NavbarProps> = () => {
   const { isAuthenticated, handleLogout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -60,11 +60,7 @@ const Navbar: React.FC<NavbarProps> = ({ pushContentDown = true }) => {
   };
 
   return (
-    <div
-      className={`flex flex-col transition-all duration-300 ${
-        isMenuOpen && pushContentDown ? "pb-64" : ""
-      }`}
-    >
+    <div>
       {/* Navbar */}
       <motion.div
         className={`fixed top-0 left-0 z-50 w-full bg-base-200 text-neutral shadow-lg`}
@@ -96,6 +92,7 @@ const Navbar: React.FC<NavbarProps> = ({ pushContentDown = true }) => {
             <button
               className="rounded-lg text-error transition-all duration-300 focus:outline-none"
               onClick={() => setIsMenuOpen((prev) => !prev)}
+              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             >
               <motion.div
                 initial={{ rotate: 0 }}
@@ -183,7 +180,6 @@ const Navbar: React.FC<NavbarProps> = ({ pushContentDown = true }) => {
           )}
         </AnimatePresence>
       </motion.div>
-      <div className="h-8" />
     </div>
   );
 };
