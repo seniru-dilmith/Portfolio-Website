@@ -80,8 +80,7 @@ const Projects = () => {
   const addOrUpdateProject = async (
     formState: FormState,
     file: File | null,
-    editingProjectId: string | null,
-    token: string
+    editingProjectId: string | null
   ): Promise<{ success: boolean; message: string }> => {
     try {
       let imageURL = formState.imageURL;
@@ -92,9 +91,7 @@ const Projects = () => {
 
         const uploadRes = await fetch('/api/upload', {
           method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          credentials: 'include',
           body: uploadData,
         });
 
@@ -114,9 +111,9 @@ const Projects = () => {
 
       const res = await fetch(url, {
         method,
+        credentials: 'include',
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           ...formState,
@@ -151,17 +148,10 @@ const Projects = () => {
   const handleAddOrUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("Please log in first.");
-      return;
-    }
-
     const { success, message } = await addOrUpdateProject(
       formState,
       file,
-      editingProjectId,
-      token
+      editingProjectId
     );
 
     if (success) {
@@ -181,18 +171,10 @@ const Projects = () => {
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this project?")) return;
 
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("Please log in first.");
-      return;
-    }
-
     try {
       const res = await fetch(`/api/projects?id=${id}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        credentials: 'include',
       });
       const data = await res.json();
       if (data.success) {
