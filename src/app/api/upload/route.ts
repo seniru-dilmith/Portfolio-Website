@@ -1,24 +1,23 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '@/util/firebaseServer';
 
-const JWT_SECRET = process.env.NEXT_JWT_SECRET!;
+const JWT_ACCESS_SECRET = process.env.NEXT_JWT_ACCESS_SECRET!;
 
-async function verifyToken(request: Request) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader?.startsWith('Bearer ')) {
+async function verifyToken(request: NextRequest) {
+  const token = request.cookies.get('accessToken')?.value;
+  if (!token) {
     throw new Error('Unauthorized: No token provided');
   }
-  const token = authHeader.split(' ')[1];
   try {
-    return jwt.verify(token, JWT_SECRET);
+    return jwt.verify(token, JWT_ACCESS_SECRET);
   } catch {
     throw new Error('Unauthorized: Invalid token');
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     await verifyToken(request);
     const formData = await request.formData();

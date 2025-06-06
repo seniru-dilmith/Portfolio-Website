@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import {
   getProjects,
   createProject,
@@ -7,16 +7,15 @@ import {
 } from '@/controllers/projectController';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.NEXT_JWT_SECRET!;
+const JWT_ACCESS_SECRET = process.env.NEXT_JWT_ACCESS_SECRET!;
 
-async function verifyToken(request: Request) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader?.startsWith('Bearer ')) {
+async function verifyToken(request: NextRequest) {
+  const token = request.cookies.get('accessToken')?.value;
+  if (!token) {
     throw new Error('Unauthorized: No token provided');
   }
-  const token = authHeader.split(' ')[1];
   try {
-    return jwt.verify(token, JWT_SECRET);
+    return jwt.verify(token, JWT_ACCESS_SECRET);
   } catch {
     throw new Error('Unauthorized: Invalid token');
   }
@@ -32,7 +31,7 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     await verifyToken(request);
     const body = await request.json();
@@ -48,7 +47,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
   try {
     await verifyToken(request);
     const { searchParams } = new URL(request.url);
@@ -72,7 +71,7 @@ export async function PUT(request: Request) {
   }
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(request: NextRequest) {
   try {
     await verifyToken(request);
     const { searchParams } = new URL(request.url);
