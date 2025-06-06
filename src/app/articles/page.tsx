@@ -7,7 +7,7 @@ import ArticleForm from '@/components/articles/ArticleForm';
 import ArticleList from '@/components/articles/ArticleList';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import LoadingSpinner from '@/util/LoadingSpinner';
 import { useAuth } from '@/context/AuthContext';
 import HeroForArticles from '@/components/articles/HeroForArticles';
 
@@ -28,8 +28,20 @@ const Articles = () => {
       setLoading(true);
       const res = await fetch('/api/articles');
       const data = await res.json();
-      if (data.success) setArticles(data.data);
-      setLoading(false);
+      if (data.success && Array.isArray(data.data)) {
+        let first = true;
+        for (const article of data.data as Article[]) {
+          setArticles((prev) => [...prev, article]);
+          if (first) {
+            setLoading(false);
+            first = false;
+          }
+          await new Promise((resolve) => setTimeout(resolve, 0));
+        }
+        if (first) setLoading(false);
+      } else {
+        setLoading(false);
+      }
     };
 
     fetchArticles();

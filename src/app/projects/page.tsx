@@ -8,7 +8,7 @@ import ProjectList from "@/components/projects/ProjectList";
 import HeroForProjects from "@/components/projects/HeroForProjects";
 import { useAuth } from "@/context/AuthContext";
 import Head from "next/head";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/util/LoadingSpinner";
 import Footer from "@/components/footer/Footer";
 import Navbar from "@/components/navbar/Navbar";
 
@@ -52,12 +52,21 @@ const Projects = () => {
       setLoading(true);
       try {
         const projectsData = await fetchProjects();
-        setProjects(projectsData);
+        let first = true;
+        for (const project of projectsData) {
+          setProjects((prev) => [...prev, project]);
+          if (first) {
+            setLoading(false);
+            first = false;
+          }
+          await new Promise((resolve) => setTimeout(resolve, 0));
+        }
+        if (first) setLoading(false);
         setError(null);
       } catch {
         setError("Failed to fetch projects");
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchData();
