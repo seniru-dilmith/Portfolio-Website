@@ -1,60 +1,71 @@
-# 🌍 Seniru Dilmith - Personal Portfolio
+# 🌐 Seniru Dilmith Portfolio
 
-Welcome to my personal website! 🚀 This platform showcases my journey, projects, skills, and experiences as a **Computer Science and Engineering undergraduate** at the **University of Moratuwa**.
-
-## 🏗️ Project Overview
-
-This website is built using:
-
-- **Next.js** - For fast and efficient server-side rendering.
-- **TypeScript** - Ensuring type safety and better development experience.
-- **Tailwind CSS** - For modern and responsive styling.
-- **Framer Motion** - Adding smooth animations to enhance user experience.
-
-## 📌 Features
-
-✅ **Interactive Timeline** – A dynamic showcase of my milestones and achievements.
-✅ **Projects Portfolio** – A collection of my best work, including **software development, machine learning, and web applications**.
-✅ **Blog Section (Coming Soon)** – Technical write-ups, tutorials, and insights.
-✅ **Smooth Animations** – Beautifully animated sections using **Framer Motion**.
-✅ **Fully Responsive** – Optimized for all screen sizes and devices.
-
-## 📸 Sneak Peek
+A personal website built with **Next.js**, **TypeScript** and **Tailwind CSS**. It showcases my projects, journey and technical writings while providing a fully responsive and animated experience.
 
 ![Website Preview](./public/story/img-1.jpg)
 
+## ✨ Features
+
+- **Interactive Timeline** Highlighting My Milestones.
+- **Projects Gallery** Covering Software Development, Machine Learning, And Web Apps.
+- **Blog Section** For Tutorials And Articles (Coming Soon).
+- **Smooth Animations** Powered By **Framer Motion**.
+- **Hosted On Vercel** With Fast Server‑Side Rendering.
+
 ## 🚀 Getting Started
 
-### 1️⃣ Clone this repository
+### Prerequisites
 
-```sh
+- Node.js 20+
+- A copy of `.env` based on `env.example`
+
+### Installation
+
+```bash
+# Clone the repository
 git clone https://github.com/seniru-dilmith/portfolio.git
 cd portfolio
-```
 
-### 2️⃣ Install dependencies
-
-```sh
+# Install dependencies
 npm install
 # or
 yarn install
-```
 
-### 3️⃣ Run the development server
-
-```sh
+# Start the dev server
 npm run dev
 # or
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to see the site in action.
+Visit [http://localhost:3000](http://localhost:3000) to explore the site locally.
 
-## 🎯 Future Plans
+### Running Tests
 
-- 📝 **Blog Integration** – Sharing my knowledge on **web development, AI, and problem-solving**.
+```bash
+npm test
+```
 
-## 🛠️ Tech Stack
+### Building for Production
+
+```bash
+npm run build
+npm start
+```
+
+## 📁 Environment Variables
+
+Copy `env.example` to `.env` and provide the following values:
+
+```env
+NEXT_JWT_SECRET=...
+NEXT_JWT_ACCESS_SECRET=...
+NEXT_JWT_REFRESH_SECRET=...
+NEXT_MONGO_URI=...
+NEXT_FIREBASE_API_KEY=...
+# and other variables
+```
+
+## 🔧 Tech Stack
 
 ![Next.js](https://img.shields.io/badge/Next.js-000?style=for-the-badge&logo=nextdotjs)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
@@ -62,13 +73,15 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the s
 ![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Hosted_on-Vercel-black?style=for-the-badge&logo=vercel)
 
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to open issues or pull requests to improve the project.
+
 ## 📬 Connect with Me
 
-🌐 **Website**: [senirudilmith.com](https://seniru.dev)
-💼 **LinkedIn**: [linkedin.com/in/seniru-dilmith](https://linkedin.com/in/seniru-dilmith)
-🐦 **Twitter**: [@SeniruDilmith](https://twitter.com/SeniruDilmith)
-📧 **Email**: [me@senirudilmith.com](mailto:me@senirudilmith.com)
-
-### 🔥 Thank you for visiting! Feel free to explore and contribute! 🚀✨
+- **Website**: [seniru.dev](https://seniru.dev)
+- **LinkedIn**: [linkedin.com/in/seniru-dilmith](https://linkedin.com/in/seniru-dilmith)
+- **Twitter**: [@SeniruDilmith](https://twitter.com/SeniruDilmith)
+- **Email**: [me@senirudilmith.com](mailto:me@senirudilmith.com)
 
 ---
