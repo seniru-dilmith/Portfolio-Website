@@ -8,17 +8,23 @@ export const AuthContext = createContext<AuthContextProps | undefined>(undefined
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Check auth status on mount by calling an API endpoint that verifies cookie
+  // Check auth status only on admin routes to avoid unnecessary API calls
   useEffect(() => {
     async function checkAuth() {
       try {
-        const res = await fetch('/api/admin/me');  // new endpoint that returns 200 if logged in
+        const res = await fetch('/api/admin/me');
         setIsAuthenticated(res.ok);
       } catch {
         setIsAuthenticated(false);
       }
     }
-    checkAuth();
+
+    if (
+      typeof window !== 'undefined' &&
+      window.location.pathname.startsWith('/admin')
+    ) {
+      checkAuth();
+    }
   }, []);
 
   // When user logs in successfully (after login API call that sets cookies)
