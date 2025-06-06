@@ -84,11 +84,27 @@ const Projects = () => {
     token: string
   ): Promise<{ success: boolean; message: string }> => {
     try {
-      const imageURL = formState.imageURL;
+      let imageURL = formState.imageURL;
 
       if (file) {
-        // TODO: Add your file upload logic here (e.g., Firebase Storage)
-        console.warn("File upload not implemented - set imageURL manually.");
+        const uploadData = new FormData();
+        uploadData.append('file', file);
+
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: uploadData,
+        });
+
+        const uploadJson = await uploadRes.json();
+
+        if (uploadRes.ok && uploadJson.success) {
+          imageURL = uploadJson.url;
+        } else {
+          console.error('Image upload failed:', uploadJson.message);
+        }
       }
 
       const url = editingProjectId
