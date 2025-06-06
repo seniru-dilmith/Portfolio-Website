@@ -8,7 +8,7 @@ import ProjectList from "@/components/projects/ProjectList";
 import HeroForProjects from "@/components/projects/HeroForProjects";
 import { useAuth } from "@/context/AuthContext";
 import Head from "next/head";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import SmallLoadingSpinner from "@/util/SmallLoadingSpinner";
 import Footer from "@/components/footer/Footer";
 import Navbar from "@/components/navbar/Navbar";
 
@@ -51,8 +51,12 @@ const Projects = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
+        setProjects([]);
         const projectsData = await fetchProjects();
-        setProjects(projectsData);
+        for (const project of projectsData) {
+          setProjects((prev) => [...prev, project]);
+          await new Promise((resolve) => setTimeout(resolve, 50));
+        }
         setError(null);
       } catch {
         setError("Failed to fetch projects");
@@ -223,17 +227,13 @@ const Projects = () => {
       </Head>
       <Navbar />
       <HeroForProjects />
-      {loading ? (
-        <LoadingSpinner />
-      ) : error ? (
-        <div className="p-8 text-center text-red-500">{error}</div>
-      ) : (
-        <motion.div
-          className="mx-auto max-w-7xl mt-8"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-        >
+      {error && <div className="p-8 text-center text-red-500">{error}</div>}
+      <motion.div
+        className="mx-auto max-w-7xl mt-8"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8 }}
+      >
           <div className="flex justify-between items-center mb-6">
             {isAuthenticated && (
               <button
@@ -266,8 +266,8 @@ const Projects = () => {
             handleDelete={handleDelete}
             isAuthenticated={isAuthenticated}
           />
-        </motion.div>
-      )}
+        {loading && <SmallLoadingSpinner />}
+      </motion.div>
       <Footer />
     </div>
   );

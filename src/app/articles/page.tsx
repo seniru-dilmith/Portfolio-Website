@@ -7,7 +7,7 @@ import ArticleForm from '@/components/articles/ArticleForm';
 import ArticleList from '@/components/articles/ArticleList';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import SmallLoadingSpinner from '@/util/SmallLoadingSpinner';
 import { useAuth } from '@/context/AuthContext';
 import HeroForArticles from '@/components/articles/HeroForArticles';
 
@@ -26,9 +26,15 @@ const Articles = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       setLoading(true);
+      setArticles([]);
       const res = await fetch('/api/articles');
       const data = await res.json();
-      if (data.success) setArticles(data.data);
+      if (data.success) {
+        for (const article of data.data as Article[]) {
+          setArticles((prev) => [...prev, article]);
+          await new Promise((resolve) => setTimeout(resolve, 50));
+        }
+      }
       setLoading(false);
     };
 
@@ -80,34 +86,39 @@ const Articles = () => {
         <Navbar />
         <div className="container mx-auto py-8">
           <HeroForArticles />
-          {loading ? <LoadingSpinner /> : (
-            <>
-              {isAuthenticated && (
-                <div className="flex justify-center mt-8">
-                  <motion.button
-                    className="btn btn-primary"
-                    onClick={() => setShowForm((prev) => !prev)}
-                    whileHover={{ scale: 1.1, backgroundColor: '#ff5722' }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    {showForm ? 'Hide Form' : 'View Form'}
-                  </motion.button>
-                </div>
-              )}
-              {showForm && isAuthenticated && (
-                <motion.div
-                  initial={{ opacity: 0, y: -50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -50 }}
-                  transition={{ duration: 0.5, ease: 'easeInOut' }}
-                  className="mt-8"
-                >
-                  <ArticleForm formState={formState} setFormState={setFormState} onSubmit={handleSubmit} />
-                </motion.div>
-              )}
-              <ArticleList articles={articles} onEdit={handleEdit} onDelete={handleDelete} />
-            </>
+          {isAuthenticated && (
+            <div className="flex justify-center mt-8">
+              <motion.button
+                className="btn btn-primary"
+                onClick={() => setShowForm((prev) => !prev)}
+                whileHover={{ scale: 1.1, backgroundColor: '#ff5722' }}
+                whileTap={{ scale: 0.9 }}
+              >
+                {showForm ? 'Hide Form' : 'View Form'}
+              </motion.button>
+            </div>
           )}
+          {showForm && isAuthenticated && (
+            <motion.div
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              transition={{ duration: 0.5, ease: 'easeInOut' }}
+              className="mt-8"
+            >
+              <ArticleForm
+                formState={formState}
+                setFormState={setFormState}
+                onSubmit={handleSubmit}
+              />
+            </motion.div>
+          )}
+          <ArticleList
+            articles={articles}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+          {loading && <SmallLoadingSpinner />}
         </div>
         <Footer />
       </div>
