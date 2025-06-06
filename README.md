@@ -6,11 +6,11 @@ A personal website built with **Next.js**, **TypeScript** and **Tailwind CSS**. 
 
 ## ✨ Features
 
-- **Interactive timeline** highlighting my milestones.
-- **Projects gallery** covering software development, machine learning and web apps.
-- **Blog section** for tutorials and articles (coming soon).
-- Smooth animations powered by **Framer Motion**.
-- Hosted on **Vercel** with fast server‑side rendering.
+- **Interactive Timeline** Highlighting My Milestones.
+- **Projects Gallery** Covering Software Development, Machine Learning, And Web Apps.
+- **Blog Section** For Tutorials And Articles (Coming Soon).
+- **Smooth Animations** Powered By **Framer Motion**.
+- **Hosted On Vercel** With Fast Server‑Side Rendering.
 
 ## 🚀 Getting Started
 
