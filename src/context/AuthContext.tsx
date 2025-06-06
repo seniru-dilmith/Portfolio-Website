@@ -1,4 +1,5 @@
 "use client";
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { AuthContextProps } from '@/types/AuthContext';
 
@@ -7,26 +8,32 @@ export const AuthContext = createContext<AuthContextProps | undefined>(undefined
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Update authentication status on token changes
+  // Check auth status on mount by calling an API endpoint that verifies cookie
   useEffect(() => {
-    const updateAuthState = () => {
-      const token = localStorage.getItem('token');
-      setIsAuthenticated(!!token);
-    };
-
-    updateAuthState(); // Initial check
-    window.addEventListener('storage', updateAuthState); // Listen for storage changes
-
-    return () => window.removeEventListener('storage', updateAuthState);
+    async function checkAuth() {
+      try {
+        const res = await fetch('/api/admin/me');  // new endpoint that returns 200 if logged in
+        setIsAuthenticated(res.ok);
+      } catch {
+        setIsAuthenticated(false);
+      }
+    }
+    checkAuth();
   }, []);
 
-  const handleLogin = (token: string) => {
-    localStorage.setItem('token', token);
+  // When user logs in successfully (after login API call that sets cookies)
+  const handleLogin = () => {
+    // just update state to true because token cookie is set by server already
     setIsAuthenticated(true);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
+  // When user logs out, call logout API to clear cookies and update state
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/logout', { method: 'POST' });
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
     setIsAuthenticated(false);
   };
 
