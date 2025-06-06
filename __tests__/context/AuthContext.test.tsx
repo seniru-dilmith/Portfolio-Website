@@ -6,7 +6,7 @@ const TestComponent = () => {
   return (
     <div>
       <div data-testid="auth-status">{isAuthenticated ? "LoggedIn" : "LoggedOut"}</div>
-      <button onClick={() => handleLogin("dummy-token")}>Login</button>
+      <button onClick={() => handleLogin()}>Login</button>
       <button onClick={handleLogout}>Logout</button>
     </div>
   );
