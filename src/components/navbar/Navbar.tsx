@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import { titleNames } from "./titles";
@@ -12,6 +13,7 @@ const Navbar: React.FC<NavbarProps> = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const pathname = usePathname();
 
   // Handle scrolling behavior
   const handleScroll = useCallback(() => {
@@ -110,18 +112,24 @@ const Navbar: React.FC<NavbarProps> = () => {
 
           {/* Desktop Menu */}
           <nav className="hidden lg:flex space-x-6">
-            {titleNames.map((item, index) => (
-              <motion.div
-                key={index}
-                whileHover="hover"
-                variants={menuItemVariants}
-                className="text-lg font-medium cursor-pointer text-primary hover:text-secondary transition-colors duration-300"
-              >
-                <Link href={`/${item === "Home" ? "" : item.toLowerCase()}`}>
-                  {item}
-                </Link>
-              </motion.div>
-            ))}
+            {titleNames.map((item, index) => {
+              const linkPath = `/${item === "Home" ? "" : item.toLowerCase()}`;
+              const isActive = pathname === linkPath;
+              return (
+                <motion.div
+                  key={index}
+                  whileHover="hover"
+                  variants={menuItemVariants}
+                  className={`text-lg font-medium cursor-pointer transition-colors duration-300 ${
+                    isActive
+                      ? "text-secondary font-semibold"
+                      : "text-primary hover:text-secondary"
+                  }`}
+                >
+                  <Link href={linkPath}>{item}</Link>
+                </motion.div>
+              );
+            })}
             {isAuthenticated && (
               <motion.div
                 whileHover="hover"
@@ -147,21 +155,23 @@ const Navbar: React.FC<NavbarProps> = () => {
               variants={mobileMenuVariants}
             >
               <nav className="flex flex-col items-center py-4 space-y-4">
-                {titleNames.map((item, index) => (
-                  <motion.div
-                    key={index}
-                    whileHover="hover"
-                    variants={menuItemVariants}
-                    className="text-lg font-medium cursor-pointer text-base-content"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <Link
-                      href={`/${item === "Home" ? "" : item.toLowerCase()}`}
+                {titleNames.map((item, index) => {
+                  const linkPath = `/${item === "Home" ? "" : item.toLowerCase()}`;
+                  const isActive = pathname === linkPath;
+                  return (
+                    <motion.div
+                      key={index}
+                      whileHover="hover"
+                      variants={menuItemVariants}
+                      className={`text-lg font-medium cursor-pointer ${
+                        isActive ? "text-secondary" : "text-base-content"
+                      }`}
+                      onClick={() => setIsMenuOpen(false)}
                     >
-                      {item}
-                    </Link>
-                  </motion.div>
-                ))}
+                      <Link href={linkPath}>{item}</Link>
+                    </motion.div>
+                  );
+                })}
                 {isAuthenticated && (
                   <motion.div
                     whileHover="hover"

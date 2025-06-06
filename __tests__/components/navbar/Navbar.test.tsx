@@ -11,6 +11,11 @@ jest.mock("@/components/navbar/ThemeToggle", () => {
   return ThemeToggleMock;
 });
 
+// Mock usePathname from next/navigation
+jest.mock("next/navigation", () => ({
+  usePathname: jest.fn().mockReturnValue("/"),
+}));
+
 describe("Navbar", () => {
   const mockLogout = jest.fn();
 
