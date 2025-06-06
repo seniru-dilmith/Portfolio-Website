@@ -12,12 +12,12 @@ export async function POST() {
     maxAge: 0,
   });
 
-  // Clear the refreshToken cookie (assuming path /api/auth/refresh)
+  // Clear the refreshToken cookie
   response.cookies.set("refreshToken", "", {
     httpOnly: true,
     secure: true,
     sameSite: "strict",
-    path: "/api/auth/refresh",
+    path: "/api/admin/refresh",
     maxAge: 0,
   });
 

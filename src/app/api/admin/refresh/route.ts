@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.NEXT_JWT_SECRET!;
+const JWT_REFRESH_SECRET = process.env.NEXT_JWT_REFRESH_SECRET!;
+const JWT_ACCESS_SECRET = process.env.NEXT_JWT_ACCESS_SECRET!;
 const ACCESS_TOKEN_EXPIRY = "15m";
 
 export async function POST(request: NextRequest) {
@@ -14,12 +15,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const payload = jwt.verify(refreshToken, JWT_SECRET) as { id: string };
+    const payload = jwt.verify(refreshToken, JWT_REFRESH_SECRET) as { id: string };
 
     // Generate new access token
     const accessToken = jwt.sign(
       { id: payload.id },
-      JWT_SECRET,
+      JWT_ACCESS_SECRET,
       { expiresIn: ACCESS_TOKEN_EXPIRY }
     );
 
