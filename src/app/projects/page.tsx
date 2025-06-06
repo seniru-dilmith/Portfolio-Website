@@ -80,15 +80,28 @@ const Projects = () => {
   const addOrUpdateProject = async (
     formState: FormState,
     file: File | null,
-    editingProjectId: string | null,
-    token: string
+    editingProjectId: string | null
   ): Promise<{ success: boolean; message: string }> => {
     try {
-      const imageURL = formState.imageURL;
+      let imageURL = formState.imageURL;
 
       if (file) {
-        // TODO: Add your file upload logic here (e.g., Firebase Storage)
-        console.warn("File upload not implemented - set imageURL manually.");
+        const uploadData = new FormData();
+        uploadData.append('file', file);
+
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          credentials: 'include',
+          body: uploadData,
+        });
+
+        const uploadJson = await uploadRes.json();
+
+        if (uploadRes.ok && uploadJson.success) {
+          imageURL = uploadJson.url;
+        } else {
+          console.error('Image upload failed:', uploadJson.message);
+        }
       }
 
       const url = editingProjectId
@@ -98,9 +111,9 @@ const Projects = () => {
 
       const res = await fetch(url, {
         method,
+        credentials: 'include',
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           ...formState,
@@ -135,17 +148,10 @@ const Projects = () => {
   const handleAddOrUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("Please log in first.");
-      return;
-    }
-
     const { success, message } = await addOrUpdateProject(
       formState,
       file,
-      editingProjectId,
-      token
+      editingProjectId
     );
 
     if (success) {
@@ -165,18 +171,10 @@ const Projects = () => {
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this project?")) return;
 
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("Please log in first.");
-      return;
-    }
-
     try {
       const res = await fetch(`/api/projects?id=${id}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        credentials: 'include',
       });
       const data = await res.json();
       if (data.success) {

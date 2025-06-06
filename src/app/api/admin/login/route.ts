@@ -4,8 +4,10 @@ import User from "@/models/UserModel";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
-const JWT_SECRET = process.env.NEXT_JWT_SECRET!;
-const TOKEN_EXPIRY = "1h";
+const JWT_ACCESS_SECRET = process.env.NEXT_JWT_ACCESS_SECRET!;
+const JWT_REFRESH_SECRET = process.env.NEXT_JWT_REFRESH_SECRET!;
+const ACCESS_TOKEN_EXPIRY = process.env.NEXT_JWT_ACCESS_EXPIRY;
+const REFRESH_TOKEN_EXPIRY = process.env.NEXT_JWT_REFRESH_EXPIRY;
 
 export async function POST(request: Request) {
   const { email, password } = await request.json();
@@ -34,16 +36,40 @@ export async function POST(request: Request) {
       );
     }
 
-    const token = jwt.sign(
+    // Generate tokens
+    const accessToken = jwt.sign(
       { id: user._id.toString(), email: user.email },
-      JWT_SECRET,
-      { expiresIn: TOKEN_EXPIRY }
+      JWT_ACCESS_SECRET,
+      { expiresIn: ACCESS_TOKEN_EXPIRY }
+    );
+    const refreshToken = jwt.sign(
+      { id: user._id.toString() },
+      JWT_REFRESH_SECRET,
+      { expiresIn: REFRESH_TOKEN_EXPIRY }
     );
 
-    return NextResponse.json(
-      { success: true, message: "Login Successful", token },
+    // TODO: Optionally save refreshToken in DB/Redis for revocation or tracking
+
+    // Set cookies
+    const response = NextResponse.json(
+      { success: true, message: "Login Successful" },
       { status: 200 }
     );
+    // HttpOnly, Secure, SameSite cookies
+    response.cookies.set("accessToken", accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      path: "/",
+    });
+    response.cookies.set("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      path: "/api/admin/refresh", // only send refresh token on refresh API route
+    });
+
+    return response;
   } catch (err) {
     console.error("Login error:", err);
     return NextResponse.json(

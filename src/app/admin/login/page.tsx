@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 import axios from "axios";
 import Head from "next/head";
 import { useRouter, usePathname } from "next/navigation";
@@ -14,6 +15,7 @@ export default function LoginPage() {
   const router = useRouter();
   const pathname = usePathname() ?? "";
   const isAdminRoute = pathname.startsWith("/admin");
+  const { handleLogin } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,8 +33,8 @@ export default function LoginPage() {
         password,
       });
 
-      if (data.success && data.token) {
-        localStorage.setItem("token", data.token);
+      if (data.success) {
+        handleLogin();
         // navigate via App‑Router
         router.push("/");
       } else {
