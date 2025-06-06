@@ -6,7 +6,13 @@ jest.mock("mongoose", () => ({
 
 describe("dbConnect", () => {
   beforeAll(() => {
-    process.env.NEXT_MONGO_URI = "mongodb://localhost/test";
+    // Set the environment variable for testing
+    process.env.NEXT_MONGO_URI = "mongodb://localhost:27017/test";
+  });
+
+  afterAll(() => {
+    // Clean up the environment variable after tests
+    delete process.env.NEXT_MONGO_URI;
   });
 
   it("connects using mongoose", async () => {
