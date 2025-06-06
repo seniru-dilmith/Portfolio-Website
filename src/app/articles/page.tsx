@@ -24,6 +24,7 @@ const Articles = () => {
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
+    let cancelled = false;
     const fetchArticles = async () => {
       setLoading(true);
       setArticles([]);
@@ -31,14 +32,18 @@ const Articles = () => {
       const data = await res.json();
       if (data.success) {
         for (const article of data.data as Article[]) {
+          if (cancelled) break;
           setArticles((prev) => [...prev, article]);
           await new Promise((resolve) => setTimeout(resolve, 50));
         }
       }
-      setLoading(false);
+      if (!cancelled) setLoading(false);
     };
 
     fetchArticles();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleSubmit = async () => {

@@ -48,12 +48,14 @@ const Projects = () => {
   };
 
   useEffect(() => {
+    let cancelled = false;
     const fetchData = async () => {
       setLoading(true);
       try {
         setProjects([]);
         const projectsData = await fetchProjects();
         for (const project of projectsData) {
+          if (cancelled) break;
           setProjects((prev) => [...prev, project]);
           await new Promise((resolve) => setTimeout(resolve, 50));
         }
@@ -61,10 +63,13 @@ const Projects = () => {
       } catch {
         setError("Failed to fetch projects");
       }
-      setLoading(false);
+      if (!cancelled) setLoading(false);
     };
 
     fetchData();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const resetForm = () => {
