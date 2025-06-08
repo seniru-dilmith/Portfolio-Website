@@ -8,7 +8,7 @@ import UpperImageSection from "@/components/story/UpperImageSection";
 import MilestoneList from "@/components/story/MilestoneList";
 import AboutMe from "@/components/story/MyStory";
 import JourneyContinues from "@/components/story/JorneyConinues";
-import FloatingSvg from "@/components/story/FloatingSvg";
+import FloatingSvg from "@/components/FloatingSvg";
 import { containerVariants, bounceIn } from "@/components/story/animations";
 
 const Story: React.FC = () => {
