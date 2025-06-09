@@ -12,8 +12,7 @@ const Navbar: React.FC<NavbarProps> = () => {
   const { isAuthenticated, handleLogout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
-  const pathname = usePathname();
+  const [lastScrollY, setLastScrollY] = useState(0);  const pathname = usePathname();
 
   // Handle scrolling behavior
   const handleScroll = useCallback(() => {
@@ -108,21 +107,18 @@ const Navbar: React.FC<NavbarProps> = () => {
                 />
               </motion.div>
             </button>
-          </div>
-
-          {/* Desktop Menu */}
-          <nav className="hidden lg:flex space-x-6">
-            {titleNames.map((item, index) => {
+          </div>          {/* Desktop Menu */}
+          <nav className="hidden lg:flex space-x-6">            {titleNames.map((item, index) => {
               const linkPath = `/${item === "Home" ? "" : item.toLowerCase()}`;
               const isActive = pathname === linkPath;
+              
               return (
                 <motion.div
                   key={index}
                   whileHover="hover"
-                  variants={menuItemVariants}
-                  className={`text-lg font-medium cursor-pointer transition-colors duration-300 ${
+                  variants={menuItemVariants}                  className={`text-lg font-medium cursor-pointer transition-all duration-300 ${
                     isActive
-                      ? "text-secondary font-semibold"
+                      ? "text-success font-bold border-b-2 border-success pb-1"
                       : "text-primary hover:text-secondary"
                   }`}
                 >
@@ -154,17 +150,18 @@ const Navbar: React.FC<NavbarProps> = () => {
               exit="exit"
               variants={mobileMenuVariants}
             >
-              <nav className="flex flex-col items-center py-4 space-y-4">
-                {titleNames.map((item, index) => {
+              <nav className="flex flex-col items-center py-4 space-y-4">                {titleNames.map((item, index) => {
                   const linkPath = `/${item === "Home" ? "" : item.toLowerCase()}`;
                   const isActive = pathname === linkPath;
+                  
                   return (
                     <motion.div
                       key={index}
                       whileHover="hover"
-                      variants={menuItemVariants}
-                      className={`text-lg font-medium cursor-pointer ${
-                        isActive ? "text-secondary" : "text-base-content"
+                      variants={menuItemVariants}                      className={`text-lg font-medium cursor-pointer transition-all duration-300 ${
+                        isActive 
+                          ? "text-success font-bold border-b-2 border-success pb-1" 
+                          : "text-base-content hover:text-accent"
                       }`}
                       onClick={() => setIsMenuOpen(false)}
                     >

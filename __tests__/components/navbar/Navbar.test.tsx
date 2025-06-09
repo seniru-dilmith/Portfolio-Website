@@ -16,13 +16,25 @@ jest.mock("next/navigation", () => ({
   usePathname: jest.fn().mockReturnValue("/"),
 }));
 
+// Mock framer-motion
+jest.mock("framer-motion", () => ({
+  motion: {
+    div: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) => <div {...props}>{children}</div>,
+  },
+  AnimatePresence: ({ children }: React.PropsWithChildren) => <>{children}</>,
+}));
+
 describe("Navbar", () => {
   const mockLogout = jest.fn();
+
+  beforeEach(() => {
+    mockLogout.mockClear();
+  });
 
   const renderNavbar = (isAuthenticated = false) => {
     render(
       <AuthContext.Provider value={{ isAuthenticated, handleLogin: jest.fn(), handleLogout: mockLogout }}>
-        <Navbar pushContentDown={false} />
+        <Navbar />
       </AuthContext.Provider>
     );
   };
@@ -34,14 +46,14 @@ describe("Navbar", () => {
     });
   });
 
-  it("shows the ThemeToggle", () => {
+  it("shows the ThemeToggle components", () => {
     renderNavbar();
     expect(screen.getAllByTestId("theme-toggle")).toHaveLength(2);
   });
 
-  it("displays Logout if authenticated", () => {
+  it("displays Logout when authenticated", () => {
     renderNavbar(true);
-    expect(screen.getAllByTestId("theme-toggle").length).toBeGreaterThan(0);
+    expect(screen.getByText("Logout")).toBeInTheDocument();
   });
 
   it("calls handleLogout on logout click", () => {
@@ -53,14 +65,15 @@ describe("Navbar", () => {
   it("toggles mobile menu when hamburger is clicked", () => {
     renderNavbar();
 
-    const menuButton = screen.getByRole("button");
+    const menuButton = screen.getByLabelText("Open menu");
     fireEvent.click(menuButton);
 
-    titleNames.forEach((title) => {
-      expect(screen.getAllByText(title)[0]).toBeInTheDocument();
-    });
+    // After clicking, menu should be open and have close label
+    expect(screen.getByLabelText("Close menu")).toBeInTheDocument();
+  });
 
-    // Close the menu
-    fireEvent.click(menuButton);
+  it("renders home icon correctly", () => {
+    renderNavbar();
+    expect(screen.getByText("🏠")).toBeInTheDocument();
   });
 });
