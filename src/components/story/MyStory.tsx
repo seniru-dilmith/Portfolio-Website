@@ -15,10 +15,11 @@ const MyStory = () => {
     const decorativeVariants = {
         hidden: { opacity: 0, scale: 0.5, rotate: 0 },
         visible: { opacity: 1, scale: 1, rotate: 360, transition: { duration: 1 } },
-    };
-
-    return (
-        <section className="py-16 px-8 bg-gradient-to-br from-primary via-secondary to-accent text-primary-content rounded-lg shadow-2xl">
+    };    return (
+        <section 
+            data-testid="animated-section"
+            className="py-16 px-8 bg-gradient-to-br from-primary via-secondary to-accent text-primary-content rounded-lg shadow-2xl"
+        >
             {/* Heading */}
             <motion.h2
                 className="text-5xl font-bold text-white mb-12 text-center"
