@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { Article } from '@/types/Article';
-import Navbar from '@/components/navbar/Navbar';
 import Footer from '@/components/footer/Footer';
 import ArticleForm from '@/components/articles/ArticleForm';
 import ArticleList from '@/components/articles/ArticleList';
@@ -86,9 +85,7 @@ const Articles = () => {
       <Head>
         <title>Articles</title>
         <meta name="description" content="Articles written by Seniru Dilmith" />
-      </Head>
-      <div className="bg-gradient-to-br from-primary via-secondary to-accent">
-        <Navbar />
+      </Head>      <div className="bg-gradient-to-br from-primary via-secondary to-accent">
         <div className="container mx-auto py-8">
           <HeroForArticles />
           {isAuthenticated && (

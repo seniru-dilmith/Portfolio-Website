@@ -3,7 +3,6 @@ import Head from "next/head";
 import { motion } from "framer-motion";
 import HeroForHome from "@/components/carousal/HeroForHome";
 import Footer from "@/components/footer/Footer";
-import Navbar from "@/components/navbar/Navbar";
 
 const Home = () => {
 
@@ -61,14 +60,7 @@ const Home = () => {
         />
         <meta name="twitter:image" content="/favicon.ico" />
         <meta name="robots" content="index, follow" />
-      </Head>
-
-      {/* Navbar with Animation */}
-      <motion.div variants={fadeIn}>
-        <Navbar pushContentDown={false} />
-      </motion.div>
-
-      {/* Hero Section with Animation */}
+      </Head>      {/* Hero Section with Animation */}
       <motion.div variants={fadeIn} className="flex-grow flex">
         <HeroForHome />
       </motion.div>
