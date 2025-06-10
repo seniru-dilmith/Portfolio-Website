@@ -21,7 +21,7 @@ const FloatingSvg: React.FC<FloatingSvgProps> = ({ svgPath, className = '' }) =>
     // Generate random values only after hydration to prevent SSR/client mismatch
     useEffect(() => {
         if (isHydrated) {
-            const pageHeight = document.documentElement.scrollHeight;
+            const pageHeight = window.innerHeight;
             setAnimationValues({
                 randomDelay: Math.random() * 5,
                 randomDuration: 15 + Math.random() * 10,
@@ -89,7 +89,7 @@ const FloatingSvg: React.FC<FloatingSvgProps> = ({ svgPath, className = '' }) =>
 
     return (
         <motion.div
-            className={`absolute pointer-events-none z-10 ${className}`}            style={{
+            className={`fixed pointer-events-none z-10 ${className}`}            style={{
                 left: `${randomLeft}%`,
                 top: `${animationValues.randomTop}px`,
             }}
