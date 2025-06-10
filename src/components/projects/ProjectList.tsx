@@ -9,7 +9,7 @@ const ProjectList: React.FC<ProjectListProps> = ({
   handleDelete,
   isAuthenticated,
 }) => {
-  const [visibleRows, setVisibleRows] = useState(1); // Number of visible rows
+  const [visibleRows, setVisibleRows] = useState(1);
   const [gridData, setGridData] = useState<(Project | null)[][]>([]);
   const ROWS_PER_LOAD = 1;
 
@@ -19,7 +19,7 @@ const ProjectList: React.FC<ProjectListProps> = ({
 
     projects.forEach((project) => {
       currentRow.push(project);
-      currentRow.push(null); // blank cell
+      currentRow.push(null);
 
       if (currentRow.length >= 3) {
         grid.push(currentRow);
@@ -33,24 +33,13 @@ const ProjectList: React.FC<ProjectListProps> = ({
   }, [projects]);
 
   useEffect(() => {
-    let lastScrollY = window.scrollY;
-
     const onScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      if (currentScrollY > lastScrollY) {
-        if (
-          window.innerHeight + currentScrollY >=
-          document.body.offsetHeight - 500
-        ) {
-          setVisibleRows((prev) => Math.min(prev + ROWS_PER_LOAD, gridData.length));
-        }
-      } else {
-        if (currentScrollY < lastScrollY - 50) {
-          setVisibleRows((prev) => Math.max(prev - ROWS_PER_LOAD, 1));
-        }
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.offsetHeight - 500
+      ) {
+        setVisibleRows((prev) => Math.min(prev + ROWS_PER_LOAD, gridData.length));
       }
-      lastScrollY = currentScrollY;
     };
 
     window.addEventListener("scroll", onScroll);
@@ -92,10 +81,7 @@ const ProjectList: React.FC<ProjectListProps> = ({
                   className="card bg-base-100 text-base-content shadow-xl p-4 rounded-lg"
                 >
                   {item.imageURL && (
-                    <motion.div
-                      className="overflow-hidden rounded-lg mb-4"
-                      whileHover={{ scale: 1.05 }}
-                    >
+                    <motion.div className="overflow-hidden rounded-lg mb-4" whileHover={{ scale: 1.05 }}>
                       <Image
                         src={item.imageURL}
                         alt={item.title}
@@ -122,18 +108,10 @@ const ProjectList: React.FC<ProjectListProps> = ({
                   </motion.a>
                   {isAuthenticated && (
                     <div className="flex justify-between mt-4">
-                      <motion.button
-                        onClick={() => handleEdit(item)}
-                        className="btn btn-warning btn-sm"
-                        whileHover={{ scale: 1.1 }}
-                      >
+                      <motion.button onClick={() => handleEdit(item)} className="btn btn-warning btn-sm" whileHover={{ scale: 1.1 }}>
                         Edit
                       </motion.button>
-                      <motion.button
-                        onClick={() => handleDelete(item._id)}
-                        className="btn btn-error btn-sm"
-                        whileHover={{ scale: 1.1 }}
-                      >
+                      <motion.button onClick={() => handleDelete(item._id)} className="btn btn-error btn-sm" whileHover={{ scale: 1.1 }}>
                         Delete
                       </motion.button>
                     </div>

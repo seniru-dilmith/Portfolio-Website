@@ -2,6 +2,8 @@
 
 import { motion } from "framer-motion";
 import FloatingSvg from "@/components/FloatingSvg";
+import { useHydration } from "@/hooks/useHydration";
+import { useState, useEffect } from "react";
 
 interface FloatingElementsProps {
   /** Array of SVG paths to use for floating elements */
@@ -20,6 +22,14 @@ interface FloatingElementsProps {
   starColor?: string;
 }
 
+interface StarParticle {
+  id: string;
+  left: number;
+  top: number;
+  duration: number;
+  delay: number;
+}
+
 const FloatingElements: React.FC<FloatingElementsProps> = ({
   svgPaths,
   primaryCount = 5,
@@ -29,6 +39,23 @@ const FloatingElements: React.FC<FloatingElementsProps> = ({
   starOpacity = "25",
   starColor = "accent/60",
 }) => {
+  const isHydrated = useHydration();
+  const [starParticles, setStarParticles] = useState<StarParticle[]>([]);
+
+  // Generate star particles after hydration to prevent SSR/client mismatch
+  useEffect(() => {
+    if (isHydrated) {
+      const particles: StarParticle[] = Array.from({ length: starCount }, (_, index) => ({
+        id: `star-${index}`,
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+        duration: 4 + Math.random() * 3,
+        delay: Math.random() * 6,
+      }));
+      setStarParticles(particles);
+    }
+  }, [isHydrated, starCount]);
+
   return (
     <>
       {/* Primary Floating SVGs */}
@@ -54,23 +81,23 @@ const FloatingElements: React.FC<FloatingElementsProps> = ({
         />
       ))}
       
-      {/* Subtle star-like particles */}
-      {Array.from({ length: starCount }).map((_, index) => (
+      {/* Subtle star-like particles - only render after hydration */}
+      {isHydrated && starParticles.map((particle) => (
         <motion.div
-          key={`star-${index}`}
+          key={particle.id}
           className="fixed pointer-events-none z-5"
           style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
+            left: `${particle.left}%`,
+            top: `${particle.top}%`,
           }}
           animate={{
             opacity: [0, 0.8, 0],
             scale: [0.3, 1.2, 0.3],
           }}
           transition={{
-            duration: 4 + Math.random() * 3,
+            duration: particle.duration,
             repeat: Infinity,
-            delay: Math.random() * 6,
+            delay: particle.delay,
             ease: "easeInOut",
           }}
         >

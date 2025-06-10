@@ -6,7 +6,6 @@ import axios from 'axios';
 import Link from 'next/link';
 import Head from 'next/head';
 import Footer from '@/components/footer/Footer';
-import Navbar from '@/components/navbar/Navbar';
 
 const SubscriptionPage: React.FC = () => {
   const [email, setEmail] = useState<string>('');
@@ -66,9 +65,7 @@ const SubscriptionPage: React.FC = () => {
       <title>Subscribe - Seniru Dilmith</title>
       <meta
         name="description" content="Stay updated with the latest news and updates from Seniru Dilmith." />
-    </Head>
-    <div className="h-screen flex flex-col bg-gradient-to-br from-primary/50 via-secondary/40 to-accent/30">
-      <Navbar />
+    </Head>    <div className="h-screen flex flex-col bg-gradient-to-br from-primary/50 via-secondary/40 to-accent/30">
       <div className="flex-grow flex items-center justify-center bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 p-4 overflow-auto">
         <motion.div
           className="bg-white rounded-3xl shadow-2xl p-6 md:p-8 w-full max-w-lg flex flex-col items-center text-center"

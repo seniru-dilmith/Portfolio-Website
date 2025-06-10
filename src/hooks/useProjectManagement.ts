@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Project } from "@/types/Project";
 import { ProjectService } from "@/services/project-service";
 
@@ -18,6 +18,7 @@ export const useProjectManagement = () => {
   const [viewForm, setViewForm] = useState(false);
   const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const cancelledRef = useRef(false);
   
   const [formState, setFormState] = useState<FormState>({
     title: "",
@@ -29,39 +30,37 @@ export const useProjectManagement = () => {
 
   // Fetch projects with staggered loading animation
   const fetchProjects = async () => {
-    let cancelled = false;
     setLoading(true);
-    setInitialLoading(true);
-    
+    setProjects([]);
+
     try {
-      setProjects([]);
       const projectsData = await ProjectService.fetchProjects();
-      
       for (const project of projectsData) {
-        if (cancelled) break;
-        setProjects((prev) => {
-          const newProjects = [...prev, project];
-          // Set initial loading to false after first project is added
-          if (newProjects.length === 1) {
-            setInitialLoading(false);
-          }
-          return newProjects;
-        });
+        if (cancelledRef.current) break;
+        setProjects((prev) => [...prev, project]);
         await new Promise((resolve) => setTimeout(resolve, 50));
       }
-      setError(null);
+      if (!cancelledRef.current) {
+        setInitialLoading(false);
+        setError(null);
+      }
     } catch {
-      setError("Failed to fetch projects");
-      setInitialLoading(false);
+      if (!cancelledRef.current) {
+        setError("Failed to fetch projects");
+        setInitialLoading(false);
+      }
     }
-    
-    if (!cancelled) setLoading(false);
-    return () => { cancelled = true; };
+
+    if (!cancelledRef.current) setLoading(false);
   };
 
   // Initialize projects on mount
   useEffect(() => {
+    cancelledRef.current = false;
     fetchProjects();
+    return () => {
+      cancelledRef.current = true;
+    };
   }, []);
 
   // Reset form state

@@ -2,7 +2,6 @@
 import Head from "next/head";
 import HeroForContact from "@/components/contact/HeroForContact";
 import Footer from "@/components/footer/Footer";
-import Navbar from "@/components/navbar/Navbar";
 import Contact from "@/components/contact/Contact";
 import { motion } from "framer-motion";
 
@@ -61,10 +60,7 @@ const ContactMe = () => {
           <meta
             name="description"
             content="Seniru Dilmith - Find my contact information here."
-          />
-        </Head>
-
-        <Navbar />
+          />        </Head>
 
         {/* About Me */}
         <motion.div variants={bounceIn}>
