@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Project } from "@/types/Project";
 import { ProjectService } from "@/services/project-service";
 
@@ -18,6 +18,7 @@ export const useProjectManagement = () => {
   const [viewForm, setViewForm] = useState(false);
   const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const cancelledRef = useRef(false);
   
   const [formState, setFormState] = useState<FormState>({
     title: "",
@@ -30,23 +31,36 @@ export const useProjectManagement = () => {
   // Fetch projects with staggered loading animation
   const fetchProjects = async () => {
     setLoading(true);
+    setProjects([]);
 
     try {
       const projectsData = await ProjectService.fetchProjects();
-      setProjects(projectsData);
-      setInitialLoading(false);
-      setError(null);
+      for (const project of projectsData) {
+        if (cancelledRef.current) break;
+        setProjects((prev) => [...prev, project]);
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      }
+      if (!cancelledRef.current) {
+        setInitialLoading(false);
+        setError(null);
+      }
     } catch {
-      setError("Failed to fetch projects");
-      setInitialLoading(false);
+      if (!cancelledRef.current) {
+        setError("Failed to fetch projects");
+        setInitialLoading(false);
+      }
     }
 
-    setLoading(false);
+    if (!cancelledRef.current) setLoading(false);
   };
 
   // Initialize projects on mount
   useEffect(() => {
+    cancelledRef.current = false;
     fetchProjects();
+    return () => {
+      cancelledRef.current = true;
+    };
   }, []);
 
   // Reset form state
