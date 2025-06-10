@@ -13,19 +13,24 @@ const FloatingSvg: React.FC<FloatingSvgProps> = ({ svgPath, className = '' }) =>
         randomX: 0,
         randomRotation: 360,
         randomScale: 1,
-        randomLeft: 50
+        randomLeft: 50,
+        randomTop: 0,
+        pageHeight: 0
     });
 
     // Generate random values only after hydration to prevent SSR/client mismatch
     useEffect(() => {
         if (isHydrated) {
+            const pageHeight = window.innerHeight;
             setAnimationValues({
                 randomDelay: Math.random() * 5,
                 randomDuration: 15 + Math.random() * 10,
                 randomX: Math.random() * 200 - 100, // -100 to 100
                 randomRotation: Math.random() * 720 + 360, // 360 to 1080 degrees
                 randomScale: 0.5 + Math.random() * 1, // 0.5 to 1.5
-                randomLeft: Math.random() * 100
+                randomLeft: Math.random() * 100,
+                randomTop: Math.random() * pageHeight,
+                pageHeight
             });
         }
     }, [isHydrated]);
@@ -35,7 +40,7 @@ const FloatingSvg: React.FC<FloatingSvgProps> = ({ svgPath, className = '' }) =>
         return null;
     }
 
-    const { randomDelay, randomDuration, randomX, randomRotation, randomScale, randomLeft } = animationValues;
+    const { randomDelay, randomDuration, randomX, randomRotation, randomScale, randomLeft, randomTop, pageHeight } = animationValues;
     
     // Random color classes for cycling
     const colorClasses = [
@@ -50,14 +55,14 @@ const FloatingSvg: React.FC<FloatingSvgProps> = ({ svgPath, className = '' }) =>
 
     const floatingVariants = {
         initial: {
-            y: '100vh',
+            y: 0,
             x: 0,
             rotate: 0,
             scale: randomScale,
             opacity: 0,
         },
         animate: {
-            y: '-100vh',
+            y: -(pageHeight + 200),
             x: [0, randomX, -randomX * 0.5, randomX * 0.8, 0],
             rotate: randomRotation,
             scale: [randomScale, randomScale * 1.2, randomScale * 0.8, randomScale],
@@ -86,6 +91,7 @@ const FloatingSvg: React.FC<FloatingSvgProps> = ({ svgPath, className = '' }) =>
         <motion.div
             className={`fixed pointer-events-none z-10 ${className}`}            style={{
                 left: `${randomLeft}%`,
+                top: `${animationValues.randomTop}px`,
             }}
             variants={floatingVariants}
             initial="initial"

@@ -29,34 +29,19 @@ export const useProjectManagement = () => {
 
   // Fetch projects with staggered loading animation
   const fetchProjects = async () => {
-    let cancelled = false;
     setLoading(true);
-    setInitialLoading(true);
-    
+
     try {
-      setProjects([]);
       const projectsData = await ProjectService.fetchProjects();
-      
-      for (const project of projectsData) {
-        if (cancelled) break;
-        setProjects((prev) => {
-          const newProjects = [...prev, project];
-          // Set initial loading to false after first project is added
-          if (newProjects.length === 1) {
-            setInitialLoading(false);
-          }
-          return newProjects;
-        });
-        await new Promise((resolve) => setTimeout(resolve, 50));
-      }
+      setProjects(projectsData);
+      setInitialLoading(false);
       setError(null);
     } catch {
       setError("Failed to fetch projects");
       setInitialLoading(false);
     }
-    
-    if (!cancelled) setLoading(false);
-    return () => { cancelled = true; };
+
+    setLoading(false);
   };
 
   // Initialize projects on mount
