@@ -31,26 +31,16 @@ const ProjectList: React.FC<ProjectListProps> = ({
 
     setGridData(grid);
   }, [projects]);
-
   useEffect(() => {
-    let lastScrollY = window.scrollY;
-
     const onScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      if (currentScrollY > lastScrollY) {
-        if (
-          window.innerHeight + currentScrollY >=
-          document.body.offsetHeight - 500
-        ) {
-          setVisibleRows((prev) => Math.min(prev + ROWS_PER_LOAD, gridData.length));
-        }
-      } else {
-        if (currentScrollY < lastScrollY - 50) {
-          setVisibleRows((prev) => Math.max(prev - ROWS_PER_LOAD, 1));
-        }
+      // Only show more cards when scrolling down and near the bottom
+      // Don't hide cards when scrolling up to improve UX
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.offsetHeight - 500
+      ) {
+        setVisibleRows((prev) => Math.min(prev + ROWS_PER_LOAD, gridData.length));
       }
-      lastScrollY = currentScrollY;
     };
 
     window.addEventListener("scroll", onScroll);
