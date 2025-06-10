@@ -38,15 +38,6 @@ const Navbar: React.FC<NavbarProps> = () => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll, isHydrated]);
-  // Framer Motion Variants
-  const navbarVariants = {
-    hidden: { y: -100, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.3, ease: "easeOut" },
-    },
-  };
 
   const menuItemVariants = {
     hover: {

@@ -40,7 +40,7 @@ const FloatingSvg: React.FC<FloatingSvgProps> = ({ svgPath, className = '' }) =>
         return null;
     }
 
-    const { randomDelay, randomDuration, randomX, randomRotation, randomScale, randomLeft, randomTop, pageHeight } = animationValues;
+    const { randomDelay, randomDuration, randomX, randomRotation, randomScale, randomLeft, pageHeight } = animationValues;
     
     // Random color classes for cycling
     const colorClasses = [

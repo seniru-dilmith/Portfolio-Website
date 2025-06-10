@@ -7,7 +7,6 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import Navbar from "@/components/navbar/Navbar";
-import DebugNavbar from "@/components/navbar/DebugNavbar";
 
 interface LayoutProps {
   children: ReactNode;

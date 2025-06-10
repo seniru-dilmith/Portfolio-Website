@@ -40,12 +40,12 @@ export async function POST(request: Request) {
     const accessToken = jwt.sign(
       { id: user._id.toString(), email: user.email },
       JWT_ACCESS_SECRET,
-      { expiresIn: ACCESS_TOKEN_EXPIRY }
+      { expiresIn: ACCESS_TOKEN_EXPIRY } as jwt.SignOptions
     );
     const refreshToken = jwt.sign(
       { id: user._id.toString() },
       JWT_REFRESH_SECRET,
-      { expiresIn: REFRESH_TOKEN_EXPIRY }
+      { expiresIn: REFRESH_TOKEN_EXPIRY } as jwt.SignOptions
     );
 
     // TODO: Optionally save refreshToken in DB/Redis for revocation or tracking
