@@ -9,7 +9,7 @@ const ProjectList: React.FC<ProjectListProps> = ({
   handleDelete,
   isAuthenticated,
 }) => {
-  const [visibleRows, setVisibleRows] = useState(1); // Number of visible rows
+  const [visibleRows, setVisibleRows] = useState(1);
   const [gridData, setGridData] = useState<(Project | null)[][]>([]);
   const ROWS_PER_LOAD = 1;
 
@@ -19,7 +19,7 @@ const ProjectList: React.FC<ProjectListProps> = ({
 
     projects.forEach((project) => {
       currentRow.push(project);
-      currentRow.push(null); // blank cell
+      currentRow.push(null);
 
       if (currentRow.length >= 3) {
         grid.push(currentRow);
@@ -31,10 +31,9 @@ const ProjectList: React.FC<ProjectListProps> = ({
 
     setGridData(grid);
   }, [projects]);
+
   useEffect(() => {
     const onScroll = () => {
-      // Only show more cards when scrolling down and near the bottom
-      // Don't hide cards when scrolling up to improve UX
       if (
         window.innerHeight + window.scrollY >=
         document.body.offsetHeight - 500
@@ -82,10 +81,7 @@ const ProjectList: React.FC<ProjectListProps> = ({
                   className="card bg-base-100 text-base-content shadow-xl p-4 rounded-lg"
                 >
                   {item.imageURL && (
-                    <motion.div
-                      className="overflow-hidden rounded-lg mb-4"
-                      whileHover={{ scale: 1.05 }}
-                    >
+                    <motion.div className="overflow-hidden rounded-lg mb-4" whileHover={{ scale: 1.05 }}>
                       <Image
                         src={item.imageURL}
                         alt={item.title}
@@ -112,18 +108,10 @@ const ProjectList: React.FC<ProjectListProps> = ({
                   </motion.a>
                   {isAuthenticated && (
                     <div className="flex justify-between mt-4">
-                      <motion.button
-                        onClick={() => handleEdit(item)}
-                        className="btn btn-warning btn-sm"
-                        whileHover={{ scale: 1.1 }}
-                      >
+                      <motion.button onClick={() => handleEdit(item)} className="btn btn-warning btn-sm" whileHover={{ scale: 1.1 }}>
                         Edit
                       </motion.button>
-                      <motion.button
-                        onClick={() => handleDelete(item._id)}
-                        className="btn btn-error btn-sm"
-                        whileHover={{ scale: 1.1 }}
-                      >
+                      <motion.button onClick={() => handleDelete(item._id)} className="btn btn-error btn-sm" whileHover={{ scale: 1.1 }}>
                         Delete
                       </motion.button>
                     </div>
