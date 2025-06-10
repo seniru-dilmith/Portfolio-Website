@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { ThemeContext } from '@/context/ThemeContext';
 
-const Switch = () => {
+const ThemeToggle = () => {
   const themeContext = useContext(ThemeContext);
   if (!themeContext) return null;
 
@@ -98,4 +98,4 @@ const Switch = () => {
   );
 };
 
-export default Switch;
+export default ThemeToggle;

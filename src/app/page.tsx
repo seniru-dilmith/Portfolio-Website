@@ -20,11 +20,9 @@ const Home = () => {
   const fadeIn = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
-  };
-
-  return (
+  };  return (
     <motion.div
-      className="min-h-screen overflow-hidden flex flex-col bg-gradient-to-br from-primary/50 via-secondary/40 to-accent/30"
+      className="min-h-screen flex flex-col bg-gradient-to-br from-primary/50 via-secondary/40 to-accent/30"
       variants={containerVariants}
       initial="hidden"
       animate="visible"

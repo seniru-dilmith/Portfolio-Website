@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -7,31 +7,44 @@ import { useAuth } from "@/context/AuthContext";
 import { titleNames } from "./titles";
 import ThemeToggle from "./ThemeToggle";
 import { NavbarProps } from "@/types/Navbar";
+import { useHydration } from "@/hooks/useHydration";
 
 const Navbar: React.FC<NavbarProps> = () => {
   const { isAuthenticated, handleLogout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);  const pathname = usePathname();
+  const [isVisible, setIsVisible] = useState(true); // Always start as visible
+  const lastScrollY = useRef(0); // Use ref instead of state to avoid re-renders
+  const isHydrated = useHydration();  const pathname = usePathname();
 
   // Handle scrolling behavior
   const handleScroll = useCallback(() => {
-    setIsVisible(window.scrollY < lastScrollY);
-    setLastScrollY(window.scrollY);
-  }, [lastScrollY]);
+    if (!isHydrated) return; // Prevent scroll handling before hydration
+    
+    const currentScrollY = window.scrollY;
+    
+    // Only hide navbar when scrolling down and past a threshold
+    if (currentScrollY > 100) {
+      setIsVisible(currentScrollY < lastScrollY.current || currentScrollY < 50);
+    } else {
+      setIsVisible(true); // Always show when near top
+    }
+    
+    lastScrollY.current = currentScrollY;
+  }, [isHydrated]); // Remove lastScrollY from dependencies since it's now a ref
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
+    if (!isHydrated) return; // Only add scroll listener after hydration
+    
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [handleScroll]);
-
+  }, [handleScroll, isHydrated]);
   // Framer Motion Variants
   const navbarVariants = {
     hidden: { y: -100, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
-      transition: { duration: 0.5, ease: "easeOut" },
+      transition: { duration: 0.3, ease: "easeOut" },
     },
   };
 
@@ -58,19 +71,16 @@ const Navbar: React.FC<NavbarProps> = () => {
       height: 0,
       transition: { duration: 0.3, ease: "easeInOut" },
     },
-  };
-
-  return (
+  };  return (
     <div>
-      {/* Navbar */}
+      {/* Navbar - Always visible by default */}
       <motion.div
-        className={`fixed top-0 left-0 z-50 w-full bg-base-200 text-neutral shadow-lg`}
-        initial="hidden"
-        animate={isVisible ? "visible" : "hidden"}
-        variants={navbarVariants}
-      >
-        <div className="flex justify-between items-center p-4 max-w-7xl mx-auto">
-          {/* Logo */}
+        className="fixed top-0 left-0 z-50 w-full bg-base-200 text-neutral shadow-lg"
+        style={{
+          transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
+          transition: 'transform 0.3s ease-out'
+        }}
+      ><div className="flex justify-between items-center p-4 max-w-7xl mx-auto">          {/* Logo */}
           <div className="text-xl font-bold text-primary hover:text-primary-focus transition-all duration-300">
             <Link href="/" className="flex items-start gap-2">
               🏠
@@ -112,15 +122,17 @@ const Navbar: React.FC<NavbarProps> = () => {
               const linkPath = `/${item === "Home" ? "" : item.toLowerCase()}`;
               const isActive = pathname === linkPath;
               
-              return (
-                <motion.div
+              return (                <motion.div
                   key={index}
                   whileHover="hover"
-                  variants={menuItemVariants}                  className={`text-lg font-medium cursor-pointer transition-all duration-300 ${
+                  variants={menuItemVariants}
+                  className={`text-lg font-medium cursor-pointer transition-all duration-300 ${
                     isActive
                       ? "text-success font-bold border-b-2 border-success pb-1"
                       : "text-primary hover:text-secondary"
-                  }`}
+                  }`}                  onClick={() => {
+                    // Navigation handled by Next.js Link component
+                  }}
                 >
                   <Link href={linkPath}>{item}</Link>
                 </motion.div>
@@ -154,16 +166,17 @@ const Navbar: React.FC<NavbarProps> = () => {
                   const linkPath = `/${item === "Home" ? "" : item.toLowerCase()}`;
                   const isActive = pathname === linkPath;
                   
-                  return (
-                    <motion.div
+                  return (                    <motion.div
                       key={index}
                       whileHover="hover"
-                      variants={menuItemVariants}                      className={`text-lg font-medium cursor-pointer transition-all duration-300 ${
+                      variants={menuItemVariants}
+                      className={`text-lg font-medium cursor-pointer transition-all duration-300 ${
                         isActive 
                           ? "text-success font-bold border-b-2 border-success pb-1" 
                           : "text-base-content hover:text-accent"
-                      }`}
-                      onClick={() => setIsMenuOpen(false)}
+                      }`}                      onClick={() => {
+                        setIsMenuOpen(false);
+                      }}
                     >
                       <Link href={linkPath}>{item}</Link>
                     </motion.div>

@@ -1,38 +1,50 @@
 "use client"; 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { carouselItems } from './data';
 import { CarouselItem } from '@/types/carousal_item';
 import React from 'react';
+import { useHydration } from '@/hooks/useHydration';
 
 const HeroForHome: React.FC = () => {
     const [currentIndex, setCurrentIndex] = useState<number>(0);
-    const [autoScrollInterval, setAutoScrollInterval] = useState<NodeJS.Timeout | null>(null);
+    const autoScrollInterval = useRef<NodeJS.Timeout | null>(null);
+    const isHydrated = useHydration();
 
-    const startAutoScroll = () => {
-        stopAutoScroll(); // Prevent multiple intervals
+    const startAutoScroll = useCallback(() => {
+        if (!isHydrated) return; // Don't start auto-scroll before hydration
+        
+        if (autoScrollInterval.current) {
+            clearInterval(autoScrollInterval.current);
+            autoScrollInterval.current = null;
+        }
+        
         const interval = setInterval(() => {
             setCurrentIndex((prevIndex) => (prevIndex + 1) % carouselItems.length);
         }, 5000);
-        setAutoScrollInterval(interval);
-    };
+        autoScrollInterval.current = interval;
+    }, [isHydrated]);
 
-    const stopAutoScroll = () => {
-        if (autoScrollInterval) {
-            clearInterval(autoScrollInterval);
-            setAutoScrollInterval(null);
+    const stopAutoScroll = useCallback(() => {
+        if (autoScrollInterval.current) {
+            clearInterval(autoScrollInterval.current);
+            autoScrollInterval.current = null;
         }
-    };
+    }, []);
 
-    const resetAutoScroll = () => {
-        startAutoScroll();
-    };
+    const resetAutoScroll = useCallback(() => {
+        if (isHydrated) {
+            startAutoScroll();
+        }
+    }, [isHydrated, startAutoScroll]);
 
     useEffect(() => {
-        startAutoScroll();
+        if (isHydrated) {
+            startAutoScroll();
+        }
         return () => stopAutoScroll();
-    }, []);
+    }, [isHydrated, startAutoScroll, stopAutoScroll]);
 
     const handleNext = () => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % carouselItems.length);
