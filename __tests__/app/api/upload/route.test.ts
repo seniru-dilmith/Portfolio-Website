@@ -61,8 +61,8 @@ describe("/api/upload - POST", () => {
     const mockRequest = {
       formData: jest.fn().mockResolvedValue(mockFormData)
     } as unknown as NextRequest;
-
-    mockVerifyToken.mockResolvedValue(undefined as any);
+    
+    mockVerifyToken.mockResolvedValue("valid-token");
 
     await POST(mockRequest);
 
@@ -77,7 +77,7 @@ describe("/api/upload - POST", () => {
       formData: jest.fn().mockRejectedValue(new Error("FormData error"))
     } as unknown as NextRequest;
 
-    mockVerifyToken.mockResolvedValue(undefined as any);
+    mockVerifyToken.mockResolvedValue("valid-token");
 
     await POST(mockRequest);
 

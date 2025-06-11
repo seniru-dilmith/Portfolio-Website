@@ -69,12 +69,11 @@ describe("Admin Login API", () => {
 
     // Mock cookie functionality
     const mockCookiesSet = jest.fn();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mockNextResponse.mockReturnValue({
       cookies: {
         set: mockCookiesSet
       }
-    } as any);
+    } as unknown as NextResponse);
 
     await POST(mockRequest);
 

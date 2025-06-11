@@ -1,6 +1,8 @@
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
-import { NextResponse } from "next/server";
+import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
+
+// No need for a separate type definition since we're using ReadonlyRequestCookies directly
 
 jest.mock("next/headers", () => ({
   cookies: jest.fn(),
@@ -28,22 +30,53 @@ describe("/api/admin/me - GET", () => {
     process.env.NEXT_JWT_ACCESS_SECRET = "access-secret";
     GET = (await import("@/app/api/admin/me/route")).GET;
   });
-
+  
   it("returns authenticated message when token is valid", async () => {
-    mockCookies.mockReturnValue({ get: () => ({ value: "token" }) } as any);
-    mockVerify.mockReturnValue(undefined as any);
+    // Create a mock for the cookies
+    const mockCookieStore = {
+      get: (name: string) => name === "accessToken" ? { value: "token" } : undefined,
+      getAll: () => [{ name: "accessToken", value: "token" }],
+      has: (name: string) => name === "accessToken",
+      size: 1,
+      [Symbol.iterator]: function* () {
+        yield ["accessToken", "token"];
+      }
+    } as unknown as ReadonlyRequestCookies;
+
+    mockCookies.mockResolvedValue(mockCookieStore);
+    mockVerify.mockImplementation(() => ({ id: "testUser123" }));
 
     await expect(GET()).resolves.not.toThrow();
   });
-
+  
   it("returns not authenticated when token missing", async () => {
-    mockCookies.mockReturnValue({ get: () => undefined } as any);
+    // Create a mock for empty cookies
+    const mockCookieStore = {
+      get: () => undefined,
+      getAll: () => [],
+      has: () => false,
+      size: 0,
+      [Symbol.iterator]: function* () { }
+    } as unknown as ReadonlyRequestCookies;
+
+    mockCookies.mockResolvedValue(mockCookieStore);
 
     await expect(GET()).resolves.not.toThrow();
   });
 
   it("returns invalid token when verification fails", async () => {
-    mockCookies.mockReturnValue({ get: () => ({ value: "token" }) } as any);
+    // Create a mock for the cookies
+    const mockCookieStore = {
+      get: () => ({ value: "token" }),
+      getAll: () => [{ name: "accessToken", value: "token" }],
+      has: () => true,
+      size: 1,
+      [Symbol.iterator]: function* () {
+        yield ["accessToken", "token"];
+      }
+    } as unknown as ReadonlyRequestCookies;
+
+    mockCookies.mockResolvedValue(mockCookieStore);
     mockVerify.mockImplementation(() => {
       throw new Error("Invalid token");
     });

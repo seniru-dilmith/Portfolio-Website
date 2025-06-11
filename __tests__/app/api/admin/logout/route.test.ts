@@ -20,11 +20,10 @@ describe("/api/admin/logout - POST", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-
   it("logs out successfully when authenticated", async () => {
     const mockRequest = {} as NextRequest;
 
-    mockVerifyToken.mockResolvedValue(undefined as any);
+    mockVerifyToken.mockResolvedValue({ userId: "testUser123" });
 
     await POST(mockRequest);
 

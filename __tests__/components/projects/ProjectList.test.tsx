@@ -27,7 +27,7 @@ jest.mock("framer-motion", () => ({
 // Mock next/image
 jest.mock("next/image", () => {
   return function MockImage({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) {
-    // eslint-disable-next-line @next/next/no-img-element
+    // Using img element directly in tests is acceptable
     return <img src={src} alt={alt} {...props} />;
   };
 });

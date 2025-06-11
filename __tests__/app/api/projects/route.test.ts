@@ -7,6 +7,10 @@ import {
 } from "@/controllers/projectController";
 import { verifyToken } from "@/middleware/auth";
 import { NextRequest, NextResponse } from "next/server";
+import { Project } from "@/types/Project";
+
+// Define jwt token payload type
+type JwtPayload = { userId: string };
 
 // Mock Request and NextRequest
 global.Request = jest.fn().mockImplementation((url) => ({
@@ -101,9 +105,7 @@ describe("/api/projects", () => {
           imageURL: "https://example.com/new.png",
           createdAt: "2024-01-01"
         })
-      } as unknown as NextRequest;
-
-      mockVerifyToken.mockResolvedValue(undefined as any);
+      } as unknown as NextRequest;      // JWT.verify returns a decoded token payload object      mockVerifyToken.mockResolvedValue({ userId: "testUser123" } as JwtPayload);
       mockCreateProject.mockResolvedValue(mockProject);
 
       await POST(mockRequest);
@@ -158,9 +160,7 @@ describe("/api/projects", () => {
           imageURL: "https://example.com/updated.png",
           createdAt: "2024-01-01"
         })
-      } as unknown as NextRequest;
-
-      mockVerifyToken.mockResolvedValue(undefined as any);
+      } as unknown as NextRequest;      mockVerifyToken.mockResolvedValue({ userId: "testUser123" } as JwtPayload);
       mockUpdateProject.mockResolvedValue(mockUpdatedProject);
 
       await PUT(mockRequest);
@@ -183,9 +183,7 @@ describe("/api/projects", () => {
       const mockRequest = {
         url: "http://localhost/api/projects",
         json: jest.fn()
-      } as unknown as NextRequest;
-
-      mockVerifyToken.mockResolvedValue(undefined as any);
+      } as unknown as NextRequest;      mockVerifyToken.mockResolvedValue({ userId: "testUser123" });
 
       await PUT(mockRequest);
 
@@ -200,11 +198,16 @@ describe("/api/projects", () => {
     it("deletes project successfully when authenticated", async () => {
       const mockRequest = {
         url: "http://localhost/api/projects?id=1"
-      } as unknown as NextRequest;
-
-      mockVerifyToken.mockResolvedValue(undefined as any);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      mockDeleteProject.mockResolvedValue({ _id: "1" } as any);
+      } as unknown as NextRequest;      mockVerifyToken.mockResolvedValue({ userId: "testUser123" });
+      mockDeleteProject.mockResolvedValue({ 
+        _id: "1", 
+        title: "Project Title", 
+        description: "Project Description", 
+        technologies: [], 
+        githubURL: "", 
+        imageURL: "",
+        createdAt: "2024-01-01"
+      } as Project);
 
       await DELETE(mockRequest);
 
@@ -218,9 +221,7 @@ describe("/api/projects", () => {
     it("returns 400 when id is missing", async () => {
       const mockRequest = {
         url: "http://localhost/api/projects"
-      } as unknown as NextRequest;
-
-      mockVerifyToken.mockResolvedValue(undefined as any);
+      } as unknown as NextRequest;      mockVerifyToken.mockResolvedValue({ userId: "testUser123" });
 
       await DELETE(mockRequest);
 

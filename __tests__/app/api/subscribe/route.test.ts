@@ -2,6 +2,7 @@ import { POST } from "@/app/api/subscribe/route";
 import dbConnect from "@/util/dbConnect";
 import MailSubscriber from "@/models/MailSubscriberModel";
 import { NextResponse } from "next/server";
+import mongoose from "mongoose";
 
 // Mock Request
 global.Request = jest.fn().mockImplementation((url) => ({
@@ -25,10 +26,10 @@ const mockDbConnect = dbConnect as jest.MockedFunction<typeof dbConnect>;
 const mockMailSubscriber = MailSubscriber as jest.Mocked<typeof MailSubscriber>;
 const mockNextResponse = NextResponse.json as jest.MockedFunction<typeof NextResponse.json>;
 
-describe("/api/subscribe - POST", () => {
-  beforeEach(() => {
+describe("/api/subscribe - POST", () => {  beforeEach(() => {
     jest.clearAllMocks();
-    mockDbConnect.mockResolvedValue(undefined as any);
+    // Mock a connection object instead of undefined
+    mockDbConnect.mockResolvedValue({ connection: "mocked" } as unknown as mongoose.Connection);
   });
 
   it("subscribes new email successfully", async () => {
@@ -37,7 +38,7 @@ describe("/api/subscribe - POST", () => {
     } as unknown as Request;
 
     mockMailSubscriber.findOne.mockResolvedValue(null);
-    mockMailSubscriber.create.mockResolvedValue({} as any);
+    mockMailSubscriber.create.mockResolvedValue({} as InstanceType<typeof MailSubscriber>);
 
     await POST(mockRequest);
 

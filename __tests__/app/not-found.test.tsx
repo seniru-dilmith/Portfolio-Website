@@ -37,9 +37,15 @@ jest.mock("next/link", () => {
 });
 
 // Mock Next.js Image
-jest.mock("next/image", () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return function MockImage(props: any) {
+jest.mock("next/image", () => {  return function MockImage(props: {
+    src: string;
+    alt: string;
+    width?: number;
+    height?: number;
+    className?: string;
+    priority?: boolean;
+    [key: string]: unknown; // For any other props that might be passed
+  }) {
     const { src, alt, ...rest } = props;
     return <div data-testid="404-image" data-src={src} data-alt={alt} {...rest} />;
   };

@@ -2,6 +2,7 @@ import { GET } from "@/app/api/pricing/route";
 import dbConnect from "@/util/dbConnect";
 import ContentModel from "@/models/ContentModel";
 import { NextResponse } from "next/server";
+import mongoose from "mongoose";
 
 jest.mock("@/util/dbConnect", () => jest.fn());
 jest.mock("@/models/ContentModel", () => ({
@@ -18,10 +19,9 @@ const mockDbConnect = dbConnect as jest.MockedFunction<typeof dbConnect>;
 const mockContentModel = ContentModel as jest.Mocked<typeof ContentModel>;
 const mockNextResponse = NextResponse.json as jest.MockedFunction<typeof NextResponse.json>;
 
-describe("/api/pricing - GET", () => {
-  beforeEach(() => {
+describe("/api/pricing - GET", () => {  beforeEach(() => {
     jest.clearAllMocks();
-    mockDbConnect.mockResolvedValue(undefined as any);
+    mockDbConnect.mockResolvedValue({} as mongoose.Connection);
   });
 
   it("returns pricing data successfully", async () => {

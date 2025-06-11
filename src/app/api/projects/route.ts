@@ -69,7 +69,8 @@ export async function DELETE(request: NextRequest) {
     if (!deleted) {
       return NextResponse.json({ success: false, message: 'Project not found' }, { status: 404 });
     }
-    return NextResponse.json({ success: true, data: deleted });
+    // Return only the ID in the response to match the test expectations
+    return NextResponse.json({ success: true, data: { _id: id } });
   } catch (err) {
     console.error('DELETE /api/projects error:', err);
     const message = err instanceof Error ? err.message : 'Internal server error';

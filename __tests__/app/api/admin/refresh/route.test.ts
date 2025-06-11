@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 
 jest.mock("jsonwebtoken", () => ({
@@ -26,14 +25,12 @@ describe("/api/admin/refresh - POST", () => {
     process.env.NEXT_JWT_ACCESS_SECRET = "access-secret";
     POST = (await import("@/app/api/admin/refresh/route")).POST;
   });
-
-  it("refreshes token successfully with valid refresh token", async () => {
-    const mockRequest = {
+  it("refreshes token successfully with valid refresh token", async () => {    const mockRequest = {
       cookies: { get: () => ({ value: "valid-refresh-token" }) },
     } as unknown as NextRequest;
 
-    mockJwt.verify.mockReturnValue({ id: "user123" } as any);
-    mockJwt.sign.mockReturnValue("new-access-token" as any);
+    mockJwt.verify.mockImplementation(() => ({ id: "user123" }));
+    mockJwt.sign.mockImplementation(() => "new-access-token");
 
 
     await expect(POST(mockRequest)).resolves.not.toThrow();

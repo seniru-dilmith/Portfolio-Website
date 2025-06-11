@@ -10,28 +10,38 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 // Mock framer-motion
 jest.mock("framer-motion", () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const createMock = (Component: string) => (props: any) => {
-    const { children, ...rest } = props;
-    // Pass all props through to keep component behaviour intact
-    switch (Component) {
-      case "div":
-        return <div {...rest}>{children}</div>;
-      case "h1":
-        return <h1 {...rest}>{children}</h1>;
-      case "h2":
-        return <h2 {...rest}>{children}</h2>;
-      case "p":
-        return <p {...rest}>{children}</p>;
-      case "form":
-        return <form {...rest}>{children}</form>;
-      case "input":
-        return <input {...rest} />;
-      case "button":
-        return <button {...rest}>{children}</button>;
-      default:
-        return <div {...rest}>{children}</div>;
-    }
+  const createMock = (Component: string) => {
+    type MockProps = {
+      children?: React.ReactNode;
+      className?: string;
+      onClick?: () => void;
+      [key: string]: unknown;
+    };
+
+    const MockComponent = (props: MockProps) => {
+      const { children, ...rest } = props;
+      // Pass all props through to keep component behaviour intact
+      switch (Component) {
+        case "div":
+          return <div {...rest}>{children}</div>;
+        case "h1":
+          return <h1 {...rest}>{children}</h1>;
+        case "h2":
+          return <h2 {...rest}>{children}</h2>;
+        case "p":
+          return <p {...rest}>{children}</p>;
+        case "form":
+          return <form {...rest}>{children}</form>;
+        case "input":
+          return <input {...rest} />;
+        case "button":
+          return <button {...rest}>{children}</button>;
+        default:
+          return <div {...rest}>{children}</div>;
+      }
+    };
+    MockComponent.displayName = `Motion${Component.charAt(0).toUpperCase() + Component.slice(1)}`;
+    return MockComponent;
   };
 
   return {

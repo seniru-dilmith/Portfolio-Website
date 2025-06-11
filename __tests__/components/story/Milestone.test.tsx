@@ -6,20 +6,37 @@ import "@testing-library/jest-dom";
 // Mock framer-motion and hooks
 jest.mock("framer-motion", () => ({
   motion: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    div: ({ children, whileHover, ...props }: any) => (
+    div: ({ 
+      children, 
+      whileHover, 
+      ...props 
+    }: React.PropsWithChildren<{
+      whileHover?: Record<string, unknown>;
+      className?: string;
+      [key: string]: unknown;
+    }>) => (
       <div data-testid="animated-div" data-while-hover={JSON.stringify(whileHover)} {...props}>
         {children}
       </div>
     ),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    h2: ({ children, ...props }: any) => (
+    h2: ({ 
+      children, 
+      ...props 
+    }: React.PropsWithChildren<{
+      className?: string;
+      [key: string]: unknown;
+    }>) => (
       <h2 data-testid="animated-heading" {...props}>
         {children}
       </h2>
     ),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    p: ({ children, ...props }: any) => (
+    p: ({ 
+      children, 
+      ...props 
+    }: React.PropsWithChildren<{
+      className?: string;
+      [key: string]: unknown;
+    }>) => (
       <p data-testid="animated-paragraph" {...props}>
         {children}
       </p>
@@ -36,11 +53,22 @@ jest.mock("react-intersection-observer", () => ({
 }));
 
 // Mock Next.js Image component
-jest.mock("next/image", () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return function MockImage({ src, alt, priority, ...props }: any) {
+jest.mock("next/image", () => {  return function MockImage({ 
+    src, 
+    alt, 
+    priority, 
+    ...props 
+  }: { 
+    src: string; 
+    alt: string; 
+    priority?: boolean; 
+    width?: number; 
+    height?: number;
+    className?: string;
+    [key: string]: unknown;
+  }) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element
+      // eslint-disable-next-line @next/next/no-img-element -- Using img element directly is acceptable in test code
       <img
         src={src}
         alt={alt}
