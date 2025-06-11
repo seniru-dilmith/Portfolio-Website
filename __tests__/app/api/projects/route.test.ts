@@ -47,13 +47,14 @@ describe("/api/projects", () => {
   describe("GET", () => {
     it("returns projects successfully", async () => {
       const mockProjects = [
-        { 
-          _id: "1", 
-          title: "Test Project", 
-          description: "Test description", 
+        {
+          _id: "1",
+          title: "Test Project",
+          description: "Test description",
           technologies: ["React", "TypeScript"],
-          githubUrl: "https://github.com/test",
-          liveUrl: "https://test.com"
+          githubURL: "https://github.com/test",
+          imageURL: "https://example.com/image.png",
+          createdAt: "2024-01-01"
         },
       ];
 
@@ -82,25 +83,27 @@ describe("/api/projects", () => {
 
   describe("POST", () => {
     it("creates project successfully when authenticated", async () => {
-      const mockProject = { 
-        _id: "1", 
-        title: "New Project", 
+      const mockProject = {
+        _id: "1",
+        title: "New Project",
         description: "New description",
         technologies: ["Vue", "JavaScript"],
-        githubUrl: "https://github.com/new",
-        liveUrl: "https://new.com"
+        githubURL: "https://github.com/new",
+        imageURL: "https://example.com/new.png",
+        createdAt: "2024-01-01"
       };
       const mockRequest = {
         json: jest.fn().mockResolvedValue({
           title: "New Project",
           description: "New description",
           technologies: ["Vue", "JavaScript"],
-          githubUrl: "https://github.com/new",
-          liveUrl: "https://new.com"
+          githubURL: "https://github.com/new",
+          imageURL: "https://example.com/new.png",
+          createdAt: "2024-01-01"
         })
       } as unknown as NextRequest;
 
-      mockVerifyToken.mockResolvedValue(undefined);
+      mockVerifyToken.mockResolvedValue(undefined as any);
       mockCreateProject.mockResolvedValue(mockProject);
 
       await POST(mockRequest);
@@ -110,8 +113,9 @@ describe("/api/projects", () => {
         title: "New Project",
         description: "New description",
         technologies: ["Vue", "JavaScript"],
-        githubUrl: "https://github.com/new",
-        liveUrl: "https://new.com"
+        githubURL: "https://github.com/new",
+        imageURL: "https://example.com/new.png",
+        createdAt: "2024-01-01"
       });
       expect(mockNextResponse).toHaveBeenCalledWith(
         { success: true, data: mockProject },
@@ -135,13 +139,14 @@ describe("/api/projects", () => {
 
   describe("PUT", () => {
     it("updates project successfully when authenticated", async () => {
-      const mockUpdatedProject = { 
-        _id: "1", 
-        title: "Updated Project", 
+      const mockUpdatedProject = {
+        _id: "1",
+        title: "Updated Project",
         description: "Updated description",
         technologies: ["React", "Next.js"],
-        githubUrl: "https://github.com/updated",
-        liveUrl: "https://updated.com"
+        githubURL: "https://github.com/updated",
+        imageURL: "https://example.com/updated.png",
+        createdAt: "2024-01-01"
       };
       const mockRequest = {
         url: "http://localhost/api/projects?id=1",
@@ -149,12 +154,13 @@ describe("/api/projects", () => {
           title: "Updated Project",
           description: "Updated description",
           technologies: ["React", "Next.js"],
-          githubUrl: "https://github.com/updated",
-          liveUrl: "https://updated.com"
+          githubURL: "https://github.com/updated",
+          imageURL: "https://example.com/updated.png",
+          createdAt: "2024-01-01"
         })
       } as unknown as NextRequest;
 
-      mockVerifyToken.mockResolvedValue(undefined);
+      mockVerifyToken.mockResolvedValue(undefined as any);
       mockUpdateProject.mockResolvedValue(mockUpdatedProject);
 
       await PUT(mockRequest);
@@ -164,8 +170,9 @@ describe("/api/projects", () => {
         title: "Updated Project",
         description: "Updated description",
         technologies: ["React", "Next.js"],
-        githubUrl: "https://github.com/updated",
-        liveUrl: "https://updated.com"
+        githubURL: "https://github.com/updated",
+        imageURL: "https://example.com/updated.png",
+        createdAt: "2024-01-01"
       });
       expect(mockNextResponse).toHaveBeenCalledWith(
         { success: true, data: mockUpdatedProject }
@@ -178,7 +185,7 @@ describe("/api/projects", () => {
         json: jest.fn()
       } as unknown as NextRequest;
 
-      mockVerifyToken.mockResolvedValue(undefined);
+      mockVerifyToken.mockResolvedValue(undefined as any);
 
       await PUT(mockRequest);
 
@@ -195,7 +202,7 @@ describe("/api/projects", () => {
         url: "http://localhost/api/projects?id=1"
       } as unknown as NextRequest;
 
-      mockVerifyToken.mockResolvedValue(undefined);
+      mockVerifyToken.mockResolvedValue(undefined as any);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       mockDeleteProject.mockResolvedValue({ _id: "1" } as any);
 
@@ -213,7 +220,7 @@ describe("/api/projects", () => {
         url: "http://localhost/api/projects"
       } as unknown as NextRequest;
 
-      mockVerifyToken.mockResolvedValue(undefined);
+      mockVerifyToken.mockResolvedValue(undefined as any);
 
       await DELETE(mockRequest);
 

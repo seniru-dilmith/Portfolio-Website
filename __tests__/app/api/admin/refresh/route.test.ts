@@ -15,7 +15,7 @@ jest.mock("next/server", () => ({
 }));
 
 const mockJwt = jwt as jest.Mocked<typeof jwt>;
-const mockNextResponse = NextResponse.json as jest.MockedFunction<typeof NextResponse.json>;
+                                   
 let POST: typeof import("@/app/api/admin/refresh/route").POST;
 
 describe("/api/admin/refresh - POST", () => {
@@ -33,7 +33,8 @@ describe("/api/admin/refresh - POST", () => {
     } as unknown as NextRequest;
 
     mockJwt.verify.mockReturnValue({ id: "user123" } as any);
-    mockJwt.sign.mockReturnValue("new-access-token");
+    mockJwt.sign.mockReturnValue("new-access-token" as any);
+
 
     await expect(POST(mockRequest)).resolves.not.toThrow();
   });

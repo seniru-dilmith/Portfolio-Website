@@ -21,7 +21,7 @@ const mockNextResponse = NextResponse.json as jest.MockedFunction<typeof NextRes
 describe("/api/features - GET", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockDbConnect.mockResolvedValue(undefined);
+    mockDbConnect.mockResolvedValue(undefined as any);
   });
 
   it("returns features successfully", async () => {

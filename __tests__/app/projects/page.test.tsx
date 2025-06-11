@@ -98,7 +98,10 @@ describe("Projects Page", () => {
     mockGetPageConfig.mockReturnValue({
       title: "Projects",
       description: "My projects",
-      meta: {}
+      keywords: "projects",
+      ogUrl: "https://example.com/projects",
+      svgTheme: "tech",
+      floatingSvgPaths: []
     });
 
     mockUseAuth.mockReturnValue({
@@ -114,12 +117,15 @@ describe("Projects Page", () => {
       error: null,
       viewForm: false,
       editingProjectId: null,
+      file: null,
       formState: { title: "", description: "", technologies: "", githubURL: "", imageURL: "" },
       setViewForm: jest.fn(),
       setFormState: jest.fn(),
       handleAddOrUpdate: jest.fn(),
       handleDelete: jest.fn(),
       handleEdit: jest.fn(),
+      handleFileChange: jest.fn(),
+      resetForm: jest.fn(),
     });
   });
 
@@ -143,12 +149,15 @@ describe("Projects Page", () => {
       error: null,
       viewForm: false,
       editingProjectId: null,
+      file: null,
       formState: { title: "", description: "", technologies: "", githubURL: "", imageURL: "" },
       setViewForm: jest.fn(),
       setFormState: jest.fn(),
       handleAddOrUpdate: jest.fn(),
       handleDelete: jest.fn(),
       handleEdit: jest.fn(),
+      handleFileChange: jest.fn(),
+      resetForm: jest.fn(),
     });
 
     render(<Projects />);
@@ -163,12 +172,15 @@ describe("Projects Page", () => {
       error: "Test error",
       viewForm: false,
       editingProjectId: null,
+      file: null,
       formState: { title: "", description: "", technologies: "", githubURL: "", imageURL: "" },
       setViewForm: jest.fn(),
       setFormState: jest.fn(),
       handleAddOrUpdate: jest.fn(),
       handleDelete: jest.fn(),
       handleEdit: jest.fn(),
+      handleFileChange: jest.fn(),
+      resetForm: jest.fn(),
     });
 
     render(<Projects />);
@@ -189,12 +201,15 @@ describe("Projects Page", () => {
       error: null,
       viewForm: true,
       editingProjectId: null,
+      file: null,
       formState: { title: "", description: "", technologies: "", githubURL: "", imageURL: "" },
       setViewForm: jest.fn(),
       setFormState: jest.fn(),
       handleAddOrUpdate: jest.fn(),
       handleDelete: jest.fn(),
       handleEdit: jest.fn(),
+      handleFileChange: jest.fn(),
+      resetForm: jest.fn(),
     });
 
     render(<Projects />);
