@@ -104,7 +104,7 @@ describe("/api/subscribe - POST", () => {
     await POST(mockRequest);
 
     expect(mockNextResponse).toHaveBeenCalledWith(
-      { success: false, message: "Internal server error" },
+      { success: false, message: "Server error: Database error" },
       { status: 500 }
     );
   });
