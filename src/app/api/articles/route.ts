@@ -54,8 +54,7 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-export async function DELETE(request: NextRequest) {
-  try {
+export async function DELETE(request: NextRequest) {  try {
     await verifyToken(request);
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
@@ -63,7 +62,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ success: false, message: "Missing id query param" }, { status: 400 });
     }
     await deleteArticle(id);
-    return NextResponse.json({ success: true }, { status: 200 });
+    return NextResponse.json({ success: true, message: "Article deleted successfully" }, { status: 200 });
   } catch (err) {
     console.error("DELETE /api/articles error:", err);
     const message = err instanceof Error ? err.message : "Internal server error";
