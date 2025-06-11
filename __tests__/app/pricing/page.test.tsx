@@ -12,37 +12,37 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 jest.mock("framer-motion", () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const createMock = (Component: string) => (props: any) => {
-    // Extract the standard props we need
-    const { children, className, onClick, onSubmit } = props;
-    
-    // Create the props object with only the allowed props
-    const safeProps: Record<string, unknown> = {};
-    if (className) safeProps.className = className;
-    if (onClick) safeProps.onClick = onClick;
-    if (onSubmit) safeProps.onSubmit = onSubmit;
-    
-    // Create the appropriate element type
+    const { children, ...rest } = props;
+    // Pass all props through to keep component behaviour intact
     switch (Component) {
-      case 'div': return <div {...safeProps}>{children}</div>;
-      case 'h1': return <h1 {...safeProps}>{children}</h1>;
-      case 'h2': return <h2 {...safeProps}>{children}</h2>;
-      case 'p': return <p {...safeProps}>{children}</p>;
-      case 'form': return <form {...safeProps}>{children}</form>;
-      case 'input': return <input {...safeProps} />;
-      case 'button': return <button {...safeProps}>{children}</button>;
-      default: return <div {...safeProps}>{children}</div>;
+      case "div":
+        return <div {...rest}>{children}</div>;
+      case "h1":
+        return <h1 {...rest}>{children}</h1>;
+      case "h2":
+        return <h2 {...rest}>{children}</h2>;
+      case "p":
+        return <p {...rest}>{children}</p>;
+      case "form":
+        return <form {...rest}>{children}</form>;
+      case "input":
+        return <input {...rest} />;
+      case "button":
+        return <button {...rest}>{children}</button>;
+      default:
+        return <div {...rest}>{children}</div>;
     }
   };
-  
+
   return {
     motion: {
-      div: createMock('div'),
-      h1: createMock('h1'),
-      h2: createMock('h2'),
-      p: createMock('p'),
-      form: createMock('form'),
-      input: createMock('input'),
-      button: createMock('button'),
+      div: createMock("div"),
+      h1: createMock("h1"),
+      h2: createMock("h2"),
+      p: createMock("p"),
+      form: createMock("form"),
+      input: createMock("input"),
+      button: createMock("button"),
     },
   };
 });

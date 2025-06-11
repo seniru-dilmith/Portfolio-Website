@@ -7,9 +7,10 @@ import "@testing-library/jest-dom";
 jest.mock("framer-motion", () => ({
   motion: {
     div: ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-      <div className={className} {...props}>
-        {children}
-      </div>
+      <div className={className} {...props}>{children}</div>
+    ),
+    button: ({ children, className, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
+      <button className={className} {...props}>{children}</button>
     ),
   },
 }));

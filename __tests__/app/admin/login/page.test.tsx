@@ -9,15 +9,17 @@ jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 // Mock Next.js navigation
-const mockPush = jest.fn();
-const mockUsePathname = jest.fn();
-
 jest.mock("next/navigation", () => ({
-  useRouter: () => ({
-    push: mockPush,
-  }),
-  usePathname: mockUsePathname,
+  useRouter: jest.fn(),
+  usePathname: jest.fn(),
 }));
+
+import { useRouter, usePathname } from "next/navigation";
+
+const mockPush = jest.fn();
+const mockUsePathname = usePathname as jest.Mock;
+const mockUseRouter = useRouter as jest.Mock;
+mockUseRouter.mockReturnValue({ push: mockPush });
 
 // Mock AuthContext
 jest.mock("@/context/AuthContext", () => ({
@@ -62,8 +64,8 @@ describe("LoginPage", () => {
     
     mockUseAuth.mockReturnValue({
       isAuthenticated: false,
-      login: jest.fn(),
-      signOut: jest.fn(),
+      handleLogin: jest.fn(),
+      handleLogout: jest.fn(),
     });
   });
 
@@ -102,8 +104,8 @@ describe("LoginPage", () => {
     const mockHandleLogin = jest.fn();
     mockUseAuth.mockReturnValue({
       isAuthenticated: false,
-      login: mockHandleLogin,
-      signOut: jest.fn(),
+      handleLogin: mockHandleLogin,
+      handleLogout: jest.fn(),
     });
     mockedAxios.post.mockResolvedValueOnce({
       data: { 
@@ -147,7 +149,7 @@ describe("LoginPage", () => {
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(screen.getByText("Invalid credentials")).toBeInTheDocument();
+      expect(screen.getByText("Something went wrong. Please try again...")).toBeInTheDocument();
     });
   });
 
