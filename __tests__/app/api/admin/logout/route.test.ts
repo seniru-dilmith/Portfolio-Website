@@ -24,7 +24,7 @@ describe("/api/admin/logout - POST", () => {
   it("logs out successfully when authenticated", async () => {
     const mockRequest = {} as NextRequest;
 
-    mockVerifyToken.mockResolvedValue(undefined);
+    mockVerifyToken.mockResolvedValue(undefined as any);
 
     await POST(mockRequest);
 

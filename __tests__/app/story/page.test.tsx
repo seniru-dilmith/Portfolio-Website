@@ -83,7 +83,10 @@ describe("Story Page", () => {
     mockGetPageConfig.mockReturnValue({
       title: "My Story",
       description: "Learn about my journey",
-      meta: {}
+      keywords: "story",
+      ogUrl: "https://example.com/story",
+      svgTheme: "nature",
+      floatingSvgPaths: []
     });
   });
 

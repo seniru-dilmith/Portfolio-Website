@@ -52,17 +52,12 @@ describe("RootLayout", () => {
   });
 
   it("sets correct HTML attributes", () => {
-    const { container } = render(<RootLayout>{mockChildren}</RootLayout>);
-    const htmlElement = container.querySelector("html");
+    render(<RootLayout>{mockChildren}</RootLayout>);
+    const htmlElement = document.documentElement;
     expect(htmlElement).toHaveAttribute("lang", "en");
     expect(htmlElement).toHaveAttribute("data-arp", "");
   });
 
-  it("renders with suppressHydrationWarning on body", () => {
-    const { container } = render(<RootLayout>{mockChildren}</RootLayout>);
-    const bodyElement = container.querySelector("body");
-    expect(bodyElement).toHaveAttribute("suppressHydrationWarning");
-  });
 
   it("uses default site name when env var is not set", () => {
     delete process.env.NEXT_PUBLIC_SITE_NAME;

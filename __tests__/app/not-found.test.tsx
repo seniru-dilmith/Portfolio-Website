@@ -60,7 +60,7 @@ describe("Custom404 Page", () => {
   it("displays appropriate error description", () => {
     render(<Custom404 />);
     expect(
-      screen.getByText(/The page you're looking for doesn't exist or has been moved/)
+      screen.getByText(/The page you’re looking for doesn’t exist or has been moved/)
     ).toBeInTheDocument();
   });
 

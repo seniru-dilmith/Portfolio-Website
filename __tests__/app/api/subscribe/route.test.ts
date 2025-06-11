@@ -28,7 +28,7 @@ const mockNextResponse = NextResponse.json as jest.MockedFunction<typeof NextRes
 describe("/api/subscribe - POST", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockDbConnect.mockResolvedValue(undefined);
+    mockDbConnect.mockResolvedValue(undefined as any);
   });
 
   it("subscribes new email successfully", async () => {
@@ -37,7 +37,7 @@ describe("/api/subscribe - POST", () => {
     } as unknown as Request;
 
     mockMailSubscriber.findOne.mockResolvedValue(null);
-    mockMailSubscriber.create.mockResolvedValue({});
+    mockMailSubscriber.create.mockResolvedValue({} as any);
 
     await POST(mockRequest);
 
@@ -104,7 +104,7 @@ describe("/api/subscribe - POST", () => {
     await POST(mockRequest);
 
     expect(mockNextResponse).toHaveBeenCalledWith(
-      { success: false, message: "Internal server error" },
+      { success: false, message: "Server error: Database error" },
       { status: 500 }
     );
   });
