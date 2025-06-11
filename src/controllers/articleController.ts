@@ -7,6 +7,11 @@ export const getArticles = async () => {
     return ArticleModel.find();
 };
 
+export const getArticleById = async (id: string) => {
+    await dbConnect();
+    return ArticleModel.findById(id);
+};
+
 export const createArticle = async (articleData: Partial<Article>) => {
     await dbConnect();
     return ArticleModel.create(articleData);

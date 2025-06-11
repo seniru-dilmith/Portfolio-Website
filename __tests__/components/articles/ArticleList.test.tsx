@@ -11,7 +11,29 @@ jest.mock("framer-motion", () => ({
         {children}
       </div>
     ),
+    button: ({ children, className, onClick, ...otherProps }: React.ButtonHTMLAttributes<HTMLButtonElement> & Record<string, unknown>) => {
+      // Filter out framer-motion specific props to avoid React warnings
+      const filteredProps: Record<string, unknown> = {};
+      Object.keys(otherProps).forEach(key => {
+        if (!key.startsWith('while') && !key.startsWith('initial') && !key.startsWith('animate')) {
+          filteredProps[key] = otherProps[key];
+        }
+      });
+      return (
+        <button className={className} onClick={onClick} {...filteredProps}>
+          {children}
+        </button>
+      );
+    },
   },
+}));
+
+// Mock Next.js navigation
+const mockPush = jest.fn();
+jest.mock("next/navigation", () => ({
+  useRouter: () => ({
+    push: mockPush,
+  }),
 }));
 
 // Mock AuthContext hook
@@ -37,8 +59,8 @@ const defaultProps = {
 describe("ArticleList", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockPush.mockClear();
   });
-
   it("renders article titles and content", () => {
     mockUseAuth.mockReturnValue({
       isAuthenticated: false,
@@ -52,6 +74,10 @@ describe("ArticleList", () => {
     expect(screen.getByText("Test Article 2")).toBeInTheDocument();
     expect(screen.getByText("This is test content for article 1")).toBeInTheDocument();
     expect(screen.getByText("This is test content for article 2")).toBeInTheDocument();
+    
+    // Check for Read More buttons
+    const readMoreButtons = screen.getAllByText("Read More");
+    expect(readMoreButtons).toHaveLength(2);
   });
 
   it("shows edit and delete buttons when authenticated", () => {
@@ -127,5 +153,20 @@ describe("ArticleList", () => {
     // Component should render without errors
     const container = document.querySelector('.grid');
     expect(container).toBeInTheDocument();
+  });
+
+  it("navigates to article detail when Read More is clicked", () => {
+    mockUseAuth.mockReturnValue({
+      isAuthenticated: false,
+      handleLogin: jest.fn(),
+      handleLogout: jest.fn(),
+    });
+
+    render(<ArticleList {...defaultProps} />);
+    
+    const readMoreButtons = screen.getAllByText("Read More");
+    fireEvent.click(readMoreButtons[0]);
+    
+    expect(mockPush).toHaveBeenCalledWith("/articles/1");
   });
 });
