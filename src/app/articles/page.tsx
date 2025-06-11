@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import SmallLoadingSpinner from '@/util/SmallLoadingSpinner';
 import { useAuth } from '@/context/AuthContext';
 import HeroForArticles from '@/components/articles/HeroForArticles';
+import { useRouter } from 'next/navigation';
 
 const Articles = () => {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -21,6 +22,7 @@ const Articles = () => {
   const [showForm, setShowForm] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const { isAuthenticated } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     let cancelled = false;
@@ -67,12 +69,8 @@ const Articles = () => {
   const handleDelete = async (id: string) => {
     const res = await fetch(`/api/articles?id=${id}`, { method: 'DELETE' });
     if (res.ok) setArticles((prev) => prev.filter((a) => a._id !== id));
-  };
-
-  const handleEdit = (article: Article) => {
-    setFormState({ title: article.title, content: article.content, tags: article.tags });
-    setEditingArticleId(article._id);
-    setShowForm(true);
+  };  const handleEdit = (article: Article) => {
+    router.push(`/articles/${article._id}?edit=true`);
   };
 
   const resetForm = () => {

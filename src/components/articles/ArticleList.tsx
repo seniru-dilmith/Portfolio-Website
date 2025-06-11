@@ -2,9 +2,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArticleListProps } from '@/types/Article';
 import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 
 const ArticleList: React.FC<ArticleListProps> = ({ articles, onEdit, onDelete }) => {
     const { isAuthenticated } = useAuth();
+    const router = useRouter();
 
     return (
         <motion.div
@@ -24,13 +26,23 @@ const ArticleList: React.FC<ArticleListProps> = ({ articles, onEdit, onDelete })
                     {/* Card Header */}
                     <div className="card-header bg-accent text-accent-content px-4 py-2 font-semibold text-lg">
                         {article.title}
-                    </div>
-
-                    {/* Card Body */}
+                    </div>                    {/* Card Body */}
                     <div className="card-body p-4 bg-neutral">
                         <p className="text-neutral-content text-sm line-clamp-3">
                             {article.content}
                         </p>
+                        
+                        {/* Read More Button */}
+                        <div className="mt-4">
+                            <motion.button
+                                className="btn btn-sm btn-primary"
+                                onClick={() => router.push(`/articles/${article._id}`)}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                Read More
+                            </motion.button>
+                        </div>
                     </div>
 
                     {/* Card Actions */}
