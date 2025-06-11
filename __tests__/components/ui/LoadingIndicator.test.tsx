@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import LoadingIndicator from "@/components/ui/LoadingIndicator";
 import "@testing-library/jest-dom";
 
@@ -13,7 +13,14 @@ jest.mock("@/util/SmallLoadingSpinner", () => {
 // Mock framer-motion
 jest.mock("framer-motion", () => ({
   motion: {
-    div: ({ children, className, initial, animate, exit, transition, ...props }: any) => (
+    div: ({ children, className, initial, animate, exit, transition, ...props }: React.PropsWithChildren<{
+      className?: string;
+      initial?: Record<string, unknown>;
+      animate?: Record<string, unknown>;
+      exit?: Record<string, unknown>;
+      transition?: Record<string, unknown>;
+      [key: string]: unknown;
+    }>) => (
       <div
         className={className}
         data-testid="motion-div"
@@ -26,7 +33,12 @@ jest.mock("framer-motion", () => ({
         {children}
       </div>
     ),
-    p: ({ children, className, animate, transition, ...props }: any) => {
+    p: ({ children, className, animate, transition, ...props }: React.PropsWithChildren<{
+      className?: string;
+      animate?: Record<string, unknown>;
+      transition?: Record<string, unknown> & { repeat?: number | "Infinity" };
+      [key: string]: unknown;
+    }>) => {
       // Handle Infinity in repeat property
       const processedTransition = transition ? {
         ...transition,

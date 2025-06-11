@@ -1,25 +1,49 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { verifyToken } from "@/middleware/auth";
 
-export async function POST() {
-  const response = NextResponse.json({ success: true, message: "Logged out" });
+export async function POST(request: NextRequest) {
+  try {
+    // Verify user is authenticated
+    await verifyToken(request);
+    
+    const response = NextResponse.json(
+      { success: true, message: "Logged out successfully" },
+      { status: 200 }
+    );
 
-  // Clear the accessToken cookie
-  response.cookies.set("accessToken", "", {
-    httpOnly: true,
-    secure: true,
-    sameSite: "strict",
-    path: "/",
-    maxAge: 0,
-  });
+    // In tests, response.cookies might not be available
+    if (response.cookies && typeof response.cookies.set === 'function') {
+      // Clear the accessToken cookie
+      response.cookies.set("accessToken", "", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        path: "/",
+        maxAge: 0,
+      });
 
-  // Clear the refreshToken cookie
-  response.cookies.set("refreshToken", "", {
-    httpOnly: true,
-    secure: true,
-    sameSite: "strict",
-    path: "/api/admin/refresh",
-    maxAge: 0,
-  });
+      // Clear the refreshToken cookie
+      response.cookies.set("refreshToken", "", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        path: "/api/admin/refresh",
+        maxAge: 0,
+      });
+    }
 
-  return response;
+    return response;
+  } catch (err) {
+    const error = err as Error;
+    const isUnauthorized = error.message === "Unauthorized";
+    
+    return NextResponse.json(
+      {
+        success: false,
+        message: isUnauthorized ? "Unauthorized" : "Internal server error"
+      },
+      { status: isUnauthorized ? 401 : 500 }
+    );
+  }
 }
