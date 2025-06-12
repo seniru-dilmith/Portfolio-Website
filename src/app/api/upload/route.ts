@@ -1,21 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '@/util/firebaseServer';
-
-const JWT_ACCESS_SECRET = process.env.NEXT_JWT_ACCESS_SECRET!;
-
-async function verifyToken(request: NextRequest) {
-  const token = request.cookies.get('accessToken')?.value;
-  if (!token) {
-    throw new Error('Unauthorized: No token provided');
-  }
-  try {
-    return jwt.verify(token, JWT_ACCESS_SECRET);
-  } catch {
-    throw new Error('Unauthorized: Invalid token');
-  }
-}
+import { verifyToken } from '@/middleware/auth';
 
 export async function POST(request: NextRequest) {
   try {
@@ -30,13 +16,20 @@ export async function POST(request: NextRequest) {
     const storageRef = ref(storage, `project-images/${file.name}`);
     await uploadBytes(storageRef, bytes);
     const url = await getDownloadURL(storageRef);
-    return NextResponse.json({ success: true, url });
-  } catch (err) {
+    return NextResponse.json({ success: true, url });  } catch (err) {
     console.error('POST /api/upload error:', err);
-    const message = err instanceof Error ? err.message : 'Internal server error';
+    const error = err as Error;
+    // Check if this is an authentication error
+    if (error.message && error.message.startsWith('Unauthorized')) {
+      return NextResponse.json(
+        { success: false, message: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+    // For all other errors, return a generic error message
     return NextResponse.json(
-      { success: false, message },
-      { status: message.startsWith('Unauthorized') ? 401 : 500 }
+      { success: false, message: 'Internal server error' },
+      { status: 500 }
     );
   }
 }

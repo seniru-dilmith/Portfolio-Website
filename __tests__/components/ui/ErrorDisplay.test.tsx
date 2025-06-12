@@ -16,7 +16,14 @@ jest.mock("lucide-react", () => ({
 // Mock framer-motion
 jest.mock("framer-motion", () => ({
   motion: {
-    div: ({ children, className, initial, animate, exit, transition, ...props }: any) => (
+    div: ({ children, className, initial, animate, exit, transition, ...props }: React.PropsWithChildren<{
+      className?: string;
+      initial?: Record<string, unknown>;
+      animate?: Record<string, unknown>;
+      exit?: Record<string, unknown>;
+      transition?: Record<string, unknown>;
+      [key: string]: unknown;
+    }>) => (
       <div
         className={className}
         data-testid="motion-div"

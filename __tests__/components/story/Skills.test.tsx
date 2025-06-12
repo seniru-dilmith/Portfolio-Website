@@ -20,12 +20,22 @@ jest.mock("@/components/story/skills_data", () => ({
 // Mock framer-motion
 jest.mock("framer-motion", () => ({
   motion: {
-    div: ({ children, ...props }: any) => (
+    div: ({ children, ...props }: React.PropsWithChildren<{
+      className?: string;
+      initial?: Record<string, unknown>;
+      animate?: Record<string, unknown>;
+      [key: string]: unknown;
+    }>) => (
       <div data-testid="animated-div" {...props}>
         {children}
       </div>
     ),
-    section: ({ children, ...props }: any) => (
+    section: ({ children, ...props }: React.PropsWithChildren<{
+      className?: string;
+      initial?: Record<string, unknown>;
+      animate?: Record<string, unknown>;
+      [key: string]: unknown;
+    }>) => (
       <section data-testid="animated-section" {...props}>
         {children}
       </section>

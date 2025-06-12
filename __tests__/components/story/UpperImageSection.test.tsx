@@ -14,7 +14,7 @@ interface MockImageProps {
 jest.mock("next/image", () => {
   return function MockImage({ src, alt, className, ...props }: MockImageProps) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element
+      // eslint-disable-next-line @next/next/no-img-element -- Using img element directly is acceptable in test code
       <img
         src={src}
         alt={alt}

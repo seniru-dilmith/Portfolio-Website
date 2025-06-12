@@ -7,21 +7,27 @@ jest.mock("@/models/ArticleModel", () => ({
   __esModule: true,
   default: {
     find: jest.fn(),
+    findById: jest.fn(),
     create: jest.fn(),
     findByIdAndUpdate: jest.fn(),
     findByIdAndDelete: jest.fn(),
   },
 }));
 
-import { getArticles, createArticle, updateArticle, deleteArticle } from "@/controllers/articleController";
+import { getArticles, getArticleById, createArticle, updateArticle, deleteArticle } from "@/controllers/articleController";
 import dbConnect from "@/util/dbConnect";
 import ArticleModel from "@/models/ArticleModel";
 
-describe("articleController", () => {
-  it("getArticles calls find", async () => {
+describe("articleController", () => {  it("getArticles calls find", async () => {
     await getArticles();
     expect(dbConnect).toHaveBeenCalled();
     expect(ArticleModel.find).toHaveBeenCalled();
+  });
+
+  it("getArticleById calls findById", async () => {
+    await getArticleById("test-id");
+    expect(dbConnect).toHaveBeenCalled();
+    expect(ArticleModel.findById).toHaveBeenCalledWith("test-id");
   });
 
   it("createArticle calls create", async () => {

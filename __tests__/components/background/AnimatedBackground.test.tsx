@@ -6,7 +6,13 @@ import "@testing-library/jest-dom";
 // Mock framer-motion
 jest.mock("framer-motion", () => ({
   motion: {
-    div: ({ children, className, style, animate, transition, ...props }: any) => {
+    div: ({ children, className, style, animate, transition, ...props }: React.PropsWithChildren<{
+      className?: string;
+      style?: React.CSSProperties;
+      animate?: Record<string, unknown>;
+      transition?: Record<string, unknown> & { repeat?: number | "Infinity" };
+      [key: string]: unknown;
+    }>) => {
       // Handle Infinity in repeat property
       const processedTransition = transition ? {
         ...transition,
