@@ -42,7 +42,6 @@ describe("Admin Login API", () => {
     
     // Mock environment variables
     process.env.NEXT_JWT_ACCESS_SECRET = "access-secret";
-    process.env.NEXT_JWT_ACCESS_SECRET = "access-secret";
     process.env.NEXT_JWT_REFRESH_SECRET = "refresh-secret";
     process.env.NEXT_JWT_ACCESS_EXPIRY = "15m";
     process.env.NEXT_JWT_REFRESH_EXPIRY = "7d";
