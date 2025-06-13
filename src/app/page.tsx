@@ -5,7 +5,6 @@ import HeroForHome from "@/components/carousal/HeroForHome";
 import Footer from "@/components/footer/Footer";
 
 const Home = () => {
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -20,13 +19,9 @@ const Home = () => {
   const fadeIn = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
-  };  return (
-    <motion.div
-      className="min-h-screen flex flex-col bg-gradient-to-br from-primary/50 via-secondary/40 to-accent/30"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
+  };
+  return (
+    <>
       <Head>
         <title>Welcome to Seniru&rsquo;s Place</title>
         <meta
@@ -58,16 +53,25 @@ const Home = () => {
         />
         <meta name="twitter:image" content="/favicon.ico" />
         <meta name="robots" content="index, follow" />
-      </Head>      {/* Hero Section with Animation */}
-      <motion.div variants={fadeIn} className="flex-grow flex">
-        <HeroForHome />
-      </motion.div>
+      </Head>
 
-      {/* Footer with Animation */}
-      <motion.div variants={fadeIn}>
-        <Footer />
+      <motion.div
+        className="h-full flex flex-col bg-gradient-to-br from-primary/50 via-secondary/40 to-accent/30"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {/* Hero Section with Animation */}
+        <motion.div variants={fadeIn} className="flex-grow flex">
+          <HeroForHome />
+        </motion.div>
+
+        {/* Footer with Animation */}
+        <motion.div variants={fadeIn}>
+          <Footer />
+        </motion.div>
       </motion.div>
-    </motion.div>
+    </>
   );
 };
 

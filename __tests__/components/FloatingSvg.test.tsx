@@ -10,30 +10,38 @@ jest.mock("@/hooks/useHydration", () => ({
 }));
 
 // Mock framer-motion with simpler implementation
-jest.mock("framer-motion", () => ({
-  motion: {
-    div: React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ children, ...props }, ref) => (
-      <div
-        ref={ref}
-        data-testid="motion-div"
-        {...props}
-      >
-        {children}
-      </div>
-    )),
-    svg: React.forwardRef<SVGSVGElement, React.SVGAttributes<SVGSVGElement> & { animate?: unknown; transition?: unknown }>(({ children, animate, transition, ...props }, ref) => (
-      <svg
-        ref={ref}
-        data-testid="motion-svg"
-        data-animate={JSON.stringify(animate)}
-        data-transition={JSON.stringify(transition)}
-        {...props}
-      >
-        {children}
-      </svg>
-    )),
-  },
-}));
+jest.mock("framer-motion", () => {
+  const MotionDiv = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ children, ...props }, ref) => (
+    <div
+      ref={ref}
+      data-testid="motion-div"
+      {...props}
+    >
+      {children}
+    </div>
+  ));
+  MotionDiv.displayName = "MotionDiv";
+
+  const MotionSvg = React.forwardRef<SVGSVGElement, React.SVGAttributes<SVGSVGElement> & { animate?: unknown; transition?: unknown }>(({ children, animate, transition, ...props }, ref) => (
+    <svg
+      ref={ref}
+      data-testid="motion-svg"
+      data-animate={JSON.stringify(animate)}
+      data-transition={JSON.stringify(transition)}
+      {...props}
+    >
+      {children}
+    </svg>
+  ));
+  MotionSvg.displayName = "MotionSvg";
+
+  return {
+    motion: {
+      div: MotionDiv,
+      svg: MotionSvg,
+    },
+  };
+});
 
 // Mock window.innerHeight
 Object.defineProperty(window, 'innerHeight', {
