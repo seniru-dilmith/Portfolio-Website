@@ -18,6 +18,11 @@ jest.mock("@/components/FloatingSvg", () => {
   };
 });
 
+// Mock useHydration hook
+jest.mock("@/hooks/useHydration", () => ({
+  useHydration: jest.fn(() => true),
+}));
+
 // Mock framer-motion
 jest.mock("framer-motion", () => ({
   motion: {

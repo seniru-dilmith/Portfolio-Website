@@ -14,27 +14,28 @@ const Navbar: React.FC<NavbarProps> = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true); // Always start as visible
   const lastScrollY = useRef(0); // Use ref instead of state to avoid re-renders
-  const isHydrated = useHydration();  const pathname = usePathname();
+  const isHydrated = useHydration();
+  const pathname = usePathname();
 
   // Handle scrolling behavior
   const handleScroll = useCallback(() => {
     if (!isHydrated) return; // Prevent scroll handling before hydration
-    
+
     const currentScrollY = window.scrollY;
-    
+
     // Only hide navbar when scrolling down and past a threshold
     if (currentScrollY > 100) {
       setIsVisible(currentScrollY < lastScrollY.current || currentScrollY < 50);
     } else {
       setIsVisible(true); // Always show when near top
     }
-    
+
     lastScrollY.current = currentScrollY;
   }, [isHydrated]); // Remove lastScrollY from dependencies since it's now a ref
 
   useEffect(() => {
     if (!isHydrated) return; // Only add scroll listener after hydration
-    
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll, isHydrated]);
@@ -62,27 +63,29 @@ const Navbar: React.FC<NavbarProps> = () => {
       height: 0,
       transition: { duration: 0.3, ease: "easeInOut" },
     },
-  };  return (
-    <div>
+  };
+  return (
+    <>
       {/* Navbar - Always visible by default */}
       <motion.div
         className="fixed top-0 left-0 z-50 w-full bg-base-200 text-neutral shadow-lg"
         style={{
-          transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
-          transition: 'transform 0.3s ease-out'
+          transform: isVisible ? "translateY(0)" : "translateY(-100%)",
+          transition: "transform 0.3s ease-out",
         }}
-      ><div className="flex justify-between items-center p-4 max-w-7xl mx-auto">          {/* Logo */}
+      >
+        <div className="flex justify-between items-center p-4 max-w-7xl mx-auto">
+          {" "}
+          {/* Logo */}
           <div className="text-xl font-bold text-primary hover:text-primary-focus transition-all duration-300">
             <Link href="/" className="flex items-start gap-2">
               🏠
             </Link>
           </div>
-
           {/* Theme Toggle Centered in Navbar (Desktop) */}
           <div className="text-warning left-1/2 transform -translate-x-1/2 hidden lg:block">
             <ThemeToggle />
           </div>
-
           {/* Mobile Menu & Theme Toggle */}
           <div className="lg:hidden flex items-center space-x-4">
             {/* Theme Toggle Button */}
@@ -108,12 +111,16 @@ const Navbar: React.FC<NavbarProps> = () => {
                 />
               </motion.div>
             </button>
-          </div>          {/* Desktop Menu */}
-          <nav className="hidden lg:flex space-x-6">            {titleNames.map((item, index) => {
+          </div>{" "}
+          {/* Desktop Menu */}
+          <nav className="hidden lg:flex space-x-6">
+            {" "}
+            {titleNames.map((item, index) => {
               const linkPath = `/${item === "Home" ? "" : item.toLowerCase()}`;
               const isActive = pathname === linkPath;
-              
-              return (                <motion.div
+
+              return (
+                <motion.div
                   key={index}
                   whileHover="hover"
                   variants={menuItemVariants}
@@ -121,7 +128,8 @@ const Navbar: React.FC<NavbarProps> = () => {
                     isActive
                       ? "text-success font-bold border-b-2 border-success pb-1"
                       : "text-primary hover:text-secondary"
-                  }`}                  onClick={() => {
+                  }`}
+                  onClick={() => {
                     // Navigation handled by Next.js Link component
                   }}
                 >
@@ -153,19 +161,25 @@ const Navbar: React.FC<NavbarProps> = () => {
               exit="exit"
               variants={mobileMenuVariants}
             >
-              <nav className="flex flex-col items-center py-4 space-y-4">                {titleNames.map((item, index) => {
-                  const linkPath = `/${item === "Home" ? "" : item.toLowerCase()}`;
+              <nav className="flex flex-col items-center py-4 space-y-4">
+                {" "}
+                {titleNames.map((item, index) => {
+                  const linkPath = `/${
+                    item === "Home" ? "" : item.toLowerCase()
+                  }`;
                   const isActive = pathname === linkPath;
-                  
-                  return (                    <motion.div
+
+                  return (
+                    <motion.div
                       key={index}
                       whileHover="hover"
                       variants={menuItemVariants}
                       className={`text-lg font-medium cursor-pointer transition-all duration-300 ${
-                        isActive 
-                          ? "text-success font-bold border-b-2 border-success pb-1" 
+                        isActive
+                          ? "text-success font-bold border-b-2 border-success pb-1"
                           : "text-base-content hover:text-accent"
-                      }`}                      onClick={() => {
+                      }`}
+                      onClick={() => {
                         setIsMenuOpen(false);
                       }}
                     >
@@ -191,7 +205,7 @@ const Navbar: React.FC<NavbarProps> = () => {
           )}
         </AnimatePresence>
       </motion.div>
-    </div>
+    </>
   );
 };
 
