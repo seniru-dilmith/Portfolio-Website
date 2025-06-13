@@ -52,11 +52,10 @@ const Home = () => {
           content="Explore my portfolio and projects in AI, Web, and Cloud Computing."
         />
         <meta name="twitter:image" content="/favicon.ico" />
-        <meta name="robots" content="index, follow" />
-      </Head>
+        <meta name="robots" content="index, follow" />      </Head>
 
       <motion.div
-        className="h-full flex flex-col bg-gradient-to-br from-primary/50 via-secondary/40 to-accent/30"
+        className="min-h-screen flex flex-col bg-gradient-to-br from-primary/50 via-secondary/40 to-accent/30"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
