@@ -40,10 +40,12 @@ describe("Home Page", () => {
     expect(screen.getByTestId("hero-for-home")).toBeInTheDocument();
     expect(screen.getByTestId("footer")).toBeInTheDocument();
   });
-
   it("renders the main container with correct classes", () => {
     const { container } = render(<Home />);
-    const mainDiv = container.firstChild as HTMLElement;
+    // The component returns a fragment with Head and motion.div
+    // We need to find the div with the expected classes
+    const mainDiv = container.querySelector('.min-h-screen');
+    expect(mainDiv).toBeInTheDocument();
     expect(mainDiv).toHaveClass("min-h-screen");
     expect(mainDiv).toHaveClass("flex");
     expect(mainDiv).toHaveClass("flex-col");
