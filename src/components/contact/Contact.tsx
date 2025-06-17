@@ -109,14 +109,14 @@ function Contact() {
               variants={fadeLeft}
             >
               <span className="font-bold">Email:</span>
-              <span>dilmithseniru@gmail.com</span>
+              <a href="mailto:dilmithseniru@gmail.com"> <span>dilmithseniru@gmail.com</span> </a>
             </motion.li>
             <motion.li
               className="flex justify-between text-lg mb-2 border-b border-base-300 pb-2"
               variants={fadeRight}
             >
               <span className="font-bold">Phone:</span>
-              <span>+94 71 462 5671</span>
+              <a href="tel:+94714625671"> <span>+94 71 462 5671</span> </a>
             </motion.li>
             <motion.li
               className="flex justify-between text-lg border-b border-base-300 pb-2"
