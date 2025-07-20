@@ -64,6 +64,13 @@ const ArticleForm: React.FC<ArticleFormProps> = ({ formState, setFormState, onSu
                     }))
                 }
             />
+        {/* Submit Button */}
+        <button
+            type="submit"
+            className="btn btn-primary w-full max-w-3xl"
+        >
+            Submit
+        </button>
         </motion.form>
     );
 };
