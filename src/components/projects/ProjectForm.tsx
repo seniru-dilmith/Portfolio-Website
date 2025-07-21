@@ -14,6 +14,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
       <h2 className="text-xl font-semibold mb-4 text-primary">
         {editingProjectId ? 'Update Project' : 'Add New Project'}
       </h2>
+      <label htmlFor="project-title" className="block mb-1 font-medium">Title</label>
       <input
         type="text"
         placeholder="Title"
@@ -22,6 +23,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
         className="border p-2 mb-4 block w-full"
         required
       />
+      <label htmlFor="project-description" className="block mb-1 font-medium">Description</label>
       <textarea
         placeholder="Description"
         value={formState.description}
@@ -29,6 +31,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
         className="border p-2 mb-4 block w-full"
         required
       />
+      <label htmlFor="project-technologies" className="block mb-1 font-medium">Technologies</label>
       <input
         type="text"
         placeholder="Technologies (comma-separated)"
@@ -37,6 +40,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
         className="border p-2 mb-4 block w-full"
         required
       />
+      <label htmlFor="project-github-url" className="block mb-1 font-medium">GitHub URL</label>
       <input
         type="url"
         placeholder="GitHub URL"
@@ -45,11 +49,14 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
         className="border p-2 mb-4 block w-full"
         required
       />
+      <label htmlFor="project-image" className="block mb-1 font-medium">Project Image</label>
       <input
         type='file'
         accept='image/*'
         onChange={handleFileChange}
         className="border p-2 mb-4 block w-full"
+        placeholder="Upload project image"
+        title="Upload project image"
       />
       <button
         type="submit"
