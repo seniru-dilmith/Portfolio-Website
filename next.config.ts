@@ -7,15 +7,21 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'firebasestorage.googleapis.com',
-        port: '', // Leave empty for default ports
-        pathname: '/v0/b/**', // Match all Firebase storage paths
+        port: '', // default ports
+        pathname: '/v0/b/**', // Firebase storage paths
       },
       {
         protocol: 'https',
         hostname: 'cdn.buymeacoffee.com',
-        port: '', // Leave empty for default ports
-        pathname: '/buttons/v2/**', // Match all Buy Me A Coffee buttons
-      }
+        port: '', // default ports
+        pathname: '/buttons/v2/**', // Buy Me A Coffee buttons
+      },
+      {
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };

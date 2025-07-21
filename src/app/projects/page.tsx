@@ -5,7 +5,6 @@ import ProjectForm from "@/components/projects/ProjectForm";
 import ProjectList from "@/components/projects/ProjectList";
 import HeroForProjects from "@/components/projects/HeroForProjects";
 import { useAuth } from "@/context/AuthContext";
-import SmallLoadingSpinner from "@/util/SmallLoadingSpinner";
 import PageLayout from "@/components/layout/PageLayout";
 import LoadingIndicator from "@/components/ui/LoadingIndicator";
 import FormActions from "@/components/ui/FormActions";
@@ -17,20 +16,12 @@ import { useProjectManagement } from "@/hooks/useProjectManagement";
 const Projects = () => {
   const { isAuthenticated } = useAuth();
   const {
-    projects,
-    loading,
-    initialLoading,
-    error,
-    viewForm,
-    editingProjectId,
-    formState,
-    setViewForm,
-    setFormState,
-    handleAddOrUpdate,
-    handleDelete,
-    handleEdit,
-    handleFileChange,
-    resetForm,
+    projects, loading, initialLoading, error, viewForm, editingProjectId,
+    formState, newFiles, setViewForm, setFormState,
+    handleAddOrUpdate, handleDelete, handleEdit, handleFileChange,
+    resetForm, removeNewFile, removeExistingImage, isUploading,
+    // 1. Get the new link handlers from the hook
+    handleLinkChange, addLinkField, removeLinkField
   } = useProjectManagement();
 
   const pageConfig = getPageConfig('projects');
@@ -41,13 +32,8 @@ const Projects = () => {
       
       <ErrorDisplay error={error} />
       
-      {/* Initial loading spinner - shows until at least one project is loaded */}
-      <LoadingIndicator 
-        show={initialLoading}
-        text="Loading projects..."
-      />
+      <LoadingIndicator show={initialLoading || (loading && projects.length === 0)} text="Loading projects..." />
       
-      {/* Main content - only show when initial loading is complete */}
       {!initialLoading && (
         <Container className="mt-8">
           <FormActions
@@ -68,12 +54,20 @@ const Projects = () => {
               className="mb-8"
             >
               <ProjectForm
-                handleAddOrUpdate={handleAddOrUpdate}
                 formState={formState}
                 setFormState={setFormState}
+                handleAddOrUpdate={handleAddOrUpdate}
                 editingProjectId={editingProjectId}
                 resetForm={resetForm}
                 handleFileChange={handleFileChange}
+                newFiles={newFiles}
+                removeNewFile={removeNewFile}
+                removeExistingImage={removeExistingImage}
+                isUploading={isUploading}
+                // 2. Pass the new handlers down as props
+                handleLinkChange={handleLinkChange}
+                addLinkField={addLinkField}
+                removeLinkField={removeLinkField}
               />
             </motion.div>
           )}
@@ -85,10 +79,8 @@ const Projects = () => {
             isAuthenticated={isAuthenticated}
           />
           
-          {loading && (
-            <div className="flex justify-center py-8">
-              <SmallLoadingSpinner />
-            </div>
+          {loading && projects.length > 0 && (
+             <LoadingIndicator show={true} text="Updating..." />
           )}
         </Container>
       )}

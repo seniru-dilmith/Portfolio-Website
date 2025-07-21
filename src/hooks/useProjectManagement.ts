@@ -1,14 +1,15 @@
-import { useState, useEffect, useRef } from "react";
-import { Project } from "@/types/Project";
+import { useState, useEffect } from "react";
+import { Project, ProjectFormState, ProjectLink } from "@/types/Project";
 import { ProjectService } from "@/services/project-service";
 
-interface FormState {
-  title: string;
-  description: string;
-  technologies: string;
-  githubURL: string;
-  imageURL: string;
-}
+// Use the corrected ProjectFormState type for the initial state
+const initialFormState: ProjectFormState = {
+  title: "",
+  description: "",
+  technologies: "",
+  links: [{ name: "GitHub", url: "" }],
+  imageURLs: [],
+};
 
 export const useProjectManagement = () => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -17,151 +18,132 @@ export const useProjectManagement = () => {
   const [error, setError] = useState<string | null>(null);
   const [viewForm, setViewForm] = useState(false);
   const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
-  const [file, setFile] = useState<File | null>(null);
-  const cancelledRef = useRef(false);
+  const [newFiles, setNewFiles] = useState<File[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
   
-  const [formState, setFormState] = useState<FormState>({
-    title: "",
-    description: "",
-    technologies: "",
-    githubURL: "",
-    imageURL: "",
-  });
+  const [formState, setFormState] = useState<ProjectFormState>(initialFormState);
 
-  // Fetch projects with staggered loading animation
   const fetchProjects = async () => {
     setLoading(true);
-    setProjects([]);
-
     try {
       const projectsData = await ProjectService.fetchProjects();
-      for (const project of projectsData) {
-        if (cancelledRef.current) break;
-        setProjects((prev) => [...prev, project]);
-        await new Promise((resolve) => setTimeout(resolve, 50));
-      }
-      if (!cancelledRef.current) {
-        setInitialLoading(false);
-        setError(null);
-      }
+      setProjects(projectsData);
+      setError(null);
     } catch {
-      if (!cancelledRef.current) {
-        setError("Failed to fetch projects");
-        setInitialLoading(false);
-      }
+      setError("Failed to fetch projects");
+    } finally {
+      setLoading(false);
+      setInitialLoading(false);
     }
-
-    if (!cancelledRef.current) setLoading(false);
   };
 
-  // Initialize projects on mount
   useEffect(() => {
-    cancelledRef.current = false;
     fetchProjects();
-    return () => {
-      cancelledRef.current = true;
-    };
   }, []);
 
-  // Reset form state
   const resetForm = () => {
-    setFormState({
-      title: "",
-      description: "",
-      technologies: "",
-      githubURL: "",
-      imageURL: "",
-    });
-    setFile(null);
+    setFormState(initialFormState);
+    setNewFiles([]);
     setEditingProjectId(null);
     setViewForm(false);
   };
 
-  // Handle add or update project
   const handleAddOrUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
+    if(newFiles.length + formState.imageURLs.length > 5){
+      alert("You can upload a maximum of 5 images per project.");
+      return;
+    }
 
-    const { success, message } = await ProjectService.addOrUpdateProject(
-      formState,
-      file,
-      editingProjectId
-    );
-
-    if (success) {
-      try {
-        const projectsData = await ProjectService.fetchProjects();
-        setProjects(projectsData);
-        if (projectsData.length > 0) {
-          setInitialLoading(false);
-        }
+    setIsUploading(true); // Start "uploading" state
+    try {
+      const { success } = await ProjectService.addOrUpdateProject(
+        formState,
+        newFiles,
+        editingProjectId
+      );
+      if (success) {
         resetForm();
-        alert(message);
-      } catch {
-        alert("Failed to refresh projects after update.");
+        await fetchProjects();
       }
-    } else {
-      alert(message);
+    } catch {
+      alert("An unexpected error occurred.");
+    } finally {
+      setIsUploading(false);
     }
   };
 
-  // Handle delete project
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this project?")) return;
-
-    const { success, message } = await ProjectService.deleteProject(id);
-
+    if (!confirm("Are you sure? This will delete the project and all its images.")) return;
+    setLoading(true);
+    const { success } = await ProjectService.deleteProject(id);
+    setLoading(false);
     if (success) {
-      const projectsData = await ProjectService.fetchProjects();
-      setProjects(projectsData);
-      if (projectsData.length === 0) {
-        setInitialLoading(true);
-      }
-      alert(message);
-    } else {
-      alert(message);
+      fetchProjects();
     }
   };
 
-  // Handle edit project
+  // The error will be fixed here because the object now correctly matches ProjectFormState
   const handleEdit = (project: Project) => {
     setFormState({
       title: project.title,
       description: project.description,
       technologies: project.technologies.join(", "),
-      githubURL: project.githubURL,
-      imageURL: project.imageURL,
+      links: project.links.length > 0 ? project.links : [{ name: "GitHub", url: "" }],
+      imageURLs: project.imageURLs || [],
     });
     setEditingProjectId(project._id);
+    setNewFiles([]);
     setViewForm(true);
+    window.scrollTo(0, 0);
   };
 
-  // Handle file change
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setFile(e.target.files[0]);
+    if (e.target.files) {
+        const filesArray = Array.from(e.target.files);
+        if(newFiles.length + formState.imageURLs.length + filesArray.length > 5) {
+            alert(`You can only add ${5 - (newFiles.length + formState.imageURLs.length)} more images.`);
+            return;
+        }
+        setNewFiles((prevFiles) => [...prevFiles, ...filesArray]);
     }
   };
 
+  const handleLinkChange = (index: number, field: keyof ProjectLink, value: string) => {
+    const updatedLinks = [...formState.links];
+    updatedLinks[index][field] = value;
+    setFormState(prev => ({ ...prev, links: updatedLinks }));
+  };
+
+  const addLinkField = () => {
+    setFormState(prev => ({
+      ...prev,
+      links: [...prev.links, { name: "", url: "" }],
+    }));
+  };
+
+  const removeLinkField = (index: number) => {
+    setFormState(prev => ({
+      ...prev,
+      links: prev.links.filter((_, i) => i !== index),
+    }));
+  };
+
+  const removeNewFile = (index: number) => {
+    setNewFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+  
+  const removeExistingImage = (index: number) => {
+    setFormState((prev) => ({
+      ...prev,
+      imageURLs: prev.imageURLs.filter((_, i) => i !== index),
+    }));
+  };
+
   return {
-    // State
-    projects,
-    loading,
-    initialLoading,
-    error,
-    viewForm,
-    editingProjectId,
-    file,
-    formState,
-    
-    // Setters
-    setViewForm,
-    setFormState,
-    
-    // Handlers
-    handleAddOrUpdate,
-    handleDelete,
-    handleEdit,
-    handleFileChange,
-    resetForm,
+    projects, loading, initialLoading, error, viewForm, editingProjectId, formState, newFiles,
+    setViewForm, setFormState,
+    handleAddOrUpdate, handleDelete, handleEdit, handleFileChange, resetForm,
+    removeNewFile, removeExistingImage, isUploading, handleLinkChange, addLinkField, removeLinkField
   };
 };

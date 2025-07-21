@@ -6,6 +6,7 @@ import {
   deleteProject,
 } from '@/controllers/projectController';
 import { verifyToken } from '@/middleware/auth';
+import { deleteFolder } from '@/lib/firebaseAdmin';
 
 export async function GET() {
   try {
@@ -65,11 +66,16 @@ export async function DELETE(request: NextRequest) {
     if (!id) {
       return NextResponse.json({ success: false, message: 'Missing id query param' }, { status: 400 });
     }
+    
+    // Delete from DB
     const deleted = await deleteProject(id);
     if (!deleted) {
       return NextResponse.json({ success: false, message: 'Project not found' }, { status: 404 });
     }
-    // Return only the ID in the response to match the test expectations
+
+    // Delete folder from Firebase Storage
+    await deleteFolder(`projects/${id}`);
+
     return NextResponse.json({ success: true, data: { _id: id } });
   } catch (err) {
     console.error('DELETE /api/projects error:', err);
