@@ -44,3 +44,4 @@ firebase.json
 firebase-debug.log
 .firebaserc
 .firebase/
+serviceAccountKey.json
