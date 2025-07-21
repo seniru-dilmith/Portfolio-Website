@@ -8,8 +8,9 @@ import { motion } from 'framer-motion';
 import { useParams, useRouter } from 'next/navigation';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { useAuth } from '@/context/AuthContext';
-import ReactMarkdown from 'react-markdown'; // Import for rendering
-import remarkGfm from 'remark-gfm'; // Plugin for GitHub Flavored Markdown (tables, etc.)
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm'; 
+import { apiFetch } from "@/lib/api";
 
 const ArticleDetail = () => {
     const [article, setArticle] = useState<Article | null>(null);
@@ -32,7 +33,7 @@ const ArticleDetail = () => {
             
             try {
                 setLoading(true);
-                const res = await fetch(`/api/articles/${id}`);
+                const res = await apiFetch(`/api/articles/${id}`);
                 const data = await res.json();
                 
                 if (data.success) {
@@ -79,7 +80,7 @@ const ArticleDetail = () => {
         if (!article) return;
 
         try {
-            const res = await fetch(`/api/articles?id=${article._id}`, {
+            const res = await apiFetch(`/api/articles?id=${article._id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formState),

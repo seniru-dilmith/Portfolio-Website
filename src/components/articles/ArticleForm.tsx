@@ -1,11 +1,10 @@
-'use client'; // This must now be a client component
+'use client';
 
 import { motion } from 'framer-motion';
 import { ArticleFormProps } from '@/types/Article';
-import dynamic from 'next/dynamic'; // Import dynamic
+import dynamic from 'next/dynamic'; 
 
 // Dynamically import the editor with SSR turned off.
-// This is the correct pattern.
 const ForwardRefEditor = dynamic(
     () => import('@/components/editor/ForwardRefEditor').then(mod => mod.ForwardRefEditor),
     { ssr: false }

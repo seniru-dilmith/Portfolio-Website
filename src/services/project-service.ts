@@ -1,4 +1,5 @@
 import { Project } from "@/types/Project";
+import { apiFetch } from "@/lib/api";
 
 interface FormState {
   title: string;
@@ -11,7 +12,7 @@ interface FormState {
 export class ProjectService {
   // Fetch projects from API
   static async fetchProjects(): Promise<Project[]> {
-    const res = await fetch("/api/projects");
+    const res = await apiFetch("/api/projects");
     if (!res.ok) throw new Error("Failed to fetch projects");
     const data = await res.json();
     if (!data.success) throw new Error("Failed to fetch projects");
@@ -24,7 +25,7 @@ export class ProjectService {
       const uploadData = new FormData();
       uploadData.append('file', file);
 
-      const uploadRes = await fetch('/api/upload', {
+      const uploadRes = await apiFetch('/api/upload', {
         method: 'POST',
         credentials: 'include',
         body: uploadData,
@@ -68,7 +69,7 @@ export class ProjectService {
         : "/api/projects";
       const method = editingProjectId ? "PUT" : "POST";
 
-      const res = await fetch(url, {
+      const res = await apiFetch(url, {
         method,
         credentials: 'include',
         headers: {
@@ -107,7 +108,7 @@ export class ProjectService {
   // Delete project via API
   static async deleteProject(id: string): Promise<{ success: boolean; message: string }> {
     try {
-      const res = await fetch(`/api/projects?id=${id}`, {
+      const res = await apiFetch(`/api/projects?id=${id}`, {
         method: "DELETE",
         credentials: 'include',
       });

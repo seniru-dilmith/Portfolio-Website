@@ -10,6 +10,7 @@ import SmallLoadingSpinner from '@/util/SmallLoadingSpinner';
 import { useAuth } from '@/context/AuthContext';
 import HeroForArticles from '@/components/articles/HeroForArticles';
 import { useRouter } from 'next/navigation';
+import { apiFetch } from "@/lib/api";
 
 const Articles = () => {
     const [articles, setArticles] = useState<Article[]>([]);
@@ -28,7 +29,7 @@ const Articles = () => {
         const fetchArticles = async () => {
             setLoading(true);
             setArticles([]);
-            const res = await fetch('/api/articles');
+            const res = await apiFetch('/api/articles');
             const data = await res.json();
             if (data.success) {
                 for (const article of data.data as Article[]) {
@@ -50,7 +51,7 @@ const Articles = () => {
         const method = 'POST';
         const url = '/api/articles';
 
-        const res = await fetch(url, {
+        const res = await apiFetch(url, {
             method,
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formState),
@@ -65,7 +66,7 @@ const Articles = () => {
     };
 
     const handleDelete = async (id: string) => {
-        const res = await fetch(`/api/articles?id=${id}`, { method: 'DELETE' });
+        const res = await apiFetch(`/api/articles?id=${id}`, { method: 'DELETE' });
         if (res.ok) setArticles((prev) => prev.filter((a) => a._id !== id));
     };
 
@@ -84,7 +85,7 @@ const Articles = () => {
                 <meta name="description" content="Articles written by Seniru Dilmith" />
             </Head>
             <div className="bg-gradient-to-br from-primary via-secondary to-accent min-h-screen">
-                <div className="container mx-auto py-8 px-4">
+                <div className="mx-auto py-8">
                     <HeroForArticles />
                     {isAuthenticated && (
                         <div className="flex justify-center mt-8">

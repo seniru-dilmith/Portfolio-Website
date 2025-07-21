@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { AuthContextProps } from '@/types/AuthContext';
 import { useHydration } from '@/hooks/useHydration';
+import { apiFetch } from "@/lib/api";
 
 export const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
@@ -16,7 +17,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     async function checkAuth() {
       try {
-        const res = await fetch('/api/admin/me');
+        const res = await apiFetch('/api/admin/me');
         setIsAuthenticated(res.ok);
         if (!res.ok) {
           localStorage.removeItem('isAdmin');
@@ -46,7 +47,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // When user logs out, call logout API to clear cookies and update state
   const handleLogout = async () => {
     try {
-      await fetch('/api/admin/logout', { method: 'POST' });
+      await apiFetch('/api/admin/logout', { method: 'POST' });
     } catch (err) {
       console.error('Logout error:', err);
     }

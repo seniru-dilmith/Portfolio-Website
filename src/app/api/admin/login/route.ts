@@ -66,7 +66,7 @@ export async function POST(request: Request) {
       httpOnly: true,
       secure: true,
       sameSite: "strict",
-      path: "/api/admin/refresh", // only send refresh token on refresh API route
+      path: "/", 
     });
 
     return response;

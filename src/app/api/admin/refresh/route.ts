@@ -1,46 +1,79 @@
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
-const JWT_REFRESH_SECRET = process.env.NEXT_JWT_REFRESH_SECRET!;
 const JWT_ACCESS_SECRET = process.env.NEXT_JWT_ACCESS_SECRET!;
-const ACCESS_TOKEN_EXPIRY = "15m";
+const JWT_REFRESH_SECRET = process.env.NEXT_JWT_REFRESH_SECRET!;
+const ACCESS_TOKEN_EXPIRY = process.env.NEXT_JWT_ACCESS_EXPIRY!;
+const REFRESH_TOKEN_EXPIRY = process.env.NEXT_JWT_REFRESH_EXPIRY!;
 
-export async function POST(request: NextRequest) {
+// convert expiry time string to seconds
+function parseExpiryToSeconds(expiry: string): number {
+  const value = parseInt(expiry.slice(0, -1), 10);
+  const unit = expiry.slice(-1);
+
+  if (isNaN(value)) return 60 * 60 * 24 * 7; // Default: 7 days
+
+  switch (unit) {
+    case 's': return value;
+    case 'm': return value * 60;
+    case 'h': return value * 60 * 60;
+    case 'd': return value * 60 * 60 * 24;
+    default: return value; // Default to seconds if unit unknown
+  }
+}
+
+
+export async function GET(request: NextRequest) {
+  const refreshToken = request.cookies.get("refreshToken")?.value;
+
+  if (!refreshToken) {
+    return NextResponse.json({ message: "Session expired" }, { status: 401 });
+  }
+
   try {
-    const refreshToken = request.cookies.get("refreshToken")?.value;
-    if (!refreshToken) {
-      return NextResponse.json(
-        { success: false, message: "No refresh token provided" },
-        { status: 401 }
-      );
-    }
-
     const payload = jwt.verify(refreshToken, JWT_REFRESH_SECRET) as { id: string };
 
-    // Generate new access token
-    const accessToken = jwt.sign(
+    // Issue new access token
+    const newAccessToken = jwt.sign(
       { id: payload.id },
       JWT_ACCESS_SECRET,
       { expiresIn: ACCESS_TOKEN_EXPIRY }
     );
 
-    const response = NextResponse.json(
-      { success: true, message: "Token refreshed" },
-      { status: 200 }
+    // Issue a new refresh token (good practice for security)
+    const newRefreshToken = jwt.sign(
+      { id: payload.id },
+      JWT_REFRESH_SECRET,
+      { expiresIn: REFRESH_TOKEN_EXPIRY }
     );
-    response.cookies.set("accessToken", accessToken, {
+
+    const response = NextResponse.json({ message: "Token refreshed successfully" }, { status: 200 });
+
+    // Set the new tokens with the correct global path
+    response.cookies.set("accessToken", newAccessToken, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV !== 'development',
       sameSite: "strict",
-      maxAge: 15 * 60,
+      maxAge: parseExpiryToSeconds(ACCESS_TOKEN_EXPIRY),
       path: "/",
     });
+
+    response.cookies.set("refreshToken", newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== 'development',
+      sameSite: "strict",
+      maxAge: parseExpiryToSeconds(REFRESH_TOKEN_EXPIRY),
+      path: "/",
+    });
+    
     return response;
-  } catch (err) {
-    console.error("Refresh token error:", err);
-    return NextResponse.json(
-      { success: false, message: "Invalid refresh token" },
-      { status: 401 }
-    );
+
+  } catch {
+    // if refresh token is invalid or expired
+    const response = NextResponse.json({ message: "Session expired" }, { status: 401 });
+    // clear the invalid cookies from the browser
+    response.cookies.delete('accessToken');
+    response.cookies.delete('refreshToken');
+    return response;
   }
 }
