@@ -114,7 +114,7 @@ describe("Articles Page", () => {
     render(<Articles />);
 
     await waitFor(() => {
-      expect(mockFetch).toHaveBeenCalledWith("/api/articles");
+      expect(mockFetch).toHaveBeenCalledWith("/api/articles", {});
     });
 
     await waitFor(() => {

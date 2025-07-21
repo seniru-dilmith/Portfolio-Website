@@ -6,24 +6,28 @@ jest.mock("jsonwebtoken", () => ({
   sign: jest.fn(),
 }));
 
-jest.mock("next/server", () => ({
-  NextRequest: jest.fn(),
+jest.mock('next/server', () => ({
   NextResponse: {
-    json: jest.fn(() => ({ cookies: { set: jest.fn() } })),
+    json: jest.fn(() => ({
+      cookies: {
+        set: jest.fn(),
+        delete: jest.fn(),
+      },
+    })),
   },
 }));
 
 const mockJwt = jwt as jest.Mocked<typeof jwt>;
                                    
-let POST: typeof import("@/app/api/admin/refresh/route").POST;
+let GET: typeof import("@/app/api/admin/refresh/route").GET;
 
-describe("/api/admin/refresh - POST", () => {
+describe("/api/admin/refresh - GET", () => {
   beforeEach(async () => {
     jest.resetModules();
     jest.clearAllMocks();
     process.env.NEXT_JWT_REFRESH_SECRET = "refresh-secret";
     process.env.NEXT_JWT_ACCESS_SECRET = "access-secret";
-    POST = (await import("@/app/api/admin/refresh/route")).POST;
+    GET = (await import("@/app/api/admin/refresh/route")).GET;
   });
   it("refreshes token successfully with valid refresh token", async () => {    const mockRequest = {
       cookies: { get: () => ({ value: "valid-refresh-token" }) },
@@ -33,7 +37,7 @@ describe("/api/admin/refresh - POST", () => {
     mockJwt.sign.mockImplementation(() => "new-access-token");
 
 
-    await expect(POST(mockRequest)).resolves.not.toThrow();
+    await expect(GET(mockRequest)).resolves.not.toThrow();
   });
 
   it("returns 401 when refresh token is missing", async () => {
@@ -41,7 +45,7 @@ describe("/api/admin/refresh - POST", () => {
       cookies: { get: () => undefined },
     } as unknown as NextRequest;
 
-    await expect(POST(mockRequest)).resolves.not.toThrow();
+    await expect(GET(mockRequest)).resolves.not.toThrow();
   });
 
   it("returns 401 when refresh token is invalid", async () => {
@@ -53,7 +57,7 @@ describe("/api/admin/refresh - POST", () => {
       throw new Error("invalid");
     });
 
-    await expect(POST(mockRequest)).resolves.not.toThrow();
+    await expect(GET(mockRequest)).resolves.not.toThrow();
   });
 
   it("handles internal server errors", async () => {
@@ -65,6 +69,6 @@ describe("/api/admin/refresh - POST", () => {
       throw new Error("unexpected");
     });
 
-    await expect(POST(mockRequest)).resolves.not.toThrow();
+    await expect(GET(mockRequest)).resolves.not.toThrow();
   });
 });
