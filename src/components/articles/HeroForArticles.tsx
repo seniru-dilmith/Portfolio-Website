@@ -27,7 +27,11 @@ const HeroForArticles = () => {
         transition={{ delay: 0.4, duration: 1 }}
       >
         Read my insights on web development, programming, and tech trends.
-        Stay updated with the latest innovations and best practices in software engineering!
+        Stay updated with the latest innovations and best practices in software engineering. <br/>
+        <motion.span className="text-sm italic">
+          PS: also on my personal belifs
+        </motion.span>
+        😉
       </motion.p>
 
       {/* Animated Call-to-Action */}
