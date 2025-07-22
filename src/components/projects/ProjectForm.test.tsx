@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -5,10 +6,13 @@ import ProjectForm from "./ProjectForm";
 import { ProjectFormProps } from "@/types/Project";
 import "@testing-library/jest-dom";
 
-// Mock next/image
+// Mock next/image with displayName for ESLint compliance
 jest.mock("next/image", () => ({
   __esModule: true,
-  default: ({ src, alt }: { src: string; alt: string }) => <img src={src} alt={alt} data-testid="next-image" />,
+  default: Object.assign(({
+    src,
+    alt
+  }: { src: string; alt: string }) => <img src={src} alt={alt} data-testid="next-image" />, { displayName: "NextImageMock" })
 }));
 
 // Mock react-icons
