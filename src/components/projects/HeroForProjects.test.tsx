@@ -6,15 +6,26 @@ import "@testing-library/jest-dom";
 // Mock framer-motion
 jest.mock("framer-motion", () => ({
   motion: {
-    div: ({ children, ...props }: React.HTMLAttributes<HTMLDivElement>) => <div {...props}>{children}</div>,
-    h1: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => <h1 {...props}>{children}</h1>,
-    p: ({ children, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => <p {...props}>{children}</p>,
+    div: Object.assign(({
+      children,
+      ...props
+    }: React.HTMLAttributes<HTMLDivElement>) => <div {...props}>{children}</div>, { displayName: "MockMotionDiv" }),
+    h1: Object.assign(({
+      children,
+      ...props
+    }: React.HTMLAttributes<HTMLHeadingElement>) => <h1 {...props}>{children}</h1>, { displayName: "MockMotionH1" }),
+    p: Object.assign(({
+      children,
+      ...props
+    }: React.HTMLAttributes<HTMLParagraphElement>) => <p {...props}>{children}</p>, { displayName: "MockMotionP" }),
   },
 }));
 
 // Mock next/link
 jest.mock("next/link", () => {
-  return ({ href, children }: { href: string; children: React.ReactNode }) => <a href={href} data-testid="next-link">{children}</a>;
+  const MockNextLink = ({ href, children }: { href: string; children: React.ReactNode }) => <a href={href} data-testid="next-link">{children}</a>;
+  MockNextLink.displayName = "MockNextLink";
+  return MockNextLink;
 });
 
 describe("HeroForProjects", () => {

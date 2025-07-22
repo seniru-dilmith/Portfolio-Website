@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 // Inline Swiper and Swiper CSS/module mocks
 jest.mock("swiper/react", () => ({
   Swiper: ({ children }: { children: React.ReactNode }) => <div data-testid="swiper">{children}</div>,
@@ -20,10 +21,13 @@ jest.mock("framer-motion", () => ({
   },
 }));
 
-// Mock next/image
+// Mock next/image with displayName for ESLint compliance
 jest.mock("next/image", () => ({
   __esModule: true,
-  default: ({ src, alt }: { src: string; alt: string }) => <img src={src} alt={alt} data-testid="next-image" />,
+  default: Object.assign(({
+    src,
+    alt
+  }: { src: string; alt: string }) => <img src={src} alt={alt} data-testid="next-image" />, { displayName: "NextImageMock" })
 }));
 
 // Mock react-icons
