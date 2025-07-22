@@ -14,6 +14,10 @@ const customJestConfig: Config = {
   moduleNameMapper: {
     // project with a 'src' directory
     '^@/(.*)$': '<rootDir>/src/$1',
+    // Mock CSS imports
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+    // Mock Swiper CSS imports
+    '^swiper/css.*$': 'identity-obj-proxy',
   },
 
   // use babel-jest to transform all JS/TS files
@@ -24,7 +28,8 @@ const customJestConfig: Config = {
 
   // which node_modules to transform
   transformIgnorePatterns: [
-      '/node_modules/(?!remark|react-markdown|unified|unist-.*|hast-.*|bail|trough|vfile.*|micromark.*|decode-named-character-reference|character-entities|mdast-util-.*|escape-string-regexp|markdown-table|github-slugger|strip-markdown|remark-gfm)/',
+      // Allow Swiper ESM modules to be transformed
+      '/node_modules/(?!remark|react-markdown|unified|unist-.*|hast-.*|bail|trough|vfile.*|micromark.*|decode-named-character-reference|character-entities|mdast-util-.*|escape-string-regexp|markdown-table|github-slugger|strip-markdown|remark-gfm|swiper)/',
       '^.+\\.module\\.(css|sass|scss)$',
   ],
 };
