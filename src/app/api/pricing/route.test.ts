@@ -19,6 +19,13 @@ const mockDbConnect = dbConnect as jest.MockedFunction<typeof dbConnect>;
 const mockContentModel = ContentModel as jest.Mocked<typeof ContentModel>;
 const mockNextResponse = NextResponse.json as jest.MockedFunction<typeof NextResponse.json>;
 
+beforeAll(() => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+afterAll(() => {
+  (console.error as jest.Mock).mockRestore?.();
+});
+
 describe("/api/pricing - GET", () => {  beforeEach(() => {
     jest.clearAllMocks();
     mockDbConnect.mockResolvedValue({} as mongoose.Connection);

@@ -13,6 +13,7 @@ export async function GET() {
     const projects = await getProjects();
     return NextResponse.json({ success: true, data: projects }, { status: 200 });
   } catch (err) {
+    // NOTE: Avoid noisy console.error in production and tests. Use a logger or mock in tests if needed.
     console.error('GET /api/projects error:', err);
     return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
   }
@@ -25,6 +26,7 @@ export async function POST(request: NextRequest) {
     const project = await createProject(body);
     return NextResponse.json({ success: true, data: project }, { status: 201 });
   } catch (err) {
+    // NOTE: Avoid noisy console.error in production and tests. Use a logger or mock in tests if needed.
     console.error('POST /api/projects error:', err);
     const message = err instanceof Error ? err.message : 'Internal server error';
     return NextResponse.json(
@@ -49,6 +51,7 @@ export async function PUT(request: NextRequest) {
     }
     return NextResponse.json({ success: true, data: updated });
   } catch (err) {
+    // NOTE: Avoid noisy console.error in production and tests. Use a logger or mock in tests if needed.
     console.error('PUT /api/projects error:', err);
     const message = err instanceof Error ? err.message : 'Internal server error';
     return NextResponse.json(
@@ -78,6 +81,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true, data: { _id: id } });
   } catch (err) {
+    // NOTE: Avoid noisy console.error in production and tests. Use a logger or mock in tests if needed.
     console.error('DELETE /api/projects error:', err);
     const message = err instanceof Error ? err.message : 'Internal server error';
     return NextResponse.json(

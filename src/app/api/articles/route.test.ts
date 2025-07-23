@@ -39,6 +39,13 @@ const mockDeleteArticle = deleteArticle as jest.MockedFunction<typeof deleteArti
 const mockVerifyToken = verifyToken as jest.MockedFunction<typeof verifyToken>;
 const mockNextResponse = NextResponse.json as jest.MockedFunction<typeof NextResponse.json>;
 
+beforeAll(() => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+afterAll(() => {
+  (console.error as jest.Mock).mockRestore?.();
+});
+
 describe("/api/articles", () => {
   beforeEach(() => {
     jest.clearAllMocks();

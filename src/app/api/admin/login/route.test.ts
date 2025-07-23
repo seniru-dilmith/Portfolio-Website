@@ -35,6 +35,13 @@ const mockJwt = jwt as jest.Mocked<typeof jwt>;
 const mockBcrypt = bcrypt as jest.Mocked<typeof bcrypt>;
 const mockNextResponse = NextResponse.json as jest.MockedFunction<typeof NextResponse.json>;
 
+beforeAll(() => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+afterAll(() => {
+  (console.error as jest.Mock).mockRestore?.();
+});
+
 describe("Admin Login API", () => {
   beforeEach(() => {
     jest.clearAllMocks();
