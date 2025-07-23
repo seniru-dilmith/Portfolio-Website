@@ -20,6 +20,13 @@ jest.mock("next/server", () => ({
 const mockGetArticleById = getArticleById as jest.MockedFunction<typeof getArticleById>;
 const mockNextResponse = NextResponse.json as jest.MockedFunction<typeof NextResponse.json>;
 
+beforeAll(() => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+afterAll(() => {
+  (console.error as jest.Mock).mockRestore?.();
+});
+
 describe("/api/articles/[id] - GET", () => {
   beforeEach(() => {
     jest.clearAllMocks();

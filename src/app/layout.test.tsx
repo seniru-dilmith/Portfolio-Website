@@ -32,6 +32,15 @@ jest.mock("@/components/navbar/Navbar", () => {
 jest.mock("@/styles/globals.css", () => ({}));
 jest.mock("@fortawesome/fontawesome-free/css/all.min.css", () => ({}));
 
+beforeAll(() => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
+});
+afterAll(() => {
+  (console.error as jest.Mock).mockRestore?.();
+  (console.warn as jest.Mock).mockRestore?.();
+});
+
 describe("RootLayout", () => {
   const mockChildren = <div data-testid="test-children">Test Content</div>;
 

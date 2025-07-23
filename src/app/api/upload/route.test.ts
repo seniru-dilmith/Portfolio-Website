@@ -34,6 +34,13 @@ function createMockFile(name = "file.txt", type = "text/plain", content = "hello
   };
 }
 
+beforeAll(() => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+afterAll(() => {
+  (console.error as jest.Mock).mockRestore?.();
+});
+
 describe("/api/upload - POST", () => {
   beforeEach(() => {
     jest.clearAllMocks();

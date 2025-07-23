@@ -26,6 +26,13 @@ const mockDbConnect = dbConnect as jest.MockedFunction<typeof dbConnect>;
 const mockMailSubscriber = MailSubscriber as jest.Mocked<typeof MailSubscriber>;
 const mockNextResponse = NextResponse.json as jest.MockedFunction<typeof NextResponse.json>;
 
+beforeAll(() => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+afterAll(() => {
+  (console.error as jest.Mock).mockRestore?.();
+});
+
 describe("/api/subscribe - POST", () => {  beforeEach(() => {
     jest.clearAllMocks();
     // Mock a connection object instead of undefined
