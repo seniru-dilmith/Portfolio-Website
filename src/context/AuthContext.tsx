@@ -28,9 +28,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
 
+    const path = window.location.pathname;
+    const isLoginPage = path === '/admin/login';
+
     const shouldCheck =
-      window.location.pathname.startsWith('/admin') ||
+      (path.startsWith('/admin') && !isLoginPage) || // Check on admin pages, but NOT the login page
       localStorage.getItem('isAdmin') === 'true';
+
     if (shouldCheck) {
       checkAuth();
     }
