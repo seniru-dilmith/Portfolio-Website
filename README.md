@@ -82,6 +82,6 @@ Contributions are welcome! Feel free to open issues or pull requests to improve 
 - **Website**: [seniru.dev](https://seniru.dev)
 - **LinkedIn**: [linkedin.com/in/seniru-dilmith](https://linkedin.com/in/seniru-dilmith)
 - **Twitter**: [@SeniruDilmith](https://twitter.com/SeniruDilmith)
-- **Email**: [me@senirudilmith.com](mailto:me@senirudilmith.com)
+- **Email**: [dilmithseniru@gmail.com.com](mailto:dilmithseniru@gmail.com)
 
 ---
