@@ -11,7 +11,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const isHydrated = useHydration();
 
-  // Check auth status on admin pages or when a previous admin session is stored
+  // Check auth status on admin pages
   useEffect(() => {
     if (!isHydrated) return; // Wait for hydration
 
@@ -19,32 +19,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const res = await apiFetch('/api/admin/me');
         setIsAuthenticated(res.ok);
-        if (!res.ok) {
-          localStorage.removeItem('isAdmin');
-        }
       } catch {
         setIsAuthenticated(false);
-        localStorage.removeItem('isAdmin');
       }
     }
 
     const path = window.location.pathname;
     const isLoginPage = path === '/admin/login';
 
-    const shouldCheck =
-      (path.startsWith('/admin') && !isLoginPage) || // Check on admin pages, but NOT the login page
-      localStorage.getItem('isAdmin') === 'true';
-
-    if (shouldCheck) {
+    // Only check auth on admin pages (except login page)
+    if (path.startsWith('/admin') && !isLoginPage) {
       checkAuth();
     }
   }, [isHydrated]);
   // When user logs in successfully (after login API call that sets cookies)
   const handleLogin = () => {
-    // Persist admin flag so we can re-check on refresh
-    if (isHydrated && typeof window !== 'undefined') {
-      localStorage.setItem('isAdmin', 'true');
-    }
     setIsAuthenticated(true);
   };
 
@@ -54,9 +43,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await apiFetch('/api/admin/logout', { method: 'POST' });
     } catch (err) {
       console.error('Logout error:', err);
-    }
-    if (isHydrated && typeof window !== 'undefined') {
-      localStorage.removeItem('isAdmin');
     }
     setIsAuthenticated(false);
   };
