@@ -45,7 +45,8 @@ describe("AuthContext", () => {
     });
     
     expect(getByTestId("auth-status").textContent).toBe("LoggedIn");
-    expect(localStorage.getItem('isAdmin')).toBe('true');
+    // isAdmin localStorage is no longer used
+    expect(localStorage.getItem('isAdmin')).toBeNull();
   });
 
   it("updates auth state on logout", async () => {
@@ -76,6 +77,7 @@ describe("AuthContext", () => {
     });
 
     expect(fetch).toHaveBeenCalledWith('/api/admin/logout', { method: 'POST' });
+    // isAdmin localStorage is no longer used
     expect(localStorage.getItem('isAdmin')).toBeNull();
   });
 });
