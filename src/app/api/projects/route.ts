@@ -15,7 +15,8 @@ export async function GET() {
   } catch (err) {
     // NOTE: Avoid noisy console.error in production and tests. Use a logger or mock in tests if needed.
     console.error('GET /api/projects error:', err);
-    return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
+    console.error('GET /api/projects error:', err);
+    return NextResponse.json({ success: false, message: err instanceof Error ? err.message : 'Unknown error', stack: err instanceof Error ? err.stack : undefined }, { status: 500 });
   }
 }
 
