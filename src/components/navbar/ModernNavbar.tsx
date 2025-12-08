@@ -34,9 +34,19 @@ const components: { title: string; href: string; description: string }[] = [
         description: "Learn more about my background, skills, and journey.",
     },
     {
+        title: "Articles",
+        href: "/articles",
+        description: "Thoughts on technology, coding, and design.",
+    },
+    {
         title: "Contact",
         href: "/contact",
         description: "Get in touch for collaborations or opportunities.",
+    },
+    {
+        title: "Work With Me",
+        href: "/work-with-me",
+        description: "Let's build something amazing together.",
     },
 ];
 

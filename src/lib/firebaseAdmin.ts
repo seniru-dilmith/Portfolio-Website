@@ -1,5 +1,6 @@
 import { initializeApp, getApps, cert, ServiceAccount } from 'firebase-admin/app';
 import { getStorage } from 'firebase-admin/storage';
+import { getFirestore } from 'firebase-admin/firestore';
 
 // Parse the service account key from the environment variable
 let serviceAccount: ServiceAccount;
@@ -23,6 +24,7 @@ if (!getApps().length) {
 }
 
 const bucket = getStorage().bucket();
+const db = getFirestore();
 
 /**
  * Deletes an entire folder from Firebase Storage.
@@ -38,4 +40,4 @@ export const deleteFolder = async (folderPath: string) => {
   }
 };
 
-export { bucket };
+export { bucket, db };

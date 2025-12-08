@@ -1,199 +1,178 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { Article } from '@/types/Article';
-import Footer from '@/components/footer/Footer';
-import ArticleForm from '@/components/articles/ArticleForm';
-import Head from 'next/head';
-import { motion } from 'framer-motion';
-import { useParams, useRouter } from 'next/navigation';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import { useAuth } from '@/context/AuthContext';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm'; 
-import { apiFetch } from "@/lib/api";
 
-const ArticleDetail = () => {
+import React, { useState, useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { format } from "date-fns";
+import { ArrowLeft, Edit, Save, X, Tag, Calendar, User } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from '@/context/AuthContext';
+import { apiFetch } from "@/lib/api";
+import { Article } from '@/types/Article';
+import { Separator } from '@/components/ui/separator';
+
+export default function ArticleDetail() {
+    const { id } = useParams();
+    const router = useRouter();
+    const { isAuthenticated } = useAuth();
+    const { toast } = useToast();
+
     const [article, setArticle] = useState<Article | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
-    const [isEditing, setIsEditing] = useState<boolean>(false);
-    const [formState, setFormState] = useState<Omit<Article, '_id'>>({
+    const [loading, setLoading] = useState(true);
+    const [isEditing, setIsEditing] = useState(false);
+    const [formData, setFormData] = useState<Omit<Article, '_id'>>({
         title: '',
         content: '',
         tags: [],
     });
-    const params = useParams();
-    const router = useRouter();
-    const { isAuthenticated } = useAuth();
-    const id = params.id as string;
 
     useEffect(() => {
-        const fetchArticle = async () => {
-            if (!id) return;
-            
-            try {
-                setLoading(true);
-                const res = await apiFetch(`/api/articles/${id}`);
-                const data = await res.json();
-                
-                if (data.success) {
-                    setArticle(data.data);
-                } else {
-                    setError(data.message || 'Article not found');
-                }
-            } catch (err) {
-                setError('Failed to load article');
-                console.error('Error fetching article:', err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchArticle();
+        if (id) fetchArticle(id as string);
     }, [id]);
 
     useEffect(() => {
         const searchParams = new URLSearchParams(window.location.search);
         if (searchParams.get('edit') === 'true' && article) {
-            setFormState({
+            setIsEditing(true);
+            setFormData({
                 title: article.title,
                 content: article.content,
                 tags: article.tags,
             });
-            setIsEditing(true);
-            router.replace(`/articles/${id}`);
         }
-    }, [article, id, router]);
+    }, [article]);
 
-    const handleEdit = () => {
-        if (article) {
-            setFormState({
-                title: article.title,
-                content: article.content,
-                tags: article.tags,
-            });
-            setIsEditing(true);
+    async function fetchArticle(articleId: string) {
+        try {
+            setLoading(true);
+            const res = await apiFetch(`/api/articles/${articleId}`);
+            const data = await res.json();
+            if (data.success) {
+                setArticle(data.data);
+            } else {
+                toast({ variant: "destructive", title: "Error", description: "Article not found" });
+                router.push('/articles');
+            }
+        } catch (error) {
+            console.error("Failed to fetch article", error);
+            toast({ variant: "destructive", title: "Error", description: "Could not load article" });
+        } finally {
+            setLoading(false);
         }
-    };
+    }
 
-    const handleSave = async () => {
+    async function handleSave() {
         if (!article) return;
-
         try {
             const res = await apiFetch(`/api/articles?id=${article._id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formState),
+                body: JSON.stringify(formData),
             });
-
             const data = await res.json();
             if (data.success) {
                 setArticle(data.data);
                 setIsEditing(false);
+                toast({ title: "Success", description: "Article updated successfully." });
+                router.replace(`/articles/${article._id}`); // Clear edit param
             } else {
-                setError('Failed to update article');
+                throw new Error("Update failed");
             }
-        } catch (err) {
-            setError('Failed to update article');
-            console.error('Error updating article:', err);
+        } catch (error) {
+            toast({ variant: "destructive", title: "Error", description: "Failed to update article." });
         }
-    };
-
-    const handleCancel = () => {
-        setIsEditing(false);
-    };
+    }
 
     if (loading) {
-        return (
-            <div className="min-h-screen bg-gradient-to-br from-primary via-secondary to-accent flex items-center justify-center">
-                <LoadingSpinner />
-            </div>
-        );
+        return <div className="min-h-screen flex items-center justify-center pt-20">Loading...</div>;
     }
 
-    if (error || !article) {
-        return (
-            <div className="min-h-screen bg-gradient-to-br from-primary via-secondary to-accent">
-                <div className="container mx-auto py-8 px-4">
-                    <div className="text-center">
-                        <h1 className="text-4xl font-bold text-white mb-4">Article Not Found</h1>
-                        <p className="text-xl text-white mb-8">{error}</p>
-                        <motion.button className="btn btn-primary" onClick={() => router.push('/articles')} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                            Back to Articles
-                        </motion.button>
-                    </div>
-                </div>
-                <Footer />
-            </div>
-        );
-    }
+    if (!article) return null;
 
     return (
-        <>
-            <Head>
-                <title>{article.title}</title>
-                <meta name="description" content={article.content.substring(0, 160)} />
-                <meta name="keywords" content={article.tags.join(', ')} />
-            </Head>
-            
-            <div className="bg-gradient-to-br from-primary via-secondary to-accent min-h-screen">
-                <div className="container mx-auto py-8 px-4">
-                    <motion.button className="btn btn-secondary mb-6" onClick={() => router.push('/articles')} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
-                        ← Back to Articles
-                    </motion.button>
+        <div className="min-h-screen bg-background pt-24 pb-12">
+            <div className="container max-w-4xl px-4 mx-auto">
+                <Button variant="ghost" className="mb-8 pl-0 hover:pl-2 transition-all" onClick={() => router.push('/articles')}>
+                    <ArrowLeft className="mr-2 h-4 w-4" /> Back to Articles
+                </Button>
 
-                    <motion.article className="bg-base-100 rounded-lg shadow-xl overflow-hidden" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-                        <div className="bg-accent text-accent-content px-8 py-6">
-                            <div className="flex justify-between items-start mb-4">
-                                <motion.h1 className="text-4xl font-bold" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
-                                    {isEditing ? formState.title : article.title}
-                                </motion.h1>
-                                
-                                {isAuthenticated && !isEditing && (
-                                    <motion.button className="btn btn-sm btn-primary" onClick={handleEdit} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
-                                        Edit Article
-                                    </motion.button>
-                                )}
+                {isEditing ? (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Title</label>
+                            <Input
+                                value={formData.title}
+                                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                className="text-xl font-bold"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Content (Markdown supported)</label>
+                            <Textarea
+                                value={formData.content}
+                                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                                className="min-h-[400px] font-mono"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Tags (comma separated)</label>
+                            <Input
+                                value={formData.tags.join(', ')}
+                                onChange={(e) => setFormData({ ...formData, tags: e.target.value.split(',').map(t => t.trim()) })}
+                            />
+                        </div>
+                        <div className="flex gap-4">
+                            <Button onClick={handleSave} className="gap-2"><Save className="h-4 w-4" /> Save Changes</Button>
+                            <Button variant="outline" onClick={() => setIsEditing(false)} className="gap-2"><X className="h-4 w-4" /> Cancel</Button>
+                        </div>
+                    </motion.div>
+                ) : (
+                    <motion.article initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                        <div className="mb-8 text-center md:text-left space-y-4">
+                            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">{article.title}</h1>
+
+                            <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
+                                {/* Mock Metadata for now as API might not return it yet, or use createdAt if available */}
+                                <div className="flex items-center gap-1 text-sm">
+                                    <Calendar className="h-4 w-4" />
+                                    <span>Today</span>
+                                </div>
+                                <div className="flex items-center gap-1 text-sm">
+                                    <User className="h-4 w-4" />
+                                    <span>Seniru Dilmith</span>
+                                </div>
+                                {article.tags.map(tag => (
+                                    <Badge key={tag} variant="secondary" className="rounded-full px-3">{tag}</Badge>
+                                ))}
                             </div>
-                            
-                            {article.tags.length > 0 && (
-                                <motion.div className="flex flex-wrap gap-2" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}>
-                                    {article.tags.map((tag, index) => (
-                                        <span key={index} className="badge badge-secondary badge-sm">{tag}</span>
-                                    ))}
-                                </motion.div>
-                            )}
                         </div>
 
-                        <motion.div className="px-8 py-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.4 }}>
-                            {isEditing ? (
-                                <div className="space-y-6">
-                                    <ArticleForm formState={formState} setFormState={setFormState} onSubmit={handleSave} />
-                                    <div className="flex gap-4 justify-center">
-                                        <motion.button className="btn btn-success" onClick={handleSave} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>Save</motion.button>
-                                        <motion.button className="btn btn-secondary" onClick={handleCancel} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>Cancel</motion.button>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="prose prose-lg max-w-none prose-invert">
-                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                        {article.content}
-                                    </ReactMarkdown>
-                                </div>
-                            )}
-                        </motion.div>
+                        {isAuthenticated && (
+                            <div className="mb-8 flex justify-end">
+                                <Button variant="outline" onClick={() => setIsEditing(true)} className="gap-2">
+                                    <Edit className="h-4 w-4" /> Edit Article
+                                </Button>
+                            </div>
+                        )}
+
+                        <Separator className="my-8" />
+
+                        <div className="prose prose-lg dark:prose-invert max-w-none">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {article.content}
+                            </ReactMarkdown>
+                        </div>
                     </motion.article>
-
-                    <motion.div className="mt-8 text-center" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.5 }}>
-                        <motion.button className="btn btn-primary btn-lg" onClick={() => router.push('/articles')} whileHover={{ scale: 1.05, backgroundColor: '#ff5722' }} whileTap={{ scale: 0.95 }}>
-                            Explore More Articles
-                        </motion.button>
-                    </motion.div>
-                </div>
-                <Footer />
+                )}
             </div>
-        </>
+        </div>
     );
-};
-
-export default ArticleDetail;
+}

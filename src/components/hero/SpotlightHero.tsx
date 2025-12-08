@@ -35,7 +35,7 @@ export default function SpotlightHero() {
                 className="pointer-events-none absolute -inset-px opacity-0 transition duration-300"
                 style={{
                     opacity,
-                    background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(255,255,255,0.1), transparent 40%)`,
+                    background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, var(--spotlight-color), transparent 40%)`,
                 }}
             />
 
@@ -44,10 +44,14 @@ export default function SpotlightHero() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="inline-flex items-center rounded-full border px-4 py-1.5 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary/50 hover:bg-secondary/80 text-secondary-foreground"
                 >
-                    <span>Available for hire</span>
-                    <span className="ml-2 h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                    <Link
+                        href="/work-with-me"
+                        className="inline-flex items-center rounded-full border px-4 py-1.5 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary/50 hover:bg-secondary/80 text-secondary-foreground"
+                    >
+                        <span>Available for hire</span>
+                        <span className="ml-2 h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                    </Link>
                 </motion.div>
 
                 <motion.h1

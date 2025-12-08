@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
-import Footer from "@/components/footer/Footer";
+
 import AnimatedBackground from "../background/AnimatedBackground";
 import FloatingElements from "../background/FloatingElements";
 import Head from "next/head";
@@ -112,11 +112,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         </motion.div>
 
         {/* Footer */}
-        {showFooter && (
-          <div className="relative z-20">
-            <Footer />
-          </div>
-        )}
+
       </div>
     </>
   );

@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Footer from "@/components/footer/Footer";
+
 import SpotlightHero from "@/components/hero/SpotlightHero";
 import TechTicker from "@/components/tech/TechTicker";
 import { Button } from "@/components/ui/button";
@@ -235,7 +235,7 @@ export default function Home() {
           </div>
         </section>
 
-        <Footer />
+
       </div>
     </>
   );

@@ -1,7 +1,7 @@
 "use client";
 import Head from "next/head";
 import HeroForContact from "@/components/contact/HeroForContact";
-import Footer from "@/components/footer/Footer";
+
 import Contact from "@/components/contact/Contact";
 import { motion } from "framer-motion";
 
@@ -83,7 +83,7 @@ const ContactMe = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 1.5, ease: "easeOut" }}
         >
-          <Footer />
+
         </motion.div>
       </motion.div>
     </>

@@ -9,6 +9,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/context/AuthContext";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import ModernNavbar from "@/components/navbar/ModernNavbar";
+import Footer from "@/components/footer/Footer";
 
 interface LayoutProps {
   children: ReactNode;
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: LayoutProps) {
                 <ModernNavbar />
               </div>
               <main className="flex-grow pt-16">{children}</main>
+              <Footer />
             </div>
           </AuthProvider>
         </ThemeProvider>

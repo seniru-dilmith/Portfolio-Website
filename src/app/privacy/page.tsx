@@ -3,7 +3,7 @@
 import React from "react";
 import Head from "next/head";
 import { motion } from "framer-motion";
-import Footer from "@/components/footer/Footer";
+
 
 const containerVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -45,8 +45,8 @@ const PrivacyPolicy = () => {
                 variants={containerVariants}
                 className="min-h-screen bg-gradient-to-br from-primary/80 via-secondary/70 to-accent/80 text-base-content px-4 sm:px-8 md:px-16 py-12"
             >
-            <motion.section variants={itemVariants} className="max-w-4xl mx-auto bg-gradient-to-br from-white via-blue-50 to-purple-100 rounded-lg shadow-lg p-8 text-base-content dark:text-accent-content">
-                <h1 className="text-4xl font-extrabold mb-6 text-center text-primary drop-shadow-lg">Privacy Policy</h1>
+                <motion.section variants={itemVariants} className="max-w-4xl mx-auto bg-gradient-to-br from-white via-blue-50 to-purple-100 rounded-lg shadow-lg p-8 text-base-content dark:text-accent-content">
+                    <h1 className="text-4xl font-extrabold mb-6 text-center text-primary drop-shadow-lg">Privacy Policy</h1>
 
                     <p className="mb-4">
                         At Seniru Dilmith, your privacy is of utmost importance to us. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website.
@@ -108,7 +108,7 @@ const PrivacyPolicy = () => {
                     <p className="mt-2 font-semibold text-base-content dark:text-accent-content">Email: <a href="mailto:dilmithseniru@gmail.com" className="text-primary underline hover:text-accent transition-colors">dilmithseniru@gmail.com</a></p>
                 </motion.section>
             </motion.main>
-            <Footer />
+
         </>
     );
 };
