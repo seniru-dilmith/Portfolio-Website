@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
-import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
 import AnimatedBackground from "../background/AnimatedBackground";
 import FloatingElements from "../background/FloatingElements";
@@ -92,20 +91,16 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       <div className={backgroundClassName}>
         {/* Animated Background Overlay */}
         <AnimatedBackground {...animatedBackgroundProps} />
-        
+
         {/* Floating Elements */}
-        <FloatingElements 
-          svgPaths={floatingSvgPaths} 
-          {...floatingElementsProps} 
+        <FloatingElements
+          svgPaths={floatingSvgPaths}
+          {...floatingElementsProps}
         />
-        
-        {/* Navbar */}
-        {showNavbar && (
-          <div className="relative z-30">
-            <Navbar />
-          </div>
-        )}
-        
+
+        {/* Navbar - Removed to prevent double rendering with RootLayout */}
+
+
         {/* Main Content */}
         <motion.div
           className="relative z-20"
@@ -115,7 +110,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         >
           {children}
         </motion.div>
-        
+
         {/* Footer */}
         {showFooter && (
           <div className="relative z-20">
