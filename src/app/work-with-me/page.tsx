@@ -23,6 +23,7 @@ import { CheckCircle2, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 const formSchema = z.object({
+    name: z.string().min(2, "Name must be at least 2 characters."),
     email: z.string().email("Please enter a valid email address."),
     title: z.string().min(5, "Title must be at least 5 characters."),
     description: z.string().min(20, "Description must be at least 20 characters."),
@@ -36,6 +37,7 @@ export default function WorkWithMePage() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            name: "",
             email: "",
             title: "",
             description: "",
@@ -74,7 +76,7 @@ export default function WorkWithMePage() {
 
     if (success) {
         return (
-            <div className="container min-h-[80vh] flex items-center justify-center pt-24">
+            <div className="container mx-auto min-h-[80vh] flex items-center justify-center pt-24">
                 <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
@@ -121,6 +123,19 @@ export default function WorkWithMePage() {
                         <CardContent>
                             <Form {...form}>
                                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                                    <FormField
+                                        control={form.control}
+                                        name="name"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Your Name</FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="Your Name" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
                                     <FormField
                                         control={form.control}
                                         name="email"

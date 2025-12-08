@@ -21,6 +21,8 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/context/AuthContext";
+
 
 const components: { title: string; href: string; description: string }[] = [
     {
@@ -62,6 +64,8 @@ export default function ModernNavbar() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
+    const { isAuthenticated, handleLogout } = useAuth();
+
     return (
         <header
             className={cn(
@@ -97,29 +101,51 @@ export default function ModernNavbar() {
                                     </NavigationMenuLink>
                                 </NavigationMenuItem>
                             ))}
+                            {isAuthenticated && (
+                                <NavigationMenuItem>
+                                    <NavigationMenuLink asChild>
+                                        <Link href="/admin/requests" className={navigationMenuTriggerStyle()}>
+                                            Dashboard
+                                        </Link>
+                                    </NavigationMenuLink>
+                                </NavigationMenuItem>
+                            )}
                         </NavigationMenuList>
                     </NavigationMenu>
 
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="w-9 h-9">
-                                <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                                <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                                <span className="sr-only">Toggle theme</span>
+                    <div className="flex items-center gap-2">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="w-9 h-9">
+                                    <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                                    <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                                    <span className="sr-only">Toggle theme</span>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => setTheme("light")}>
+                                    Light
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setTheme("dark")}>
+                                    Dark
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setTheme("system")}>
+                                    System
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+
+                        {isAuthenticated && (
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={handleLogout}
+                                className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10"
+                            >
+                                Logout
                             </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => setTheme("light")}>
-                                Light
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setTheme("dark")}>
-                                Dark
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setTheme("system")}>
-                                System
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                        )}
+                    </div>
                 </div>
 
                 {/* Mobile Navigation */}
@@ -169,6 +195,23 @@ export default function ModernNavbar() {
                                         {item.title}
                                     </Link>
                                 ))}
+                                {isAuthenticated && (
+                                    <>
+                                        <div className="h-px bg-border my-2" />
+                                        <Link
+                                            href="/admin/requests"
+                                            className="px-4 py-2 hover:bg-accent rounded-md transition-colors font-medium text-primary"
+                                        >
+                                            Admin Dashboard
+                                        </Link>
+                                        <button
+                                            onClick={handleLogout}
+                                            className="px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-md transition-colors text-left text-red-500"
+                                        >
+                                            Logout
+                                        </button>
+                                    </>
+                                )}
                             </div>
                         </SheetContent>
                     </Sheet>

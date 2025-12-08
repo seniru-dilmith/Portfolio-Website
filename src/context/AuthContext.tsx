@@ -27,8 +27,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const path = window.location.pathname;
     const isLoginPage = path === '/admin/login';
 
-    // Only check auth on admin pages (except login page)
-    if (path.startsWith('/admin') && !isLoginPage) {
+    // Check auth on all pages to verify admin status globally
+    if (!isLoginPage) {
       checkAuth();
     }
   }, [isHydrated]);

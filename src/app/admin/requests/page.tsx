@@ -77,6 +77,7 @@ export default function AdminRequestsPage() {
                 body: JSON.stringify({
                     requestId: replyingTo.id,
                     userEmail: replyingTo.email,
+                    userName: replyingTo.name,
                     replyMessage,
                     originalTitle: replyingTo.title,
                 }),
@@ -105,8 +106,8 @@ export default function AdminRequestsPage() {
     }
 
     return (
-        <div className="container py-10 pt-24">
-            <div className="flex justify-between items-center mb-8">
+        <div className="container mx-auto px-4 py-10 pt-24">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
                 <h1 className="text-3xl font-bold">Work Requests</h1>
                 <Badge variant="outline" className="text-lg px-4 py-1">
                     Total: {requests.length}
@@ -120,7 +121,7 @@ export default function AdminRequestsPage() {
                             <TableHead>Status</TableHead>
                             <TableHead>Date</TableHead>
                             <TableHead>Project</TableHead>
-                            <TableHead>Email</TableHead>
+                            <TableHead>User</TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -146,49 +147,19 @@ export default function AdminRequestsPage() {
                                         <div className="font-medium">{req.title}</div>
                                         <div className="text-sm text-muted-foreground truncate">{req.description}</div>
                                     </TableCell>
-                                    <TableCell>{req.email}</TableCell>
+                                    <TableCell>
+                                        <div className="font-medium">{req.name}</div>
+                                        <div className="text-xs text-muted-foreground">{req.email}</div>
+                                    </TableCell>
                                     <TableCell className="text-right">
-                                        <Dialog open={replyingTo?.id === req.id} onOpenChange={(open) => !open && setReplyingTo(null)}>
-                                            <DialogTrigger asChild>
-                                                <Button
-                                                    variant="outline"
-                                                    size="sm"
-                                                    onClick={() => setReplyingTo(req)}
-                                                    className="gap-2"
-                                                >
-                                                    <Reply className="h-4 w-4" /> Reply
-                                                </Button>
-                                            </DialogTrigger>
-                                            <DialogContent className="sm:max-w-[500px]">
-                                                <DialogHeader>
-                                                    <DialogTitle>Reply to {req.email}</DialogTitle>
-                                                    <DialogDescription>
-                                                        Write a response to "{req.title}". This will be emailed to the user.
-                                                    </DialogDescription>
-                                                </DialogHeader>
-                                                <div className="grid gap-4 py-4">
-                                                    <div className="bg-muted p-3 rounded-md text-sm italic border-l-2 border-primary">
-                                                        "{req.description}"
-                                                    </div>
-                                                    <Textarea
-                                                        id="reply"
-                                                        placeholder="Type your reply here..."
-                                                        className="min-h-[150px]"
-                                                        value={replyMessage}
-                                                        onChange={(e) => setReplyMessage(e.target.value)}
-                                                    />
-                                                </div>
-                                                <DialogFooter>
-                                                    <Button variant="outline" onClick={() => setReplyingTo(null)}>
-                                                        Cancel
-                                                    </Button>
-                                                    <Button onClick={handleReply} disabled={sendingReply}>
-                                                        {sendingReply && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                                        Send Email
-                                                    </Button>
-                                                </DialogFooter>
-                                            </DialogContent>
-                                        </Dialog>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => setReplyingTo(req)}
+                                            className="gap-2"
+                                        >
+                                            <Reply className="h-4 w-4" /> Reply
+                                        </Button>
                                     </TableCell>
                                 </TableRow>
                             ))
@@ -196,6 +167,39 @@ export default function AdminRequestsPage() {
                     </TableBody>
                 </Table>
             </div>
+
+            {/* Reply Dialog - Moved outside the table for better performance and z-index handling */}
+            <Dialog open={!!replyingTo} onOpenChange={(open) => !open && setReplyingTo(null)}>
+                <DialogContent className="sm:max-w-[500px]">
+                    <DialogHeader>
+                        <DialogTitle>Reply to {replyingTo?.email}</DialogTitle>
+                        <DialogDescription>
+                            Write a response to "{replyingTo?.title}". This will be emailed to the user.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="bg-muted p-3 rounded-md text-sm italic border-l-2 border-primary max-h-[100px] overflow-y-auto">
+                            "{replyingTo?.description}"
+                        </div>
+                        <Textarea
+                            id="reply"
+                            placeholder="Type your reply here..."
+                            className="min-h-[150px]"
+                            value={replyMessage}
+                            onChange={(e) => setReplyMessage(e.target.value)}
+                        />
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setReplyingTo(null)}>
+                            Cancel
+                        </Button>
+                        <Button onClick={handleReply} disabled={sendingReply}>
+                            {sendingReply && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Send Email
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

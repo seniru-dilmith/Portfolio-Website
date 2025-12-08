@@ -1,22 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/firebaseAdmin';
+import dbConnect from '@/util/dbConnect';
+import WorkRequest from '@/models/WorkRequest';
 import { sendEmail } from '@/lib/email';
 import { cookies } from 'next/headers';
 import { verify } from 'jsonwebtoken';
 import { z } from 'zod';
+import { getReplyEmailHtml } from '@/lib/email-templates';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = process.env.NEXT_JWT_ACCESS_SECRET!;
 
 const replySchema = z.object({
   requestId: z.string(),
   userEmail: z.string().email(),
+  userName: z.string(),
   replyMessage: z.string().min(1),
   originalTitle: z.string(),
 });
 
 async function isAuthenticated() {
     const cookieStore = await cookies();
-    const token = cookieStore.get('admin_token');
+    const token = cookieStore.get('accessToken');
 
   if (!token) return false;
 
@@ -34,23 +37,21 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    await dbConnect();
     const body = await req.json();
     const result = replySchema.safeParse(body);
 
     if (!result.success) {
-      return NextResponse.json({ error: 'Invalid input', details: result.error.errors }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid input', details: result.error.issues }, { status: 400 });
     }
 
-    const { requestId, userEmail, replyMessage, originalTitle } = result.data;
+    const { requestId, userEmail, userName, replyMessage, originalTitle } = result.data;
 
     // Send email
     const emailResult = await sendEmail(
       userEmail,
-      `Re: ${originalTitle} - Response from ${process.env.NEXT_PUBLIC_SITE_NAME}`,
-      `<p>${replyMessage.replace(/\n/g, '<br>')}</p>
-       <br>
-       <hr>
-       <p style="color: #666; font-size: 0.9em;">You received this email because you submitted a request on our website.</p>`
+      `Re: ${originalTitle} - Response from ${process.env.NEXT_PUBLIC_SITE_NAME || 'Seniru Dilmith'}`,
+      getReplyEmailHtml(userName, replyMessage, originalTitle)
     );
 
     if (!emailResult.success) {
@@ -58,9 +59,8 @@ export async function POST(req: NextRequest) {
     }
 
     // Update Request Status
-    await db.collection('work_requests').doc(requestId).update({
+    await WorkRequest.findByIdAndUpdate(requestId, {
       status: 'replied',
-      repliedAt: new Date(),
     });
 
     return NextResponse.json({ success: true });

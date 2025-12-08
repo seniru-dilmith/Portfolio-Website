@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/firebaseAdmin';
+import dbConnect from '@/util/dbConnect';
+import WorkRequest from '@/models/WorkRequest';
 import { cookies } from 'next/headers';
 import { verify } from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = process.env.NEXT_JWT_ACCESS_SECRET!;
 
 async function isAuthenticated() {
     const cookieStore = await cookies();
-    const token = cookieStore.get('admin_token');
+    const token = cookieStore.get('accessToken');
 
   if (!token) return false;
 
@@ -25,17 +26,20 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const snapshot = await db.collection('work_requests')
-      .orderBy('createdAt', 'desc')
-      .get();
+    await dbConnect();
+    const requests = await WorkRequest.find({}).sort({ createdAt: -1 });
 
-    const requests = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate ? doc.data().createdAt.toDate() : doc.data().createdAt, // Handle Firestore Timestamp
+    const formattedRequests = requests.map((doc: any) => ({
+      id: doc._id.toString(),
+      name: doc.name || 'Unknown', // Handle legacy data
+      email: doc.email,
+      title: doc.title,
+      description: doc.description,
+      status: doc.status,
+      createdAt: doc.createdAt,
     }));
 
-    return NextResponse.json(requests);
+    return NextResponse.json(formattedRequests);
   } catch (error) {
     console.error('Error fetching requests:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
