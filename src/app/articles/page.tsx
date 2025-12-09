@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/components/ui/use-toast"; // Fixed import
+import LoadingIndicator from "@/components/ui/LoadingIndicator";
 import { apiFetch } from "@/lib/api";
 import { Article } from "@/types/Article"; // Ensure this type matches your API response
 
@@ -35,6 +36,7 @@ export default function ArticlesPage() {
             const res = await apiFetch("/api/articles");
             const data = await res.json();
             if (data.success && Array.isArray(data.data)) {
+                // Articles are already processed/stripped by the API
                 setArticles(data.data);
             } else {
                 // Fallback or empty if structure differs
@@ -97,17 +99,17 @@ export default function ArticlesPage() {
                     )}
                 </div>
 
-                {loading ? (
-                    <div className="flex justify-center items-center h-64" data-testid="loading-spinner">
-                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                    </div>
-                ) : articles.length === 0 ? (
+                <LoadingIndicator show={loading} text="Loading articles..." />
+
+                {!loading && articles.length === 0 && (
                     <div className="text-center py-20 bg-muted/30 rounded-lg border border-dashed">
                         <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                         <h3 className="text-lg font-medium">No articles yet</h3>
                         <p className="text-muted-foreground">Check back soon for new content!</p>
                     </div>
-                ) : (
+                )}
+
+                {!loading && articles.length > 0 && (
                     <motion.div
                         variants={container}
                         initial="hidden"

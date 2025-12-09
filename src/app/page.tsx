@@ -49,7 +49,8 @@ export default function Home() {
                   </Button>
                 </div>
               </div>
-              <div className="flex-1 grid grid-cols-2 gap-4">
+              <div className="flex-1 grid grid-cols-3 gap-4">
+
                 <Card className="bg-secondary/10 border-none">
                   <CardHeader>
                     <GraduationCap className="h-8 w-8 text-primary mb-2" />
@@ -60,16 +61,7 @@ export default function Home() {
                     <p className="text-xs font-medium mt-1">University of Moratuwa</p>
                   </CardContent>
                 </Card>
-                <Card className="bg-secondary/10 border-none">
-                  <CardHeader>
-                    <Heart className="h-8 w-8 text-primary mb-2" />
-                    <CardTitle>Volunteering</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">Active Member & Event Organizer</p>
-                    <p className="text-xs font-medium mt-1">MoraSpirit</p>
-                  </CardContent>
-                </Card>
+          
                 <Card className="bg-secondary/10 border-none">
                   <CardHeader>
                     <Briefcase className="h-8 w-8 text-primary mb-2" />
@@ -80,6 +72,18 @@ export default function Home() {
                     <p className="text-xs font-medium mt-1">GTN Tech</p>
                   </CardContent>
                 </Card>
+
+                <Card className="bg-secondary/10 border-none">
+                  <CardHeader>
+                    <Heart className="h-8 w-8 text-primary mb-2" />
+                    <CardTitle>Volunteering</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">Head of Web and Technolofy Pillar</p>
+                    <p className="text-xs font-medium mt-1">MoraSpirit</p>
+                  </CardContent>
+                </Card>
+
               </div>
             </div>
           </div>
@@ -119,7 +123,7 @@ export default function Home() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    Designing scalable architectures. Experience with VHDL processor design and low-level system logic.
+                    Designing scalable architectures with the aid of low-level system logic.
                   </p>
                 </CardContent>
               </Card>
@@ -185,14 +189,14 @@ export default function Home() {
                 </div>
                 <CardHeader>
                   <div className="flex justify-between items-start">
-                    <CardTitle className="text-xl">The Library</CardTitle>
-                    <Badge variant="secondary">JavaScript</Badge>
+                    <CardTitle className="text-xl">Dreamy Delights E-commerce Platform</CardTitle>
+                    <Badge variant="secondary">Next.JS 15</Badge>
                   </div>
                   <CardDescription>Web Application</CardDescription>
                 </CardHeader>
                 <CardContent className="flex-1">
                   <p className="text-muted-foreground text-sm">
-                    A dynamic library management system built with vanilla JavaScript, demonstrating DOM manipulation and local storage usage.
+                    A fully functioning E-commerce platform built with Next.js 15, TypeScript, and Tailwind CSS live on <Link className="underline hover:text-primary" href="https://thedreamydelights.com">thedreamydelights.com</Link>
                   </p>
                 </CardContent>
               </Card>

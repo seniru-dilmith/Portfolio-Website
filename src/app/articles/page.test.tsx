@@ -59,7 +59,14 @@ jest.mock("@/components/articles/HeroForArticles", () => {
 
 jest.mock("@/util/SmallLoadingSpinner", () => {
   return function MockSmallLoadingSpinner() {
-    return <div data-testid="loading-spinner">Loading...</div>;
+    return <div data-testid="small-loading-spinner">Loading...</div>;
+  };
+});
+
+jest.mock("@/components/ui/LoadingIndicator", () => {
+  return function MockLoadingIndicator({ show }: { show: boolean }) {
+    if (!show) return null;
+    return <div data-testid="loading-spinner">Loading Indicator</div>;
   };
 });
 
