@@ -1,12 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 // Inline Swiper and Swiper CSS/module mocks
-jest.mock("swiper/react", () => ({
-  Swiper: ({ children }: { children: React.ReactNode }) => <div data-testid="swiper">{children}</div>,
-  SwiperSlide: ({ children }: { children: React.ReactNode }) => <div data-testid="swiper-slide">{children}</div>,
+// Mock Carousel components
+jest.mock("@/components/ui/carousel", () => ({
+  Carousel: ({ children }: any) => <div data-testid="carousel">{children}</div>,
+  CarouselContent: ({ children }: any) => <div>{children}</div>,
+  CarouselItem: ({ children }: any) => <div>{children}</div>,
+  CarouselNext: () => <button>Next</button>,
+  CarouselPrevious: () => <button>Previous</button>,
 }));
-jest.mock("swiper/css", () => ({}));
-jest.mock("swiper/css/navigation", () => ({}));
-jest.mock("swiper/modules", () => ({}));
 
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
@@ -14,10 +15,20 @@ import ProjectCard from "./projectCard";
 import { Project } from "@/types/Project";
 import "@testing-library/jest-dom";
 
+// Mock IntersectionObserver
+const mockIntersectionObserver = jest.fn();
+mockIntersectionObserver.mockReturnValue({
+  observe: () => null,
+  unobserve: () => null,
+  disconnect: () => null
+});
+window.IntersectionObserver = mockIntersectionObserver;
+
 // Mock framer-motion
 jest.mock("framer-motion", () => ({
   motion: {
-    div: ({ children, ...props }: React.HTMLAttributes<HTMLDivElement>) => <div {...props}>{children}</div>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    div: ({ children, layout, ...props }: any) => <div {...props}>{children}</div>,
   },
 }));
 
@@ -30,10 +41,16 @@ jest.mock("next/image", () => ({
   }: { src: string; alt: string }) => <img src={src} alt={alt} data-testid="next-image" />, { displayName: "NextImageMock" })
 }));
 
-// Mock react-icons
 jest.mock("react-icons/fa", () => ({
   FaGithub: () => <span data-testid="fa-github">GitHubIcon</span>,
   FaLink: () => <span data-testid="fa-link">LinkIcon</span>,
+}));
+
+jest.mock("@/components/ui/button", () => ({
+  Button: ({ children, asChild, ...props }: any) => {
+    if (asChild) return <>{children}</>;
+    return <button {...props}>{children}</button>;
+  },
 }));
 
 const mockProject: Project = {
@@ -63,10 +80,10 @@ describe("ProjectCard", () => {
     expect(screen.getByText("A test project description")).toBeInTheDocument();
     expect(screen.getByText("React")).toBeInTheDocument();
     expect(screen.getByText("TypeScript")).toBeInTheDocument();
-    expect(screen.getByText("GitHub")).toBeInTheDocument();
-    expect(screen.getByText("Demo")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /GitHub/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Demo/i })).toBeInTheDocument();
     expect(screen.getAllByTestId("next-image")).toHaveLength(2);
-    expect(screen.getByTestId("swiper")).toBeInTheDocument();
+    expect(screen.getByTestId("carousel")).toBeInTheDocument();
   });
 
   it("renders edit and delete buttons if authenticated", () => {

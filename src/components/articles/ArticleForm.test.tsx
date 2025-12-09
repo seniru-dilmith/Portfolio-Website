@@ -46,9 +46,9 @@ describe('ArticleForm', () => {
 
     it('renders all form fields', () => {
         render(<ArticleForm {...defaultProps} />);
-        
-        expect(screen.getByPlaceholderText('Title')).toBeInTheDocument();
-        expect(screen.getByPlaceholderText('Tags (comma-separated)')).toBeInTheDocument();
+
+        expect(screen.getByPlaceholderText('Enter article title...')).toBeInTheDocument();
+        expect(screen.getByPlaceholderText('react, nextjs, design (comma separated)')).toBeInTheDocument();
         // Our mock is now guaranteed to be on the screen
         expect(screen.getByRole('textbox', { name: 'Article Content' })).toBeInTheDocument();
     });
@@ -61,7 +61,7 @@ describe('ArticleForm', () => {
         };
 
         render(<ArticleForm {...defaultProps} formState={formState} />);
-        
+
         expect(screen.getByDisplayValue('Test Title')).toBeInTheDocument();
         expect(screen.getByDisplayValue('React, Testing')).toBeInTheDocument();
         expect(screen.getByRole('textbox', { name: 'Article Content' })).toHaveValue('Test Content');
@@ -70,30 +70,30 @@ describe('ArticleForm', () => {
     it('calls setFormState when title input changes', async () => {
         const user = userEvent.setup();
         render(<ArticleForm {...defaultProps} />);
-        
-        const titleInput = screen.getByPlaceholderText('Title');
+
+        const titleInput = screen.getByPlaceholderText('Enter article title...');
         await user.type(titleInput, 'New Title');
-        
+
         expect(defaultProps.setFormState).toHaveBeenCalled();
     });
 
     it('calls setFormState when content editor changes', async () => {
         const user = userEvent.setup();
         render(<ArticleForm {...defaultProps} />);
-        
+
         const contentEditor = screen.getByRole('textbox', { name: 'Article Content' });
         await user.type(contentEditor, 'New Content');
-        
+
         expect(defaultProps.setFormState).toHaveBeenCalled();
     });
 
     it('calls setFormState when tags input changes', async () => {
         const user = userEvent.setup();
         render(<ArticleForm {...defaultProps} />);
-        
-        const tagsInput = screen.getByPlaceholderText('Tags (comma-separated)');
+
+        const tagsInput = screen.getByPlaceholderText('react, nextjs, design (comma separated)');
         await user.type(tagsInput, 'React, Testing');
-        
+
         expect(defaultProps.setFormState).toHaveBeenCalled();
     });
 
@@ -114,7 +114,7 @@ describe('ArticleForm', () => {
 
     it('has required attribute on title field', () => {
         render(<ArticleForm {...defaultProps} />);
-        const titleInput = screen.getByPlaceholderText('Title');
+        const titleInput = screen.getByPlaceholderText('Enter article title...');
         expect(titleInput).toBeRequired();
     });
 });

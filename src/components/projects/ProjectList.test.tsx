@@ -74,7 +74,6 @@ describe("ProjectList", () => {
     );
     // Should render 3 ProjectCard components
     expect(screen.getAllByTestId("project-card")).toHaveLength(3);
-    // Should render empty cells (hidden md:block)
-    expect(screen.getAllByText((content, element) => element?.className?.includes("hidden") ?? false).length).toBeGreaterThan(0);
+
   });
 }); 

@@ -189,6 +189,13 @@ export default function WorkWithMePage() {
                                             "Submit Request"
                                         )}
                                     </Button>
+                                    <p className="text-xs text-center text-muted-foreground mt-4">
+                                        By submitting this form, you agree to our{" "}
+                                        <a href="/privacy" className="underline hover:text-primary transition-colors">
+                                            Privacy Policy
+                                        </a>
+                                        .
+                                    </p>
                                 </form>
                             </Form>
                         </CardContent>

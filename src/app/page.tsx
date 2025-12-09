@@ -4,7 +4,7 @@ import SpotlightHero from "@/components/hero/SpotlightHero";
 import TechTicker from "@/components/tech/TechTicker";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowRight, Code2, Rocket, Users, GraduationCap, Heart, Cpu, Globe } from "lucide-react";
+import { ArrowRight, Code2, Rocket, Users, GraduationCap, Heart, Cpu, Globe, Briefcase } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -68,6 +68,16 @@ export default function Home() {
                   <CardContent>
                     <p className="text-sm text-muted-foreground">Active Member & Event Organizer</p>
                     <p className="text-xs font-medium mt-1">MoraSpirit</p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-secondary/10 border-none">
+                  <CardHeader>
+                    <Briefcase className="h-8 w-8 text-primary mb-2" />
+                    <CardTitle>Experience</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">Software Engineer Intern</p>
+                    <p className="text-xs font-medium mt-1">GTN Tech</p>
                   </CardContent>
                 </Card>
               </div>

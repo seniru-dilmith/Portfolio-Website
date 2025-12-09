@@ -83,7 +83,7 @@ export default function ArticlesPage() {
     return (
         <div className="bg-background pt-24 pb-12">
             <div className="container px-4 mx-auto">
-                <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+                <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4" data-testid="hero-for-articles">
                     <div>
                         <h1 className="text-4xl font-bold tracking-tight mb-4">Articles & Thoughts</h1>
                         <p className="text-muted-foreground text-lg max-w-2xl">
@@ -98,7 +98,7 @@ export default function ArticlesPage() {
                 </div>
 
                 {loading ? (
-                    <div className="flex justify-center items-center h-64">
+                    <div className="flex justify-center items-center h-64" data-testid="loading-spinner">
                         <Loader2 className="h-8 w-8 animate-spin text-primary" />
                     </div>
                 ) : articles.length === 0 ? (
@@ -113,6 +113,7 @@ export default function ArticlesPage() {
                         initial="hidden"
                         animate="show"
                         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                        data-testid="article-list"
                     >
                         {articles.map((article) => (
                             <motion.div key={article._id} variants={item}>

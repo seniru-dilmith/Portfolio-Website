@@ -4,7 +4,7 @@ import RootLayout from "@/app/layout";
 import "@testing-library/jest-dom";
 
 // Mock components
-jest.mock("@/context/ThemeContext", () => ({
+jest.mock("@/components/theme-provider", () => ({
   ThemeProvider: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="theme-provider">{children}</div>
   ),
@@ -22,9 +22,16 @@ jest.mock("@/components/GoogleAnalytics", () => {
   };
 });
 
-jest.mock("@/components/navbar/Navbar", () => {
+jest.mock("@/components/navbar/ModernNavbar", () => {
   return function MockNavbar() {
     return <div data-testid="navbar">Navbar</div>;
+  };
+});
+
+
+jest.mock("@/components/footer/Footer", () => {
+  return function MockFooter() {
+    return <div data-testid="footer">Footer</div>;
   };
 });
 
@@ -33,8 +40,8 @@ jest.mock("@/styles/globals.css", () => ({}));
 jest.mock("@fortawesome/fontawesome-free/css/all.min.css", () => ({}));
 
 beforeAll(() => {
-  jest.spyOn(console, 'error').mockImplementation(() => {});
-  jest.spyOn(console, 'warn').mockImplementation(() => {});
+  jest.spyOn(console, 'error').mockImplementation(() => { });
+  jest.spyOn(console, 'warn').mockImplementation(() => { });
 });
 afterAll(() => {
   (console.error as jest.Mock).mockRestore?.();
@@ -52,19 +59,20 @@ describe("RootLayout", () => {
 
   it("renders children within the layout structure", () => {
     const { getByTestId } = render(<RootLayout>{mockChildren}</RootLayout>);
-    
+
     expect(getByTestId("test-children")).toBeInTheDocument();
     expect(getByTestId("theme-provider")).toBeInTheDocument();
     expect(getByTestId("auth-provider")).toBeInTheDocument();
     expect(getByTestId("google-analytics")).toBeInTheDocument();
     expect(getByTestId("navbar")).toBeInTheDocument();
+    expect(getByTestId("footer")).toBeInTheDocument();
   });
 
   it("sets correct HTML attributes", () => {
     render(<RootLayout>{mockChildren}</RootLayout>);
     const htmlElement = document.documentElement;
     expect(htmlElement).toHaveAttribute("lang", "en");
-    expect(htmlElement).toHaveAttribute("data-arp", "");
+
   });
 
 

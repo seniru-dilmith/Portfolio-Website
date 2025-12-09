@@ -15,9 +15,16 @@ jest.mock("framer-motion", () => ({
 }));
 
 // Mock components
-jest.mock("@/components/carousal/HeroForHome", () => {
-  return function MockHeroForHome() {
-    return <div data-testid="hero-for-home">Hero Component</div>;
+// Mock components
+jest.mock("@/components/hero/SpotlightHero", () => {
+  return function MockSpotlightHero() {
+    return <div data-testid="spotlight-hero">Spotlight Hero</div>;
+  };
+});
+
+jest.mock("@/components/tech/TechTicker", () => {
+  return function MockTechTicker() {
+    return <div data-testid="tech-ticker">Tech Ticker</div>;
   };
 });
 
@@ -37,8 +44,7 @@ jest.mock("next/head", () => {
 describe("Home Page", () => {
   it("renders without crashing", () => {
     render(<Home />);
-    expect(screen.getByTestId("hero-for-home")).toBeInTheDocument();
-    expect(screen.getByTestId("footer")).toBeInTheDocument();
+    expect(screen.getByTestId("spotlight-hero")).toBeInTheDocument();
   });
   it("renders the main container with correct classes", () => {
     const { container } = render(<Home />);
@@ -53,7 +59,7 @@ describe("Home Page", () => {
 
   it("includes Hero and Footer components", () => {
     render(<Home />);
-    expect(screen.getByTestId("hero-for-home")).toBeInTheDocument();
-    expect(screen.getByTestId("footer")).toBeInTheDocument();
+    expect(screen.getByTestId("spotlight-hero")).toBeInTheDocument();
+    expect(screen.getByTestId("tech-ticker")).toBeInTheDocument();
   });
 });

@@ -96,9 +96,9 @@ describe("Articles Page", () => {
     await act(async () => {
       render(<Articles />);
     });
-    
+
     expect(screen.getByTestId("hero-for-articles")).toBeInTheDocument();
-    expect(screen.getByTestId("footer")).toBeInTheDocument();
+
   });
 
   it("fetches and displays articles on mount", async () => {
@@ -123,7 +123,7 @@ describe("Articles Page", () => {
   });
 
   it("shows loading spinner while fetching articles", async () => {
-    mockFetch.mockImplementation(() => new Promise(() => {})); // Never resolves
+    mockFetch.mockImplementation(() => new Promise(() => { })); // Never resolves
 
     render(<Articles />);
 

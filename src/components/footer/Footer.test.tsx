@@ -9,6 +9,6 @@ describe('Footer', () => {
     expect(screen.getByText(/Made with/i)).toBeInTheDocument();
     expect(screen.getByText(/Powered by innovation/i)).toBeInTheDocument();
     expect(screen.getByText(/Next.js/i)).toBeInTheDocument();
-    expect(screen.getByText(/Daisy UI/i)).toBeInTheDocument();
+    expect(screen.getByText(/Shadcn UI/i)).toBeInTheDocument();
   });
 }); 

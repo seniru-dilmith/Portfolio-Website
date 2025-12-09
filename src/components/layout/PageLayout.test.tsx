@@ -4,17 +4,7 @@ import PageLayout from "@/components/layout/PageLayout";
 import "@testing-library/jest-dom";
 
 // Mock all the dependencies
-jest.mock("@/components/navbar/Navbar", () => {
-  return function MockNavbar() {
-    return <nav data-testid="navbar">Navbar</nav>;
-  };
-});
 
-jest.mock("@/components/footer/Footer", () => {
-  return function MockFooter() {
-    return <footer data-testid="footer">Footer</footer>;
-  };
-});
 
 jest.mock("@/components/background/AnimatedBackground", () => {
   return function MockAnimatedBackground() {
@@ -60,15 +50,7 @@ describe("PageLayout", () => {
     expect(screen.getByText("Test Content")).toBeInTheDocument();
   });
 
-  it("renders navbar by default", () => {
-    render(<PageLayout {...defaultProps} />);
-    expect(screen.getByTestId("navbar")).toBeInTheDocument();
-  });
 
-  it("renders footer by default", () => {
-    render(<PageLayout {...defaultProps} />);
-    expect(screen.getByTestId("footer")).toBeInTheDocument();
-  });
 
   it("renders animated background", () => {
     render(<PageLayout {...defaultProps} />);
@@ -80,15 +62,7 @@ describe("PageLayout", () => {
     expect(screen.getByTestId("floating-elements")).toBeInTheDocument();
   });
 
-  it("hides navbar when showNavbar is false", () => {
-    render(<PageLayout {...defaultProps} showNavbar={false} />);
-    expect(screen.queryByTestId("navbar")).not.toBeInTheDocument();
-  });
 
-  it("hides footer when showFooter is false", () => {
-    render(<PageLayout {...defaultProps} showFooter={false} />);
-    expect(screen.queryByTestId("footer")).not.toBeInTheDocument();
-  });
 
   it("renders SEO meta tags", () => {
     render(<PageLayout {...defaultProps} />);
@@ -103,7 +77,7 @@ describe("PageLayout", () => {
       ogDescription: "Custom OG Description",
       ogImage: "/custom-image.jpg",
     };
-    
+
     render(<PageLayout {...customProps} />);
     expect(screen.getByTestId("head")).toBeInTheDocument();
   });
@@ -114,7 +88,7 @@ describe("PageLayout", () => {
       twitterTitle: "Custom Twitter Title",
       twitterDescription: "Custom Twitter Description",
     };
-    
+
     render(<PageLayout {...customProps} />);
     expect(screen.getByTestId("head")).toBeInTheDocument();
   });
@@ -123,7 +97,7 @@ describe("PageLayout", () => {
     const { container } = render(
       <PageLayout {...defaultProps} backgroundClassName="custom-bg-class" />
     );
-    
+
     const backgroundElement = container.querySelector(".custom-bg-class");
     expect(backgroundElement).toBeInTheDocument();
   });
@@ -135,7 +109,7 @@ describe("PageLayout", () => {
         <div>Second Child</div>
       </>
     );
-    
+
     render(<PageLayout {...defaultProps}>{multipleChildren}</PageLayout>);
     expect(screen.getByText("First Child")).toBeInTheDocument();
     expect(screen.getByText("Second Child")).toBeInTheDocument();

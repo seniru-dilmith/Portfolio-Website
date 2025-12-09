@@ -31,9 +31,9 @@ jest.mock("next/link", () => {
 describe("HeroForProjects", () => {
   it("renders the main heading, subtitle, and contact link", () => {
     render(<HeroForProjects />);
-    expect(screen.getByRole("heading", { name: /check out my projects/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /my projects/i })).toBeInTheDocument();
     expect(screen.getByText(/explore my portfolio/i)).toBeInTheDocument();
-    const contactLink = screen.getByTestId("next-link");
+    const contactLink = screen.getByRole("link", { name: /contact me/i });
     expect(contactLink).toHaveAttribute("href", "/contact");
     expect(contactLink).toHaveTextContent(/contact me/i);
   });
