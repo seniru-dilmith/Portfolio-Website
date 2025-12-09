@@ -30,6 +30,18 @@ export const milestones = [
         image: '/story/img-5.jpg',
     },
     {
+        title: 'Pillarhead of Web and Technology - Moraspirit',
+        date: '2023 - Present',
+        description: 'Leading the Web and Technology Pillar at Moraspirit.',
+        image: '/story/img-7.jpg',
+    },
+    {
+        title: 'Software Engineer Intern - GTN Tech',
+        date: 'Present',
+        description: 'Working as a Software Engineer Intern at GTN Tech Sri Lanka.',
+        image: '/story/img-8.jpg',
+    },
+    {
         title: 'Music: My Daily Remedy',
         date: 'Always',
         description: 'Music is my day-to-day doctor. Playing my guitar and keyboard, and listening to soothing melodies make me feel good, calm, and centered.',

@@ -2,7 +2,10 @@
 
 import { motion } from 'framer-motion';
 import { ArticleFormProps } from '@/types/Article';
-import dynamic from 'next/dynamic'; 
+import dynamic from 'next/dynamic';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 
 // Dynamically import the editor with SSR turned off.
 const ForwardRefEditor = dynamic(
@@ -13,63 +16,65 @@ const ForwardRefEditor = dynamic(
 const ArticleForm: React.FC<ArticleFormProps> = ({ formState, setFormState, onSubmit }) => {
     return (
         <motion.form
-            className="space-y-6 items-center flex flex-col"
+            className="space-y-6 w-full max-w-3xl mx-auto"
             onSubmit={(e) => {
                 e.preventDefault();
                 onSubmit();
             }}
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.4 }}
         >
-            {/* Title Input */}
-            <input
-                type="text"
-                className="input input-bordered w-full max-w-3xl"
-                placeholder="Title"
-                value={formState.title}
-                onChange={(e) =>
-                    setFormState((prev) => ({
-                        ...prev,
-                        title: e.target.value,
-                    }))
-                }
-                required
-            />
-
-            {/* MDX Editor for Content */}
-            <div className="w-full max-w-3xl bg-base-200 rounded-lg p-1 border border-base-300 shadow-inner">
-                <ForwardRefEditor
-                    markdown={formState.content}
-                    onChange={(newContent) =>
+            <div className="space-y-2">
+                <Label htmlFor="title">Title</Label>
+                <Input
+                    id="title"
+                    placeholder="Enter article title..."
+                    value={formState.title}
+                    onChange={(e) =>
                         setFormState((prev) => ({
                             ...prev,
-                            content: newContent,
+                            title: e.target.value,
+                        }))
+                    }
+                    required
+                    className="text-lg"
+                />
+            </div>
+
+            <div className="space-y-2">
+                <Label>Content</Label>
+                <div className="min-h-[400px] border rounded-md overflow-hidden bg-background">
+                    <ForwardRefEditor
+                        markdown={formState.content}
+                        onChange={(newContent) =>
+                            setFormState((prev) => ({
+                                ...prev,
+                                content: newContent,
+                            }))
+                        }
+                    />
+                </div>
+            </div>
+
+            <div className="space-y-2">
+                <Label htmlFor="tags">Tags</Label>
+                <Input
+                    id="tags"
+                    placeholder="react, nextjs, design (comma separated)"
+                    value={formState.tags.join(', ')}
+                    onChange={(e) =>
+                        setFormState((prev) => ({
+                            ...prev,
+                            tags: e.target.value.split(',').map((tag) => tag.trim()),
                         }))
                     }
                 />
             </div>
 
-            {/* Tags Input */}
-            <input
-                type="text"
-                className="input input-bordered w-full max-w-3xl"
-                placeholder="Tags (comma-separated)"
-                value={formState.tags.join(', ')}
-                onChange={(e) =>
-                    setFormState((prev) => ({
-                        ...prev,
-                        tags: e.target.value.split(',').map((tag) => tag.trim()),
-                    }))
-                }
-            />
-        {/* Submit Button */}
-        <button
-            type="submit"
-            className="btn btn-primary w-full max-w-3xl"
-        >
-            Submit
-        </button>
+            <Button type="submit" size="lg" className="w-full">
+                Publish Article
+            </Button>
         </motion.form>
     );
 };

@@ -1,103 +1,122 @@
+"use client";
+
 import React from 'react';
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Project } from "@/types/Project";
 import { FaGithub, FaLink } from "react-icons/fa";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
-// Import Swiper React components and modules
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
+interface ProjectCardProps {
+  project: Project;
+  handleEdit: (p: Project) => void;
+  handleDelete: (id: string) => void;
+  isAuthenticated: boolean;
+}
 
-// Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/navigation';
-
-// Individual Project Card with Swiper Carousel
-const ProjectCard: React.FC<{ project: Project; handleEdit: (p: Project) => void; handleDelete: (id: string) => void; isAuthenticated: boolean }> = ({
+const ProjectCard: React.FC<ProjectCardProps> = ({
   project, handleEdit, handleDelete, isAuthenticated
 }) => {
   const hasImages = project.imageURLs && project.imageURLs.length > 0;
 
   const getLinkIcon = (name: string) => {
     if (name.toLowerCase().includes('github')) {
-      return <FaGithub />;
+      return <FaGithub className="mr-2 h-4 w-4" />;
     }
-    return <FaLink />;
+    return <FaLink className="mr-2 h-4 w-4" />;
   };
 
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, scale: 0.8 }}
+      initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.8 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-      className="card bg-base-100 text-base-content shadow-xl flex flex-col overflow-hidden" // Added overflow-hidden
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.3 }}
     >
-      {/* The entire carousel is now managed by Swiper */}
-      <figure className="relative h-48 bg-base-300 group">
-        {hasImages ? (
-          <Swiper
-            // Install navigation module
-            modules={[Navigation]}
-            spaceBetween={0}
-            slidesPerView={1}
-            navigation // Enables the navigation arrows
-            loop={true} // Allows infinite scrolling
-            className="w-full h-full"
-          >
-            {project.imageURLs.map((url, index) => (
-              <SwiperSlide key={index}>
-                <Image
-                  src={url}
-                  alt={`${project.title} - slide ${index + 1}`}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  quality={80}
-                  priority={index === 0}
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-500">No Image</div>
-        )}
-      </figure>
-
-      <div className="card-body p-5 flex-grow flex flex-col">
-        <h2 className="card-title text-xl font-bold">{project.title}</h2>
-        <p className="text-gray-500 text-sm mt-1 line-clamp-3 flex-grow">{project.description}</p>
-        <div className="mt-4">
-            <p className="text-sm font-semibold mb-2">Technologies:</p>
-            <div className="flex flex-wrap gap-2">
-                {project.technologies.map(tech => (
-                    <div key={tech} className="badge badge-outline">{tech}</div>
+      <Card className="flex flex-col h-full overflow-hidden hover:shadow-lg transition-shadow duration-300 border-primary/20">
+        <div className="relative h-48 bg-muted w-full">
+          {hasImages ? (
+            <Carousel className="w-full h-full">
+              <CarouselContent>
+                {project.imageURLs.map((url, index) => (
+                  <CarouselItem key={index} className="relative h-48 w-full">
+                    <div className="relative h-full w-full">
+                      <Image
+                        src={url}
+                        alt={`${project.title} - image ${index + 1}`}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                    </div>
+                  </CarouselItem>
                 ))}
-            </div>
-        </div>
-        <div className="card-actions justify-between items-center mt-5">
-          <div className="flex flex-wrap gap-2">
-            {project.links.map((link) => (
-              <a
-                key={link.name}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-primary btn-sm gap-2"
-              >
-                {getLinkIcon(link.name)} {link.name}
-              </a>
-            ))}
-          </div>
-          {isAuthenticated && (
-            <div className="flex gap-2 shrink-0">
-              <button onClick={() => handleEdit(project)} className="btn btn-warning btn-sm">Edit</button>
-              <button onClick={() => handleDelete(project._id)} className="btn btn-error btn-sm">Delete</button>
+              </CarouselContent>
+              {project.imageURLs.length > 1 && (
+                <>
+                  <CarouselPrevious className="left-2" />
+                  <CarouselNext className="right-2" />
+                </>
+              )}
+            </Carousel>
+          ) : (
+            <div className="flex h-full items-center justify-center text-muted-foreground bg-muted/50">
+              No Image
             </div>
           )}
         </div>
-      </div>
+
+        <CardHeader>
+          <CardTitle className="text-xl">{project.title}</CardTitle>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {project.technologies.map((tech) => (
+              <Badge key={tech} variant="secondary" className="text-xs">
+                {tech}
+              </Badge>
+            ))}
+          </div>
+        </CardHeader>
+
+        <CardContent className="flex-grow">
+          <CardDescription className="line-clamp-4 leading-relaxed">
+            {project.description}
+          </CardDescription>
+        </CardContent>
+
+        <CardFooter className="flex justify-between items-center gap-4 border-t pt-4">
+          <div className="flex gap-2">
+            {project.links.map((link) => (
+              <Button key={link.name} variant="outline" size="sm" asChild>
+                <a href={link.url} target="_blank" rel="noopener noreferrer">
+                  {getLinkIcon(link.name)}
+                  {link.name}
+                </a>
+              </Button>
+            ))}
+          </div>
+
+          {isAuthenticated && (
+            <div className="flex gap-2">
+              <Button variant="secondary" size="sm" onClick={() => handleEdit(project)}>
+                Edit
+              </Button>
+              <Button variant="destructive" size="sm" onClick={() => handleDelete(project._id)}>
+                Delete
+              </Button>
+            </div>
+          )}
+        </CardFooter>
+      </Card>
     </motion.div>
   );
 };

@@ -14,10 +14,12 @@ export async function POST(request: NextRequest) {
 
     // In tests, response.cookies might not be available
     if (response.cookies && typeof response.cookies.set === 'function') {
+      const isProduction = process.env.NODE_ENV === 'production';
+
       // Clear the accessToken cookie
       response.cookies.set("accessToken", "", {
         httpOnly: true,
-        secure: true,
+        secure: isProduction,
         sameSite: "strict",
         path: "/",
         maxAge: 0,
@@ -26,7 +28,7 @@ export async function POST(request: NextRequest) {
       // Clear the refreshToken cookie
       response.cookies.set("refreshToken", "", {
         httpOnly: true,
-        secure: true,
+        secure: isProduction,
         sameSite: "strict",
         path: "/api/admin/refresh",
         maxAge: 0,

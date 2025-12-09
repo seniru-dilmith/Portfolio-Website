@@ -1,133 +1,87 @@
+"use client";
+
 import React from "react";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Mail, Phone, MapPin } from "lucide-react";
+import { FaYoutube, FaTiktok } from "react-icons/fa";
 
 function Contact() {
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut" },
-    },
-  };
-
-  const popIn = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: { duration: 0.8, ease: "easeOut" },
-    },
-  };
-
-  const staggerContainer = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
-  };
-
-  const fadeLeft = {
-    hidden: { opacity: 0, x: -50 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.8, ease: "easeOut" },
-    },
-  };
-
-  const fadeRight = {
-    hidden: { opacity: 0, x: 50 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.8, ease: "easeOut" },
-    },
-  };
-
   return (
-    <section className="py-16 bg-base-300 text-base-content text-center">
-      <motion.div
-        className="max-w-4xl mx-auto"
-        initial="hidden"
-        animate="visible"
-        variants={staggerContainer}
-      >
-        {/* Contact Email */}
-        <motion.a
-          href="mailto:dilmithseniru@gmail.com"
-          className="btn btn-primary btn-lg text-white hover:bg-primary-focus mb-6 shadow-lg transform hover:scale-105 transition"
-          variants={popIn}
-        >
-          Contact Me
-        </motion.a>
-
-        {/* Social Media Links */}
+    <section className="py-12 px-4 container mx-auto mb-20">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        {/* Contact Info */}
         <motion.div
-          className="flex justify-center space-x-6 mt-6"
-          variants={fadeInUp}
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
         >
-          <motion.a
-            href="https://www.youtube.com/channel/UCRmiVlt8wLBN3GSY5uZScgg"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-circle btn-outline text-primary hover:bg-primary hover:text-white hover:shadow-lg transition duration-300"
-            whileHover={{ scale: 1.5, rotate: 20 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <i className="fab fa-youtube"></i>
-          </motion.a>
-          <motion.a
-            href="https://www.tiktok.com/@seniru.dilmith"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-circle btn-outline text-secondary hover:bg-secondary hover:text-white hover:shadow-lg transition duration-300"
-            whileHover={{ scale: 1.5, rotate: -20 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <i className="fab fa-tiktok"></i>
-          </motion.a>
+          <Card className="h-full">
+            <CardHeader>
+              <CardTitle>Contact Information</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex items-center gap-4">
+                <div className="p-2 bg-primary/10 rounded-full">
+                  <Mail className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <p className="font-medium">Email</p>
+                  <a href="mailto:dilmithseniru@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">dilmithseniru@gmail.com</a>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <div className="p-2 bg-primary/10 rounded-full">
+                  <Phone className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <p className="font-medium">Phone</p>
+                  <a href="tel:+94714625671" className="text-muted-foreground hover:text-primary transition-colors">+94 71 462 5671</a>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <div className="p-2 bg-primary/10 rounded-full">
+                  <MapPin className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <p className="font-medium">Location</p>
+                  <p className="text-muted-foreground">Horana, Sri Lanka</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </motion.div>
 
-        {/* Personal Details */}
+        {/* Social & Actions */}
         <motion.div
-          className="mt-10 text-left bg-base-100 text-base-content p-6 rounded-lg shadow-2xl"
-          variants={fadeInUp}
+          initial={{ opacity: 0, x: 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          className="flex flex-col gap-6"
         >
-          <h3 className="text-2xl font-semibold mb-4 text-center">
-            Personal Details
-          </h3>
-          <motion.ul
-            className="space-y-4"
-            initial="hidden"
-            animate="visible"
-            variants={{
-              hidden: { opacity: 0 },
-              visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
-            }}
-          >
-            <motion.li
-              className="flex justify-between text-lg mb-2 border-b border-base-300 pb-2"
-              variants={fadeLeft}
-            >
-              <span className="font-bold">Email:</span>
-              <a href="mailto:dilmithseniru@gmail.com"> <span>dilmithseniru@gmail.com</span> </a>
-            </motion.li>
-            <motion.li
-              className="flex justify-between text-lg mb-2 border-b border-base-300 pb-2"
-              variants={fadeRight}
-            >
-              <span className="font-bold">Phone:</span>
-              <a href="tel:+94714625671"> <span>+94 71 462 5671</span> </a>
-            </motion.li>
-            <motion.li
-              className="flex justify-between text-lg border-b border-base-300 pb-2"
-              variants={fadeLeft}
-            >
-              <span className="font-bold">Location:</span>
-              <span>Horana, Sri Lanka</span>
-            </motion.li>
-          </motion.ul>
+          <Card className="flex-1 flex flex-col justify-center text-center p-6">
+            <h3 className="text-xl font-bold mb-6">Connect with Me</h3>
+            <div className="flex justify-center gap-4 mb-8">
+              <Button variant="outline" size="icon" className="h-12 w-12 rounded-full" asChild>
+                <a href="https://www.youtube.com/channel/UCRmiVlt8wLBN3GSY5uZScgg" target="_blank" rel="noopener noreferrer">
+                  <FaYoutube className="h-6 w-6 text-red-600" />
+                </a>
+              </Button>
+              <Button variant="outline" size="icon" className="h-12 w-12 rounded-full" asChild>
+                <a href="https://www.tiktok.com/@seniru.dilmith" target="_blank" rel="noopener noreferrer">
+                  <FaTiktok className="h-6 w-6" />
+                </a>
+              </Button>
+            </div>
+            <Button size="lg" className="w-full" asChild>
+              <a href="mailto:dilmithseniru@gmail.com">Send an Email</a>
+            </Button>
+          </Card>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   );
 }

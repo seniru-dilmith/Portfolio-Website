@@ -42,36 +42,36 @@ jest.mock("framer-motion", () => ({
 describe("Contact", () => {
   it("renders contact email link", () => {
     render(<Contact />);
-    const link = screen.getByRole("link", { name: /contact me/i });
+    const link = screen.getByRole("link", { name: /send an email/i });
     expect(link).toHaveAttribute("href", "mailto:dilmithseniru@gmail.com");
   });
 
   it("displays personal details section", () => {
     render(<Contact />);
-    expect(screen.getByText("Personal Details")).toBeInTheDocument();
+    expect(screen.getByText("Contact Information")).toBeInTheDocument();
   });
 
   it("shows email in personal details", () => {
     render(<Contact />);
-    expect(screen.getByText("Email:")).toBeInTheDocument();
+    expect(screen.getByText("Email")).toBeInTheDocument();
     expect(screen.getByText("dilmithseniru@gmail.com")).toBeInTheDocument();
   });
 
   it("shows phone number in personal details", () => {
     render(<Contact />);
-    expect(screen.getByText("Phone:")).toBeInTheDocument();
+    expect(screen.getByText("Phone")).toBeInTheDocument();
     expect(screen.getByText("+94 71 462 5671")).toBeInTheDocument();
   });
 
   it("shows location in personal details", () => {
     render(<Contact />);
-    expect(screen.getByText("Location:")).toBeInTheDocument();
+    expect(screen.getByText("Location")).toBeInTheDocument();
     expect(screen.getByText("Horana, Sri Lanka")).toBeInTheDocument();
   });
 
   it("renders social media links", () => {
     render(<Contact />);
-    
+
     // Check for social media icons (FontAwesome classes)
     const socialLinks = document.querySelectorAll('a[target="_blank"]');
     expect(socialLinks.length).toBeGreaterThan(0);

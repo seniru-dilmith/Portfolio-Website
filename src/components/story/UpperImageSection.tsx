@@ -34,6 +34,7 @@ const UpperImageSection: React.FC = () => (
           src="/story/seniru.jpg"
           alt="My Photo"
           fill
+          priority
           sizes="100vw 50vw 33vw"
           className="rounded-lg shadow-lg border-8 object-cover"
         />

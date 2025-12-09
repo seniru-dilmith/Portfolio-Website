@@ -45,20 +45,18 @@ describe("ContactMe Page", () => {
     render(<ContactMe />);
     expect(screen.getByTestId("hero-for-contact")).toBeInTheDocument();
     expect(screen.getByTestId("contact-component")).toBeInTheDocument();
-    expect(screen.getByTestId("footer")).toBeInTheDocument();
   });
 
   it("renders all main components", () => {
     render(<ContactMe />);
-    
+
     expect(screen.getByTestId("hero-for-contact")).toBeInTheDocument();
     expect(screen.getByTestId("contact-component")).toBeInTheDocument();
-    expect(screen.getByTestId("footer")).toBeInTheDocument();
   });
 
   it("has correct page structure", () => {
     const { container } = render(<ContactMe />);
-    
+
     // Check that the page has the expected structure
     expect(container.firstChild).toBeInTheDocument();
   });

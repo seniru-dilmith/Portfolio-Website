@@ -1,0 +1,49 @@
+import { NextRequest, NextResponse } from 'next/server';
+import dbConnect from '@/util/dbConnect';
+import WorkRequest from '@/models/WorkRequest';
+import { cookies } from 'next/headers';
+import { verify } from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.NEXT_JWT_ACCESS_SECRET!;
+
+async function isAuthenticated() {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('accessToken');
+
+  if (!token) return false;
+
+  try {
+    verify(token.value, JWT_SECRET);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function GET(_req: NextRequest) {
+  if (!(await isAuthenticated())) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  try {
+    await dbConnect();
+    const requests = await WorkRequest.find({}).sort({ createdAt: -1 });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const formattedRequests = requests.map((doc: any) => ({
+      id: doc._id.toString(),
+      name: doc.name || 'Unknown', // Handle legacy data
+      email: doc.email,
+      title: doc.title,
+      description: doc.description,
+      status: doc.status,
+      createdAt: doc.createdAt,
+    }));
+
+    return NextResponse.json(formattedRequests);
+  } catch (error) {
+    console.error('Error fetching requests:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}

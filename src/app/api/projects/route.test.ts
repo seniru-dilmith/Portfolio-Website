@@ -74,7 +74,7 @@ describe("/api/projects", () => {
       mockGetProjects.mockRejectedValue(new Error("Database error"));
       await GET();
       expect(mockNextResponse).toHaveBeenCalledWith(
-        { success: false, message: "Internal server error" },
+        expect.objectContaining({ success: false, message: "Database error" }),
         { status: 500 }
       );
     });

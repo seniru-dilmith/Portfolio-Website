@@ -25,10 +25,8 @@ export async function apiFetch(
       response = await fetch(url, options);
     } else {
       console.log("Failed to refresh token. Logging out.");
-      // If the refresh token is also invalid, log the user out.
-      // You can redirect to the login page here.
-      window.location.href = "/admin/login"; 
-      // Return the failed refresh response to prevent further processing
+      // If the refresh token is also invalid, we just return the failed response.
+      // Automatic redirection is removed to allow public pages to stay visible.
       return refreshResponse;
     }
   }

@@ -1,1 +1,1 @@
-export const titleNames = ['Home', 'Story', 'Articles', 'Pricing', 'Projects', 'Contact'];
+export const titleNames = ['Home', 'Projects', 'About', 'Articles', 'Contact', 'Work With Me'];
