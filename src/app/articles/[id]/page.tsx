@@ -5,12 +5,10 @@ import { useParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { format } from "date-fns";
-import { ArrowLeft, Edit, Save, X, Tag, Calendar, User } from 'lucide-react';
+import { ArrowLeft, Edit, Save, X, Calendar, User } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from "@/components/ui/use-toast";
@@ -36,6 +34,7 @@ export default function ArticleDetail() {
 
     useEffect(() => {
         if (id) fetchArticle(id as string);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
     useEffect(() => {
@@ -61,8 +60,8 @@ export default function ArticleDetail() {
                 toast({ variant: "destructive", title: "Error", description: "Article not found" });
                 router.push('/articles');
             }
-        } catch (error) {
-            console.error("Failed to fetch article", error);
+        } catch (_error) {
+            console.error("Failed to fetch article", _error);
             toast({ variant: "destructive", title: "Error", description: "Could not load article" });
         } finally {
             setLoading(false);
@@ -86,7 +85,7 @@ export default function ArticleDetail() {
             } else {
                 throw new Error("Update failed");
             }
-        } catch (error) {
+        } catch {
             toast({ variant: "destructive", title: "Error", description: "Failed to update article." });
         }
     }

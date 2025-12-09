@@ -21,10 +21,9 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, Reply, Mail, AlertCircle } from "lucide-react";
+import { Loader2, Reply } from "lucide-react";
 import { WorkRequest } from "@/types/request";
 import { useToast } from "@/components/ui/use-toast";
 import { apiFetch } from "@/lib/api";
@@ -142,7 +141,7 @@ export default function AdminRequestsPage() {
                                             <Badge variant="secondary" className="bg-green-500/10 text-green-500 hover:bg-green-500/20">Replied</Badge>
                                         )}
                                     </TableCell>
-                                    <TableCell>{format(new Date(req.createdAt as any), "MMM d, yyyy")}</TableCell>
+                                    <TableCell>{format(new Date(req.createdAt), "MMM d, yyyy")}</TableCell>
                                     <TableCell className="max-w-[300px]">
                                         <div className="font-medium">{req.title}</div>
                                         <div className="text-sm text-muted-foreground truncate">{req.description}</div>
@@ -174,12 +173,12 @@ export default function AdminRequestsPage() {
                     <DialogHeader>
                         <DialogTitle>Reply to {replyingTo?.email}</DialogTitle>
                         <DialogDescription>
-                            Write a response to "{replyingTo?.title}". This will be emailed to the user.
+                            Write a response to &quot;{replyingTo?.title}&quot;. This will be emailed to the user.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                         <div className="bg-muted p-3 rounded-md text-sm italic border-l-2 border-primary max-h-[100px] overflow-y-auto">
-                            "{replyingTo?.description}"
+                            &quot;{replyingTo?.description}&quot;
                         </div>
                         <Textarea
                             id="reply"

@@ -2,8 +2,11 @@
 // Inline Swiper and Swiper CSS/module mocks
 // Mock Carousel components
 jest.mock("@/components/ui/carousel", () => ({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Carousel: ({ children }: any) => <div data-testid="carousel">{children}</div>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   CarouselContent: ({ children }: any) => <div>{children}</div>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   CarouselItem: ({ children }: any) => <div>{children}</div>,
   CarouselNext: () => <button>Next</button>,
   CarouselPrevious: () => <button>Previous</button>,
@@ -27,7 +30,7 @@ window.IntersectionObserver = mockIntersectionObserver;
 // Mock framer-motion
 jest.mock("framer-motion", () => ({
   motion: {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
     div: ({ children, layout, ...props }: any) => <div {...props}>{children}</div>,
   },
 }));
@@ -47,6 +50,7 @@ jest.mock("react-icons/fa", () => ({
 }));
 
 jest.mock("@/components/ui/button", () => ({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Button: ({ children, asChild, ...props }: any) => {
     if (asChild) return <>{children}</>;
     return <button {...props}>{children}</button>;

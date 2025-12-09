@@ -1,4 +1,4 @@
-import Head from "next/head";
+import { Metadata } from "next";
 
 import SpotlightHero from "@/components/hero/SpotlightHero";
 import TechTicker from "@/components/tech/TechTicker";
@@ -8,21 +8,14 @@ import { ArrowRight, Code2, Rocket, Users, GraduationCap, Heart, Cpu, Globe, Bri
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+export const metadata: Metadata = {
+  title: "Seniru Dilmith | Full Stack Developer & CS Undergraduate",
+  description: "Portfolio of Seniru Dilmith, a Computer Science Undergraduate at University of Moratuwa specializing in Full Stack Development and Cloud Computing.",
+};
+
 export default function Home() {
   return (
     <>
-      <Head>
-        <title>Seniru Dilmith | Full Stack Developer & CS Undergraduate</title>
-        <meta
-          name="description"
-          content="Portfolio of Seniru Dilmith, a Computer Science Undergraduate at University of Moratuwa specializing in Full Stack Development and Cloud Computing."
-        />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1"
-        />
-      </Head>
-
       <div className="flex flex-col min-h-screen">
         {/* Client Side Hero */}
         <SpotlightHero />
@@ -49,7 +42,7 @@ export default function Home() {
                   </Button>
                 </div>
               </div>
-              <div className="flex-1 grid grid-cols-3 gap-4">
+              <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
 
                 <Card className="bg-secondary/10 border-none">
                   <CardHeader>
@@ -61,7 +54,7 @@ export default function Home() {
                     <p className="text-xs font-medium mt-1">University of Moratuwa</p>
                   </CardContent>
                 </Card>
-          
+
                 <Card className="bg-secondary/10 border-none">
                   <CardHeader>
                     <Briefcase className="h-8 w-8 text-primary mb-2" />

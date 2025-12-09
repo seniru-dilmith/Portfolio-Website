@@ -3,9 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { format } from "date-fns";
 import { motion } from "framer-motion";
-import { Plus, Edit, Trash2, Loader2, FileText, Tag } from "lucide-react";
+import { Plus, Edit, Trash2, FileText, Tag } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,6 +27,7 @@ export default function ArticlesPage() {
 
     useEffect(() => {
         fetchArticles();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     async function fetchArticles() {
@@ -61,7 +61,7 @@ export default function ArticlesPage() {
             } else {
                 throw new Error("Failed to delete");
             }
-        } catch (error) {
+        } catch {
             toast({ variant: "destructive", title: "Error", description: "Could not delete article." });
         }
     }

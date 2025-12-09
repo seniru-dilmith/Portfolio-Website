@@ -68,7 +68,9 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   backgroundClassName = "bg-gradient-to-br from-primary/70 via-secondary/60 to-accent/50 min-h-screen relative overflow-x-hidden",
   floatingSvgPaths,
   children,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   showNavbar = true,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   showFooter = true,
   animatedBackgroundProps,
   floatingElementsProps,

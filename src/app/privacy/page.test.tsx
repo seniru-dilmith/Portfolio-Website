@@ -6,12 +6,15 @@ import "@testing-library/jest-dom";
 // Mock framer-motion
 jest.mock("framer-motion", () => ({
   motion: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     div: ({ children, className, ...props }: any) => (
       <div className={className} {...props}>{children}</div>
     ),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     h1: ({ children, className, ...props }: any) => (
       <h1 className={className} {...props}>{children}</h1>
     ),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     p: ({ children, className, ...props }: any) => (
       <p className={className} {...props}>{children}</p>
     ),

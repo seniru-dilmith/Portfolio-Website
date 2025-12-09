@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import AdminRequestsPage from "@/app/admin/requests/page";
 import "@testing-library/jest-dom";
 
@@ -35,13 +35,19 @@ jest.mock("@/components/ui/use-toast", () => ({
 
 // Mock Dialog
 jest.mock("@/components/ui/dialog", () => ({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Dialog: ({ children, open, onOpenChange }: any) => (
         open ? <div data-testid="dialog" onClick={() => onOpenChange(false)}>{children}</div> : null
     ),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     DialogContent: ({ children }: any) => <div>{children}</div>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     DialogHeader: ({ children }: any) => <div>{children}</div>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     DialogTitle: ({ children }: any) => <div>{children}</div>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     DialogDescription: ({ children }: any) => <div>{children}</div>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     DialogFooter: ({ children }: any) => <div>{children}</div>,
 }));
 

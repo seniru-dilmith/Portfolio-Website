@@ -1,7 +1,6 @@
 import { POST } from "@/app/api/admin/reply/route";
 import WorkRequest from "@/models/WorkRequest";
 import { sendEmail } from "@/lib/email";
-import { getReplyEmailHtml } from "@/lib/email-templates";
 import { cookies } from "next/headers";
 import { verify } from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
@@ -39,7 +38,6 @@ jest.mock("next/server", () => ({
 
 const mockFindByIdAndUpdate = WorkRequest.findByIdAndUpdate as jest.Mock;
 const mockSendEmail = sendEmail as jest.Mock;
-const mockGetReplyEmailHtml = getReplyEmailHtml as jest.Mock;
 const mockCookies = cookies as jest.Mock;
 const mockVerify = verify as jest.Mock;
 const mockNextResponse = NextResponse.json as jest.Mock;

@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
     NavigationMenu,
@@ -11,7 +10,7 @@ import {
     NavigationMenuList,
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -55,6 +54,7 @@ const components: { title: string; href: string; description: string }[] = [
 export default function ModernNavbar() {
     const { setTheme } = useTheme();
     const [isScrolled, setIsScrolled] = React.useState(false);
+    const [isOpen, setIsOpen] = React.useState(false);
 
     React.useEffect(() => {
         const handleScroll = () => {
@@ -171,7 +171,7 @@ export default function ModernNavbar() {
                         </DropdownMenuContent>
                     </DropdownMenu>
 
-                    <Sheet>
+                    <Sheet open={isOpen} onOpenChange={setIsOpen}>
                         <SheetTrigger asChild>
                             <Button variant="ghost" size="icon">
                                 <Menu className="h-5 w-5" />
@@ -179,9 +179,11 @@ export default function ModernNavbar() {
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="right">
+                            <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
                             <div className="flex flex-col gap-4 mt-8">
                                 <Link
                                     href="/"
+                                    onClick={() => setIsOpen(false)}
                                     className="px-4 py-2 hover:bg-accent rounded-md transition-colors"
                                 >
                                     Home
@@ -190,6 +192,7 @@ export default function ModernNavbar() {
                                     <Link
                                         key={item.title}
                                         href={item.href}
+                                        onClick={() => setIsOpen(false)}
                                         className="px-4 py-2 hover:bg-accent rounded-md transition-colors"
                                     >
                                         {item.title}
@@ -200,12 +203,16 @@ export default function ModernNavbar() {
                                         <div className="h-px bg-border my-2" />
                                         <Link
                                             href="/admin/requests"
+                                            onClick={() => setIsOpen(false)}
                                             className="px-4 py-2 hover:bg-accent rounded-md transition-colors font-medium text-primary"
                                         >
                                             Admin Dashboard
                                         </Link>
                                         <button
-                                            onClick={handleLogout}
+                                            onClick={() => {
+                                                handleLogout();
+                                                setIsOpen(false);
+                                            }}
                                             className="px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-md transition-colors text-left text-red-500"
                                         >
                                             Logout

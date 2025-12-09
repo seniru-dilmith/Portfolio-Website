@@ -44,7 +44,7 @@ export default function NewArticlePage() {
             } else {
                 throw new Error(data.message || "Failed to create");
             }
-        } catch (error) {
+        } catch {
             toast({ variant: "destructive", title: "Error", description: "Failed to create article." });
         }
     };
