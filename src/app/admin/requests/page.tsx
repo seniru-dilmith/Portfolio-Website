@@ -169,10 +169,10 @@ export default function AdminRequestsPage() {
 
             {/* Reply Dialog - Moved outside the table for better performance and z-index handling */}
             <Dialog open={!!replyingTo} onOpenChange={(open) => !open && setReplyingTo(null)}>
-                <DialogContent className="sm:max-w-[500px]">
+                <DialogContent className="sm:max-w-[500px]" aria-describedby="reply-dialog-description">
                     <DialogHeader>
                         <DialogTitle>Reply to {replyingTo?.email}</DialogTitle>
-                        <DialogDescription>
+                        <DialogDescription id="reply-dialog-description">
                             Write a response to &quot;{replyingTo?.title}&quot;. This will be emailed to the user.
                         </DialogDescription>
                     </DialogHeader>

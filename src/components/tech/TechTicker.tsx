@@ -3,12 +3,13 @@
 import { motion } from "framer-motion";
 import {
     SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiNodedotjs,
-    SiMongodb, SiFirebase, SiDocker, SiPython, SiAmazon, SiGit
+    SiMongodb, SiFirebase, SiDocker, SiPython, SiAmazon, SiGit, SiAngular
 } from "react-icons/si";
 
 const techs = [
     { name: "React", icon: SiReact },
     { name: "Next.js", icon: SiNextdotjs },
+    { name: "Angular.js", icon: SiAngular },
     { name: "TypeScript", icon: SiTypescript },
     { name: "Tailwind", icon: SiTailwindcss },
     { name: "Node.js", icon: SiNodedotjs },

@@ -62,6 +62,7 @@ const Footer: React.FC = () => {
               alt="Buy Me A Coffee"
               width={160}
               height={40}
+              style={{ height: "auto" }}
               className="hover:opacity-80 transition-opacity duration-300"
             />
           </Link>

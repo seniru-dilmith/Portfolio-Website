@@ -18,23 +18,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     async function checkAuth() {
       try {
         const res = await apiFetch('/api/admin/me');
-        setIsAuthenticated(res.ok);
+        if (res.ok) {
+          setIsAuthenticated(true);
+          localStorage.setItem('admin_logged_in', 'true');
+        } else {
+          throw new Error('Not authenticated');
+        }
       } catch {
         setIsAuthenticated(false);
+        localStorage.removeItem('admin_logged_in');
       }
     }
 
     const path = window.location.pathname;
     const isLoginPage = path === '/admin/login';
+    const isAdminRoute = path.startsWith('/admin');
+    const hasAuthFlag = localStorage.getItem('admin_logged_in') === 'true';
 
-    // Check auth on all pages to verify admin status globally
-    if (!isLoginPage) {
+    // Check auth only if on admin route (excluding login) OR if we have a local flag saying we might be logged in
+    if (!isLoginPage && (isAdminRoute || hasAuthFlag)) {
       checkAuth();
     }
   }, [isHydrated]);
+
   // When user logs in successfully (after login API call that sets cookies)
   const handleLogin = () => {
     setIsAuthenticated(true);
+    localStorage.setItem('admin_logged_in', 'true');
   };
 
   // When user logs out, call logout API to clear cookies and update state
@@ -45,6 +55,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('Logout error:', err);
     }
     setIsAuthenticated(false);
+    localStorage.removeItem('admin_logged_in');
   };
 
   return (
