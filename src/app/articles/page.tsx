@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Plus, Edit, Trash2, FileText, Tag } from "lucide-react";
+import { Plus, Edit, Trash2, FileText, Tag, Calendar, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,29 +26,28 @@ export default function ArticlesPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchArticles();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    async function fetchArticles() {
-        try {
-            setLoading(true);
-            const res = await apiFetch("/api/articles");
-            const data = await res.json();
-            if (data.success && Array.isArray(data.data)) {
-                // Articles are already processed/stripped by the API
-                setArticles(data.data);
-            } else {
-                // Fallback or empty if structure differs
-                setArticles([]);
+        const fetchArticles = async () => {
+            try {
+                setLoading(true);
+                const res = await apiFetch("/api/articles");
+                const data = await res.json();
+                if (data.success && Array.isArray(data.data)) {
+                    // Articles are already processed/stripped by the API
+                    setArticles(data.data);
+                } else {
+                    // Fallback or empty if structure differs
+                    setArticles([]);
+                }
+            } catch (error) {
+                console.error("Failed to fetch articles:", error);
+                toast({ variant: "destructive", title: "Error", description: "Failed to load articles." });
+            } finally {
+                setLoading(false);
             }
-        } catch (error) {
-            console.error("Failed to fetch articles:", error);
-            toast({ variant: "destructive", title: "Error", description: "Failed to load articles." });
-        } finally {
-            setLoading(false);
-        }
-    }
+        };
+
+        fetchArticles();
+    }, [toast]);
 
     async function handleDelete(id: string) {
         if (!confirm("Are you sure you want to delete this article?")) return;
@@ -127,8 +126,11 @@ export default function ArticlesPage() {
                                             </Link>
                                         </CardTitle>
                                         <CardDescription className="flex items-center gap-2 mt-2">
-                                            {/* Assuming we might have a date, if not, omit or use mock */}
-                                            {/* <Calendar className="h-3 w-3" /> {format(new Date(article.createdAt), 'MMM d, yyyy')} */}
+                                            <Calendar className="h-3 w-3" />
+                                            <span>{new Date(article.createdAt).toLocaleDateString('en-GB')}</span>
+                                            <span className="mx-1">•</span>
+                                            <User className="h-3 w-3" />
+                                            <span>{article.author}</span>
                                         </CardDescription>
                                     </CardHeader>
                                     <CardContent className="flex-1">

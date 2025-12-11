@@ -18,6 +18,8 @@ export default function NewArticlePage() {
         title: "",
         content: "",
         tags: [] as string[],
+        author: "",
+        createdAt: new Date().toISOString().split('T')[0], // Default to today
     });
 
     // Protect route

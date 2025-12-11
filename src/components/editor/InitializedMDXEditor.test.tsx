@@ -7,8 +7,13 @@ import { MDXEditorMethods, MDXEditorProps } from "@mdxeditor/editor";
 // Mock @mdxeditor/editor
 const mockMDXEditor = jest.fn((props: Partial<MDXEditorProps> & { ref?: Ref<MDXEditorMethods> }) => {
   // Filter out non-DOM props and do not spread ref, autoFocus, onBlur, onChange, or onError onto the div
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { contentEditableClassName, ref, autoFocus, onBlur, onChange, onError, ...domProps } = props;
+  void contentEditableClassName;
+  void ref;
+  void autoFocus;
+  void onBlur;
+  void onChange;
+  void onError;
   return <div data-testid="mdx-editor-mock" {...domProps}>MDX Editor Mock</div>;
 });
 

@@ -110,7 +110,7 @@ describe("Articles Page", () => {
 
   it("fetches and displays articles on mount", async () => {
     const mockArticles = [
-      { _id: "1", title: "Test Article", content: "Test content", tags: ["test"] },
+      { _id: "1", title: "Test Article", content: "Test content", tags: ["test"], author: "Test User", createdAt: new Date().toISOString() },
     ];
 
     mockFetch.mockResolvedValueOnce({

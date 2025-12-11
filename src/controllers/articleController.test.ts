@@ -6,7 +6,8 @@ jest.mock("@/util/dbConnect", () => ({
 jest.mock("@/models/ArticleModel", () => ({
   __esModule: true,
   default: {
-    find: jest.fn(),
+    find: jest.fn().mockReturnThis(),
+    sort: jest.fn(),
     findById: jest.fn(),
     create: jest.fn(),
     findByIdAndUpdate: jest.fn(),
@@ -22,6 +23,7 @@ describe("articleController", () => {  it("getArticles calls find", async () => 
     await getArticles();
     expect(dbConnect).toHaveBeenCalled();
     expect(ArticleModel.find).toHaveBeenCalled();
+    expect(ArticleModel.find().sort).toHaveBeenCalledWith({ createdAt: -1 });
   });
 
   it("getArticleById calls findById", async () => {
@@ -31,7 +33,7 @@ describe("articleController", () => {  it("getArticles calls find", async () => 
   });
 
   it("createArticle calls create", async () => {
-    const data = { title: "t" };
+    const data = { title: "t", author: "Test", createdAt: new Date() };
     await createArticle(data);
     expect(ArticleModel.create).toHaveBeenCalledWith(data);
   });

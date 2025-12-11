@@ -2,9 +2,9 @@ name: Run Tests on Push
 
 on:
   push:
-    branches: [master] # or "master" or any branch you want
+    branches: [master]
   pull_request:
-    branches: [maater]
+    branches: [master]
 
 jobs:
   test:

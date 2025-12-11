@@ -35,20 +35,14 @@ jest.mock("@/components/ui/use-toast", () => ({
 
 // Mock Dialog
 jest.mock("@/components/ui/dialog", () => ({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Dialog: ({ children, open, onOpenChange }: any) => (
+    Dialog: ({ children, open, onOpenChange }: { children: React.ReactNode; open: boolean; onOpenChange: (open: boolean) => void }) => (
         open ? <div data-testid="dialog" onClick={() => onOpenChange(false)}>{children}</div> : null
     ),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    DialogContent: ({ children }: any) => <div>{children}</div>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    DialogHeader: ({ children }: any) => <div>{children}</div>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    DialogTitle: ({ children }: any) => <div>{children}</div>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    DialogDescription: ({ children }: any) => <div>{children}</div>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    DialogFooter: ({ children }: any) => <div>{children}</div>,
+    DialogContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    DialogHeader: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    DialogTitle: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    DialogDescription: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    DialogFooter: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
 import { apiFetch } from "@/lib/api";

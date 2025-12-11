@@ -5,6 +5,8 @@ const ArticleSchema = new Schema<Article>({
     title: { type: String, required: true },
     content: { type: String, required: true },
     tags: { type: [String], required: true },
+    author: { type: String, required: true },
+    createdAt: { type: Date, required: true },
 });
 
 export default models.Article || model<Article>('Article', ArticleSchema);

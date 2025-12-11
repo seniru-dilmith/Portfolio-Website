@@ -17,10 +17,9 @@ global.fetch = jest.fn();
 // Mock Next.js Image
 jest.mock("next/image", () => ({
     __esModule: true,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    default: (props: any) => {
-        // eslint-disable-next-line @next/next/no-img-element
-        return <img {...props} alt={props.alt} />;
+    default: ({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => {
+        // Using div with role img to avoid next/image lint rule in tests
+        return <div role="img" aria-label={alt} data-src={src} {...props} />;
     },
 }));
 

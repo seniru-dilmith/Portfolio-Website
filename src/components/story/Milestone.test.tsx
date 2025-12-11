@@ -6,10 +6,10 @@ import "@testing-library/jest-dom";
 // Mock framer-motion and hooks
 jest.mock("framer-motion", () => ({
   motion: {
-    div: ({ 
-      children, 
-      whileHover, 
-      ...props 
+    div: ({
+      children,
+      whileHover,
+      ...props
     }: React.PropsWithChildren<{
       whileHover?: Record<string, unknown>;
       className?: string;
@@ -19,9 +19,9 @@ jest.mock("framer-motion", () => ({
         {children}
       </div>
     ),
-    h2: ({ 
-      children, 
-      ...props 
+    h2: ({
+      children,
+      ...props
     }: React.PropsWithChildren<{
       className?: string;
       [key: string]: unknown;
@@ -30,9 +30,9 @@ jest.mock("framer-motion", () => ({
         {children}
       </h2>
     ),
-    p: ({ 
-      children, 
-      ...props 
+    p: ({
+      children,
+      ...props
     }: React.PropsWithChildren<{
       className?: string;
       [key: string]: unknown;
@@ -53,25 +53,27 @@ jest.mock("react-intersection-observer", () => ({
 }));
 
 // Mock Next.js Image component
-jest.mock("next/image", () => {  return function MockImage({ 
-    src, 
-    alt, 
-    priority, 
-    ...props 
-  }: { 
-    src: string; 
-    alt: string; 
-    priority?: boolean; 
-    width?: number; 
+jest.mock("next/image", () => {
+  return function MockImage({
+    src,
+    alt,
+    priority,
+    ...props
+  }: {
+    src: string;
+    alt: string;
+    priority?: boolean;
+    width?: number;
     height?: number;
     className?: string;
     [key: string]: unknown;
   }) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element -- Using img element directly is acceptable in test code
-      <img
-        src={src}
-        alt={alt}
+      <div
+        role="img"
+        aria-label={alt}
+        data-alt={alt}
+        data-src={src}
         data-testid="next-image"
         data-priority={priority}
         {...props}
@@ -90,7 +92,7 @@ describe("Milestone", () => {
 
   it("renders milestone title", () => {
     render(<Milestone milestone={mockMilestone} reverse={false} />);
-    
+
     expect(screen.getByText("Test Milestone Title")).toBeInTheDocument();
     expect(screen.getByText("Test Milestone Title")).toHaveClass(
       "text-2xl",
@@ -104,7 +106,7 @@ describe("Milestone", () => {
 
   it("renders milestone date", () => {
     render(<Milestone milestone={mockMilestone} reverse={false} />);
-    
+
     expect(screen.getByText("January 2023")).toBeInTheDocument();
     expect(screen.getByText("January 2023")).toHaveClass(
       "text-xs",
@@ -117,7 +119,7 @@ describe("Milestone", () => {
 
   it("renders milestone description", () => {
     render(<Milestone milestone={mockMilestone} reverse={false} />);
-    
+
     expect(screen.getByText(/This is a test milestone description/)).toBeInTheDocument();
     expect(screen.getByText(/This is a test milestone description/)).toHaveClass(
       "text-sm",
@@ -128,10 +130,10 @@ describe("Milestone", () => {
 
   it("renders milestone image with correct props", () => {
     render(<Milestone milestone={mockMilestone} reverse={false} />);
-    
+
     const image = screen.getByTestId("next-image");
-    expect(image).toHaveAttribute("src", "/test/milestone-image.jpg");
-    expect(image).toHaveAttribute("alt", "Test Milestone Title");
+    expect(image).toHaveAttribute("data-src", "/test/milestone-image.jpg");
+    expect(image).toHaveAttribute("data-alt", "Test Milestone Title");
     expect(image).toHaveClass(
       "rounded-lg",
       "shadow-lg",
@@ -143,17 +145,17 @@ describe("Milestone", () => {
 
   it("applies correct layout when reverse is false", () => {
     render(<Milestone milestone={mockMilestone} reverse={false} />);
-    
+
     const containerDivs = screen.getAllByTestId("animated-div");
-    
+
     // Find main container
-    const mainContainer = containerDivs.find(div => 
-      div.className?.includes("flex") && 
-      div.className?.includes("flex-col") && 
+    const mainContainer = containerDivs.find(div =>
+      div.className?.includes("flex") &&
+      div.className?.includes("flex-col") &&
       div.className?.includes("lg:flex-row") &&
       !div.className?.includes("lg:flex-row-reverse")
     );
-    
+
     expect(mainContainer).toBeInTheDocument();
     expect(mainContainer).toHaveClass(
       "flex",
@@ -168,30 +170,30 @@ describe("Milestone", () => {
 
   it("applies correct layout when reverse is true", () => {
     render(<Milestone milestone={mockMilestone} reverse={true} />);
-    
+
     const containerDivs = screen.getAllByTestId("animated-div");
-    
+
     // Find main container with reverse class
-    const mainContainer = containerDivs.find(div => 
+    const mainContainer = containerDivs.find(div =>
       div.className?.includes("lg:flex-row-reverse")
     );
-    
+
     expect(mainContainer).toBeInTheDocument();
     expect(mainContainer).toHaveClass("lg:flex-row-reverse");
   });
 
   it("applies correct content section styling", () => {
     render(<Milestone milestone={mockMilestone} reverse={false} />);
-    
+
     const contentDivs = screen.getAllByTestId("animated-div");
-    
+
     // Find content section
-    const contentSection = contentDivs.find(div => 
-      div.className?.includes("w-full") && 
-      div.className?.includes("lg:w-1/2") && 
+    const contentSection = contentDivs.find(div =>
+      div.className?.includes("w-full") &&
+      div.className?.includes("lg:w-1/2") &&
       div.className?.includes("bg-neutral")
     );
-    
+
     expect(contentSection).toBeInTheDocument();
     expect(contentSection).toHaveClass(
       "w-full",
@@ -207,15 +209,15 @@ describe("Milestone", () => {
 
   it("applies correct image section styling", () => {
     render(<Milestone milestone={mockMilestone} reverse={false} />);
-    
+
     const imageDivs = screen.getAllByTestId("animated-div");
-    
+
     // Find image container
-    const imageContainer = imageDivs.find(div => 
-      div.className?.includes("w-[80%]") && 
+    const imageContainer = imageDivs.find(div =>
+      div.className?.includes("w-[80%]") &&
       div.className?.includes("lg:w-1/2")
     );
-    
+
     expect(imageContainer).toBeInTheDocument();
     expect(imageContainer).toHaveClass(
       "w-[80%]",
@@ -227,16 +229,16 @@ describe("Milestone", () => {
 
   it("applies correct image aspect ratio classes", () => {
     render(<Milestone milestone={mockMilestone} reverse={false} />);
-    
+
     const imageDivs = screen.getAllByTestId("animated-div");
-    
+
     // Find image wrapper with aspect ratio
-    const imageWrapper = imageDivs.find(div => 
-      div.className?.includes("aspect-video") && 
-      div.className?.includes("md:aspect-[4/3]") && 
+    const imageWrapper = imageDivs.find(div =>
+      div.className?.includes("aspect-video") &&
+      div.className?.includes("md:aspect-[4/3]") &&
       div.className?.includes("lg:aspect-[16/9]")
     );
-    
+
     expect(imageWrapper).toBeInTheDocument();
     expect(imageWrapper).toHaveClass(
       "relative",
@@ -249,23 +251,23 @@ describe("Milestone", () => {
 
   it("sets image priority based on reverse prop", () => {
     const { rerender } = render(<Milestone milestone={mockMilestone} reverse={true} />);
-    
+
     let image = screen.getByTestId("next-image");
     expect(image).toHaveAttribute("data-priority", "true");
-    
+
     rerender(<Milestone milestone={mockMilestone} reverse={false} />);
-    
+
     image = screen.getByTestId("next-image");
     expect(image).toHaveAttribute("data-priority", "false");
   });
 
   it("renders proper responsive design classes", () => {
     render(<Milestone milestone={mockMilestone} reverse={false} />);
-    
+
     const title = screen.getByText("Test Milestone Title");
     const date = screen.getByText("January 2023");
     const description = screen.getByText(/This is a test milestone/);
-    
+
     expect(title).toHaveClass("text-2xl", "md:text-3xl");
     expect(date).toHaveClass("text-xs", "md:text-sm");
     expect(description).toHaveClass("text-sm", "md:text-base");
@@ -273,14 +275,14 @@ describe("Milestone", () => {
 
   it("maintains proper semantic structure", () => {
     render(<Milestone milestone={mockMilestone} reverse={false} />);
-    
+
     // Verify heading structure
     const heading = screen.getByRole("heading", { level: 2 });
     expect(heading).toHaveTextContent("Test Milestone Title");
-    
+
     // Verify image has proper alt text
     const image = screen.getByRole("img");
-    expect(image).toHaveAttribute("alt", "Test Milestone Title");
+    expect(image).toHaveAttribute("data-alt", "Test Milestone Title");
   });
 
   it("handles different milestone data correctly", () => {
@@ -290,29 +292,29 @@ describe("Milestone", () => {
       description: "Different description for testing purposes.",
       image: "/different/image.jpg",
     };
-    
+
     render(<Milestone milestone={differentMilestone} reverse={true} />);
-    
+
     expect(screen.getByText("Another Milestone")).toBeInTheDocument();
     expect(screen.getByText("December 2022")).toBeInTheDocument();
     expect(screen.getByText("Different description for testing purposes.")).toBeInTheDocument();
-    
+
     const image = screen.getByTestId("next-image");
-    expect(image).toHaveAttribute("src", "/different/image.jpg");
-    expect(image).toHaveAttribute("alt", "Another Milestone");
+    expect(image).toHaveAttribute("data-src", "/different/image.jpg");
+    expect(image).toHaveAttribute("data-alt", "Another Milestone");
   });
 
   it("applies proper spacing and padding classes", () => {
     render(<Milestone milestone={mockMilestone} reverse={false} />);
-    
-    const contentSection = screen.getAllByTestId("animated-div").find(div => 
+
+    const contentSection = screen.getAllByTestId("animated-div").find(div =>
       div.className?.includes("p-4") && div.className?.includes("md:p-6")
     );
-    
-    const imageSection = screen.getAllByTestId("animated-div").find(div => 
+
+    const imageSection = screen.getAllByTestId("animated-div").find(div =>
       div.className?.includes("p-2") && div.className?.includes("md:p-6")
     );
-    
+
     expect(contentSection).toHaveClass("p-4", "md:p-6");
     expect(imageSection).toHaveClass("p-2", "md:p-6");
   });

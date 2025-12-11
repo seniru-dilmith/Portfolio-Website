@@ -4,7 +4,7 @@ import { Article } from '@/types/Article';
 
 export const getArticles = async () => {
     await dbConnect();
-    return ArticleModel.find();
+    return ArticleModel.find().sort({ createdAt: -1 });
 };
 
 export const getArticleById = async (id: string) => {
