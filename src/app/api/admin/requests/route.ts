@@ -20,8 +20,7 @@ async function isAuthenticated() {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function GET(_req: NextRequest) {
+export async function GET() {
   if (!(await isAuthenticated())) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
@@ -30,8 +29,16 @@ export async function GET(_req: NextRequest) {
     await dbConnect();
     const requests = await WorkRequest.find({}).sort({ createdAt: -1 });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const formattedRequests = requests.map((doc: any) => ({
+    interface WorkRequestDoc {
+      _id: { toString: () => string };
+      name?: string;
+      email: string;
+      title?: string;
+      description: string;
+      status: string;
+      createdAt: Date;
+    }
+    const formattedRequests = (requests as unknown as WorkRequestDoc[]).map((doc) => ({
       id: doc._id.toString(),
       name: doc.name || 'Unknown', // Handle legacy data
       email: doc.email,

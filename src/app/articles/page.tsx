@@ -26,29 +26,28 @@ export default function ArticlesPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchArticles();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    async function fetchArticles() {
-        try {
-            setLoading(true);
-            const res = await apiFetch("/api/articles");
-            const data = await res.json();
-            if (data.success && Array.isArray(data.data)) {
-                // Articles are already processed/stripped by the API
-                setArticles(data.data);
-            } else {
-                // Fallback or empty if structure differs
-                setArticles([]);
+        const fetchArticles = async () => {
+            try {
+                setLoading(true);
+                const res = await apiFetch("/api/articles");
+                const data = await res.json();
+                if (data.success && Array.isArray(data.data)) {
+                    // Articles are already processed/stripped by the API
+                    setArticles(data.data);
+                } else {
+                    // Fallback or empty if structure differs
+                    setArticles([]);
+                }
+            } catch (error) {
+                console.error("Failed to fetch articles:", error);
+                toast({ variant: "destructive", title: "Error", description: "Failed to load articles." });
+            } finally {
+                setLoading(false);
             }
-        } catch (error) {
-            console.error("Failed to fetch articles:", error);
-            toast({ variant: "destructive", title: "Error", description: "Failed to load articles." });
-        } finally {
-            setLoading(false);
-        }
-    }
+        };
+
+        fetchArticles();
+    }, [toast]);
 
     async function handleDelete(id: string) {
         if (!confirm("Are you sure you want to delete this article?")) return;

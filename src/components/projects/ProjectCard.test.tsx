@@ -1,13 +1,9 @@
-/* eslint-disable @next/next/no-img-element */
 // Inline Swiper and Swiper CSS/module mocks
 // Mock Carousel components
 jest.mock("@/components/ui/carousel", () => ({
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Carousel: ({ children }: any) => <div data-testid="carousel">{children}</div>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  CarouselContent: ({ children }: any) => <div>{children}</div>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  CarouselItem: ({ children }: any) => <div>{children}</div>,
+  Carousel: ({ children }: { children: React.ReactNode }) => <div data-testid="carousel">{children}</div>,
+  CarouselContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  CarouselItem: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   CarouselNext: () => <button>Next</button>,
   CarouselPrevious: () => <button>Previous</button>,
 }));
@@ -30,8 +26,7 @@ window.IntersectionObserver = mockIntersectionObserver;
 // Mock framer-motion
 jest.mock("framer-motion", () => ({
   motion: {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-    div: ({ children, layout, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: React.HTMLAttributes<HTMLDivElement>) => <div {...props}>{children}</div>,
   },
 }));
 
@@ -41,7 +36,7 @@ jest.mock("next/image", () => ({
   default: Object.assign(({
     src,
     alt
-  }: { src: string; alt: string }) => <img src={src} alt={alt} data-testid="next-image" />, { displayName: "NextImageMock" })
+  }: { src: string; alt: string }) => <div role="img" aria-label={alt} data-src={src} data-testid="next-image" />, { displayName: "NextImageMock" })
 }));
 
 jest.mock("react-icons/fa", () => ({
@@ -50,8 +45,7 @@ jest.mock("react-icons/fa", () => ({
 }));
 
 jest.mock("@/components/ui/button", () => ({
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Button: ({ children, asChild, ...props }: any) => {
+  Button: ({ children, asChild, ...props }: { children: React.ReactNode; asChild?: boolean } & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
     if (asChild) return <>{children}</>;
     return <button {...props}>{children}</button>;
   },

@@ -35,42 +35,27 @@ export default function ArticleDetail() {
     });
 
     useEffect(() => {
-        if (id) fetchArticle(id as string);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id]);
-
-    useEffect(() => {
-        const searchParams = new URLSearchParams(window.location.search);
-        if (searchParams.get('edit') === 'true' && article) {
-            setIsEditing(true);
-            setFormData({
-                title: article.title,
-                content: article.content,
-                tags: article.tags,
-                author: article.author || '',
-                createdAt: article.createdAt ? new Date(article.createdAt).toISOString().split('T')[0] : '',
-            });
-        }
-    }, [article]);
-
-    async function fetchArticle(articleId: string) {
-        try {
-            setLoading(true);
-            const res = await apiFetch(`/api/articles/${articleId}`);
-            const data = await res.json();
-            if (data.success) {
-                setArticle(data.data);
-            } else {
-                toast({ variant: "destructive", title: "Error", description: "Article not found" });
-                router.push('/articles');
+        const fetchArticle = async (articleId: string) => {
+            try {
+                setLoading(true);
+                const res = await apiFetch(`/api/articles/${articleId}`);
+                const data = await res.json();
+                if (data.success) {
+                    setArticle(data.data);
+                } else {
+                    toast({ variant: "destructive", title: "Error", description: "Article not found" });
+                    router.push('/articles');
+                }
+            } catch (_error) {
+                console.error("Failed to fetch article", _error);
+                toast({ variant: "destructive", title: "Error", description: "Could not load article" });
+            } finally {
+                setLoading(false);
             }
-        } catch (_error) {
-            console.error("Failed to fetch article", _error);
-            toast({ variant: "destructive", title: "Error", description: "Could not load article" });
-        } finally {
-            setLoading(false);
-        }
-    }
+        };
+
+        if (id) fetchArticle(id as string);
+    }, [id, router, toast]);
 
     async function handleSave() {
         if (!article) return;
