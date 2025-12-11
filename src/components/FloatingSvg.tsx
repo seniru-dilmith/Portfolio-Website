@@ -8,7 +8,9 @@ import { useState, useEffect } from "react";
 const FloatingSvg: React.FC<FloatingSvgProps> = ({
   svgPath,
   className = "",
-}) => {  const isHydrated = useHydration();
+  customColors,
+}) => {
+  const isHydrated = useHydration();
   const [animationValues, setAnimationValues] = useState({
     randomDelay: 0,
     randomDuration: 15,
@@ -19,7 +21,7 @@ const FloatingSvg: React.FC<FloatingSvgProps> = ({
     randomTop: 0,
     pageHeight: 0,
   });
-  
+
   // State for color cycling
   const [currentColorIndex, setCurrentColorIndex] = useState(0);
   // Generate random values only after hydration to prevent SSR/client mismatch
@@ -36,7 +38,7 @@ const FloatingSvg: React.FC<FloatingSvgProps> = ({
         randomTop: Math.random() * pageHeight,
         pageHeight,
       });
-      
+
       // Set initial random color index
       setCurrentColorIndex(Math.floor(Math.random() * 7)); // 7 colors available
     }
@@ -45,7 +47,7 @@ const FloatingSvg: React.FC<FloatingSvgProps> = ({
   // Color cycling effect - change color every second
   useEffect(() => {
     if (!isHydrated) return;
-    
+
     const colorInterval = setInterval(() => {
       setCurrentColorIndex(prevIndex => (prevIndex + 1) % 7); // Cycle through 7 colors
     }, 10000); // Change every 10 seconds
@@ -66,7 +68,7 @@ const FloatingSvg: React.FC<FloatingSvgProps> = ({
     randomLeft,
     pageHeight,
   } = animationValues;  // Color values for smooth transitions (using CSS custom properties or hex values)
-  const colorValues = [
+  const colorValues = customColors && customColors.length > 0 ? customColors : [
     "#3b82f6", // primary blue
     "#8b5cf6", // secondary purple
     "#06b6d4", // accent cyan
@@ -77,7 +79,7 @@ const FloatingSvg: React.FC<FloatingSvgProps> = ({
   ];
 
   // Use current color index for cycling
-  const selectedColor = colorValues[currentColorIndex];
+  const selectedColor = colorValues[currentColorIndex % colorValues.length];
 
   const floatingVariants = {
     initial: {
@@ -100,7 +102,8 @@ const FloatingSvg: React.FC<FloatingSvgProps> = ({
         repeat: Infinity,
         repeatDelay: animationValues.randomDelay * 0.6,
       },
-    },  };
+    },
+  };
 
   return (
     <motion.div

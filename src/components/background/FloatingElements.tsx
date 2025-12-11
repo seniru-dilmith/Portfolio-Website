@@ -20,6 +20,7 @@ interface FloatingElementsProps {
   starOpacity?: string;
   /** Color for star particles */
   starColor?: string;
+  customColors?: string[];
 }
 
 interface StarParticle {
@@ -38,6 +39,7 @@ const FloatingElements: React.FC<FloatingElementsProps> = ({
   starCount = 12,
   starOpacity = "25",
   starColor = "accent/60",
+  customColors,
 }) => {
   const isHydrated = useHydration();
   const [starParticles, setStarParticles] = useState<StarParticle[]>([]);
@@ -60,27 +62,29 @@ const FloatingElements: React.FC<FloatingElementsProps> = ({
     <>
       {/* Primary Floating SVGs */}
       {svgPaths.slice(0, primaryCount).map((path, index) => (
-        <FloatingSvg key={`primary-${index}`} svgPath={path} />
+        <FloatingSvg key={`primary-${index}`} svgPath={path} customColors={customColors} />
       ))}
-      
+
       {/* Additional floating elements for more density */}
       {Array.from({ length: extraCount }).map((_, index) => (
-        <FloatingSvg 
-          key={`extra-${index}`} 
-          svgPath={svgPaths[index % svgPaths.length]} 
+        <FloatingSvg
+          key={`extra-${index}`}
+          svgPath={svgPaths[index % svgPaths.length]}
           className={`opacity-${50 + (index % 4) * 15}`}
+          customColors={customColors}
         />
       ))}
-      
+
       {/* Smaller ambient particles */}
       {Array.from({ length: ambientCount }).map((_, index) => (
-        <FloatingSvg 
-          key={`ambient-${index}`} 
-          svgPath={svgPaths[index % Math.min(3, svgPaths.length)]} 
+        <FloatingSvg
+          key={`ambient-${index}`}
+          svgPath={svgPaths[index % Math.min(3, svgPaths.length)]}
           className={`opacity-${starOpacity}`}
+          customColors={customColors}
         />
       ))}
-      
+
       {/* Subtle star-like particles - only render after hydration */}
       {isHydrated && starParticles.map((particle) => (
         <motion.div

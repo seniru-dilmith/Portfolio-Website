@@ -25,6 +25,7 @@ export interface PageConfig {
     starCount?: number;
     starOpacity?: string;
     starColor?: string;
+    customColors?: string[];
   };
 }
 
@@ -68,6 +69,7 @@ export const PAGE_CONFIGS: Record<string, PageConfig> = {
       starCount: 5,
       starOpacity: "60",
       starColor: "accent/80",
+      customColors: ["#ffffff", "#f3f4f6", "#e5e7eb", "#d1d5db", "#9ca3af"],
     },
   },
   articles: {
