@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Plus, Edit, Trash2, FileText, Tag } from "lucide-react";
+import { Plus, Edit, Trash2, FileText, Tag, Calendar, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -127,8 +127,11 @@ export default function ArticlesPage() {
                                             </Link>
                                         </CardTitle>
                                         <CardDescription className="flex items-center gap-2 mt-2">
-                                            {/* Assuming we might have a date, if not, omit or use mock */}
-                                            {/* <Calendar className="h-3 w-3" /> {format(new Date(article.createdAt), 'MMM d, yyyy')} */}
+                                            <Calendar className="h-3 w-3" />
+                                            <span>{new Date(article.createdAt).toLocaleDateString('en-GB')}</span>
+                                            <span className="mx-1">•</span>
+                                            <User className="h-3 w-3" />
+                                            <span>{article.author}</span>
                                         </CardDescription>
                                     </CardHeader>
                                     <CardContent className="flex-1">

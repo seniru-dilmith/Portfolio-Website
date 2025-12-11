@@ -30,6 +30,8 @@ export default function ArticleDetail() {
         title: '',
         content: '',
         tags: [],
+        author: '',
+        createdAt: '',
     });
 
     useEffect(() => {
@@ -45,6 +47,8 @@ export default function ArticleDetail() {
                 title: article.title,
                 content: article.content,
                 tags: article.tags,
+                author: article.author || '',
+                createdAt: article.createdAt ? new Date(article.createdAt).toISOString().split('T')[0] : '',
             });
         }
     }, [article]);
@@ -113,6 +117,23 @@ export default function ArticleDetail() {
                                 className="text-xl font-bold"
                             />
                         </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">Author</label>
+                                <Input
+                                    value={formData.author}
+                                    onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">Publish Date</label>
+                                <Input
+                                    type="date"
+                                    value={formData.createdAt as string}
+                                    onChange={(e) => setFormData({ ...formData, createdAt: e.target.value })}
+                                />
+                            </div>
+                        </div>
                         <div className="space-y-2">
                             <label className="text-sm font-medium">Content (Markdown supported)</label>
                             <Textarea
@@ -134,19 +155,19 @@ export default function ArticleDetail() {
                         </div>
                     </motion.div>
                 ) : (
-                    <motion.article initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                    <motion.article initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-foreground">
                         <div className="mb-8 text-center md:text-left space-y-4">
-                            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">{article.title}</h1>
+                            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight text-foreground">{article.title}</h1>
 
                             <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
                                 {/* Mock Metadata for now as API might not return it yet, or use createdAt if available */}
                                 <div className="flex items-center gap-1 text-sm">
                                     <Calendar className="h-4 w-4" />
-                                    <span>Today</span>
+                                    <span>{new Date(article.createdAt).toLocaleDateString('en-GB')}</span>
                                 </div>
                                 <div className="flex items-center gap-1 text-sm">
                                     <User className="h-4 w-4" />
-                                    <span>Seniru Dilmith</span>
+                                    <span>{article.author}</span>
                                 </div>
                                 {article.tags.map(tag => (
                                     <Badge key={tag} variant="secondary" className="rounded-full px-3">{tag}</Badge>
@@ -164,7 +185,7 @@ export default function ArticleDetail() {
 
                         <Separator className="my-8" />
 
-                        <div className="prose prose-lg dark:prose-invert max-w-none">
+                        <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground">
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {article.content}
                             </ReactMarkdown>

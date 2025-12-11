@@ -42,6 +42,39 @@ const ArticleForm: React.FC<ArticleFormProps> = ({ formState, setFormState, onSu
                 />
             </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                    <Label htmlFor="author">Author</Label>
+                    <Input
+                        id="author"
+                        placeholder="Author Name"
+                        value={formState.author}
+                        onChange={(e) =>
+                            setFormState((prev) => ({
+                                ...prev,
+                                author: e.target.value,
+                            }))
+                        }
+                        required
+                    />
+                </div>
+                <div className="space-y-2">
+                    <Label htmlFor="date">Publish Date</Label>
+                    <Input
+                        id="date"
+                        type="date"
+                        value={formState.createdAt}
+                        onChange={(e) =>
+                            setFormState((prev) => ({
+                                ...prev,
+                                createdAt: e.target.value,
+                            }))
+                        }
+                        required
+                    />
+                </div>
+            </div>
+
             <div className="space-y-2">
                 <Label>Content</Label>
                 <div className="min-h-[400px] border rounded-md overflow-hidden bg-background">

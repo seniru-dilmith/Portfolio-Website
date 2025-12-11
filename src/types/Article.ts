@@ -5,6 +5,8 @@ export interface Article {
     title: string;
     content: string;
     tags: string[];
+    author: string;
+    createdAt: string | Date;
 }
 
 export interface ArticleListProps {
@@ -14,7 +16,7 @@ export interface ArticleListProps {
 }
 
 export interface ArticleFormProps {
-    formState: { title: string; content: string; tags: string[] };
-    setFormState: Dispatch<SetStateAction<{ title: string; content: string; tags: string[] }>>;
+    formState: { title: string; content: string; tags: string[]; author: string; createdAt: string };
+    setFormState: Dispatch<SetStateAction<{ title: string; content: string; tags: string[]; author: string; createdAt: string }>>;
     onSubmit: () => void;
 }
