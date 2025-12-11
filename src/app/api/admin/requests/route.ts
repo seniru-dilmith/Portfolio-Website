@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import dbConnect from '@/util/dbConnect';
 import WorkRequest from '@/models/WorkRequest';
 import { cookies } from 'next/headers';
