@@ -56,6 +56,19 @@ export default function ArticleDetail() {
 
         if (id) fetchArticle(id as string);
     }, [id, router, toast]);
+    useEffect(() => {
+        if (article) {
+            setFormData({
+                title: article.title,
+                content: article.content,
+                tags: article.tags,
+                author: article.author,
+                createdAt: article.createdAt,
+            });
+        }
+    }, [article]);
+
+
 
     async function handleSave() {
         if (!article) return;
@@ -181,3 +194,4 @@ export default function ArticleDetail() {
         </div>
     );
 }
+

@@ -10,7 +10,7 @@ import {
     NavigationMenuList,
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -180,6 +180,7 @@ export default function ModernNavbar() {
                         </SheetTrigger>
                         <SheetContent side="right">
                             <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
+                            <SheetDescription className="sr-only">Mobile navigation menu</SheetDescription>
                             <div className="flex flex-col gap-4 mt-8">
                                 <Link
                                     href="/"
