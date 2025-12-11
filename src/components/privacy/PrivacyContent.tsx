@@ -50,7 +50,7 @@ export default function PrivacyContent() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <p className="leading-relaxed">
-                            At Seniru Dilmith, we are committed to protecting your personal information and your right to privacy.
+                            At seniru.dev, we are committed to protecting your personal information and your right to privacy.
                             This Privacy Policy explains what information we collect, how we use it, and what rights you have in relation to it.
                         </p>
                     </CardContent>
@@ -65,8 +65,8 @@ export default function PrivacyContent() {
                             <h3 className="font-semibold text-lg text-foreground">Personal Information</h3>
                             <p className="text-muted-foreground">
                                 We collect personal information that you voluntarily provide to us when you express an interest in obtaining information about us or our products and services,
-                                when you participate in activities on the Website (such as by posting messages in our online forums or entering competitions, contests or giveaways)
-                                or otherwise when you contact us.
+                                when you submit work requests, contact us through our forms, or when you access administrative features (for authorized users).
+                                The personal information we collect may include names, email addresses, and project details provided in work requests.
                             </p>
                         </div>
                         <Separator />
@@ -76,6 +76,14 @@ export default function PrivacyContent() {
                                 We automatically collect certain information when you visit, use or navigate the Website. This information does not reveal your specific identity
                                 (like your name or contact information) but may include device and usage information, such as your IP address, browser and device characteristics,
                                 operating system, language preferences, referring URLs, device name, country, location, information about how and when you use our Website and other technical information.
+                            </p>
+                        </div>
+                        <Separator />
+                        <div className="space-y-2">
+                            <h3 className="font-semibold text-lg text-foreground">Cookies and Authentication</h3>
+                            <p className="text-muted-foreground">
+                                We use cookies primarily for authentication purposes to secure administrative areas of the site. If you are an admin user, a secure cookie is stored to maintain your session.
+                                We do not use third-party tracking cookies for advertising purposes.
                             </p>
                         </div>
                     </CardContent>
@@ -88,9 +96,9 @@ export default function PrivacyContent() {
                     <CardContent>
                         <ul className="list-disc list-inside space-y-2 text-muted-foreground">
                             <li>To provide and maintain our Service.</li>
+                            <li>To manage and respond to your work requests and inquiries.</li>
+                            <li>To securely authenticate authorized administrative users.</li>
                             <li>To notify you about changes to our Service.</li>
-                            <li>To allow you to participate in interactive features of our Service.</li>
-                            <li>To provide customer support.</li>
                             <li>To gather analysis or valuable information so that we can improve our Service.</li>
                             <li>To monitor the usage of our Service.</li>
                             <li>To detect, prevent and address technical issues.</li>
