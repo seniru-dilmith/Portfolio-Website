@@ -5,10 +5,10 @@ import User from "@/models/UserModel";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
-const JWT_ACCESS_SECRET = process.env.NEXT_JWT_ACCESS_SECRET!;
-const JWT_REFRESH_SECRET = process.env.NEXT_JWT_REFRESH_SECRET!;
-const ACCESS_TOKEN_EXPIRY = process.env.NEXT_JWT_ACCESS_EXPIRY;
-const REFRESH_TOKEN_EXPIRY = process.env.NEXT_JWT_REFRESH_EXPIRY;
+const JWT_ACCESS_SECRET = process.env.NEXT_JWT_ACCESS_SECRET || "mock-access-secret";
+const JWT_REFRESH_SECRET = process.env.NEXT_JWT_REFRESH_SECRET || "mock-refresh-secret";
+const ACCESS_TOKEN_EXPIRY = process.env.NEXT_JWT_ACCESS_EXPIRY || "1h";
+const REFRESH_TOKEN_EXPIRY = process.env.NEXT_JWT_REFRESH_EXPIRY || "1d";
 
 export async function POST(request: Request) {
   const { email, password } = await request.json();
