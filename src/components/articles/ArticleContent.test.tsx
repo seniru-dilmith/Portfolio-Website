@@ -69,6 +69,7 @@ describe("ArticleContent Component", () => {
         jest.clearAllMocks();
         mockUseAuth.mockReturnValue({
             isAuthenticated: false,
+            isLoading: false,
             handleLogin: jest.fn(),
             handleLogout: jest.fn(),
         });
@@ -85,6 +86,7 @@ describe("ArticleContent Component", () => {
     it("renders Edit button when authenticated", () => {
         mockUseAuth.mockReturnValue({
             isAuthenticated: true,
+            isLoading: false,
             handleLogin: jest.fn(),
             handleLogout: jest.fn(),
         });
@@ -97,6 +99,7 @@ describe("ArticleContent Component", () => {
     it("switches to edit mode when Edit button is clicked", async () => {
         mockUseAuth.mockReturnValue({
             isAuthenticated: true,
+            isLoading: false,
             handleLogin: jest.fn(),
             handleLogout: jest.fn(),
         });

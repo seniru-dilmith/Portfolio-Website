@@ -29,27 +29,26 @@ import { useToast } from "@/components/ui/use-toast";
 import { apiFetch } from "@/lib/api";
 
 export default function AdminRequestsPage() {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, isLoading } = useAuth();
     const router = useRouter();
     const { toast } = useToast();
     const [requests, setRequests] = useState<WorkRequest[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [fetching, setFetching] = useState(true);
     const [replyingTo, setReplyingTo] = useState<WorkRequest | null>(null);
     const [replyMessage, setReplyMessage] = useState("");
     const [sendingReply, setSendingReply] = useState(false);
 
     useEffect(() => {
+        if (isLoading) return;
+
         // Basic Client-side protection (Server API also verifies)
         if (!isAuthenticated) {
-            // Allow time for auth check to resolve
-            const timer = setTimeout(() => {
-                if (!isAuthenticated) router.push("/admin/login");
-            }, 1000);
-            return () => clearTimeout(timer);
+            router.push("/admin/login");
+            return;
         }
 
         fetchRequests();
-    }, [isAuthenticated, router]);
+    }, [isAuthenticated, isLoading, router]);
 
     async function fetchRequests() {
         try {
@@ -61,7 +60,7 @@ export default function AdminRequestsPage() {
         } catch (error) {
             console.error("Failed to fetch requests", error);
         } finally {
-            setLoading(false);
+            setFetching(false);
         }
     }
 
@@ -96,7 +95,7 @@ export default function AdminRequestsPage() {
         }
     }
 
-    if (loading) {
+    if (fetching) {
         return (
             <div className="flex h-[50vh] items-center justify-center">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />

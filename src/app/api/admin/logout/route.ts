@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
         httpOnly: true,
         secure: isProduction,
         sameSite: "strict",
-        path: "/api/admin/refresh",
+        path: "/",
         maxAge: 0,
       });
     }
