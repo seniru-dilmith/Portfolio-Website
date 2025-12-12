@@ -17,9 +17,13 @@ export default function NewArticlePage() {
     const [formState, setFormState] = useState({
         title: "",
         content: "",
+        summary: "",
         tags: [] as string[],
         author: "",
         createdAt: new Date().toISOString().split('T')[0], // Default to today
+        seoTitle: "",
+        seoDescription: "",
+        seoKeywords: "",
     });
 
     // Protect route

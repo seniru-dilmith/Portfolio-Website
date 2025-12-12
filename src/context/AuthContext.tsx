@@ -9,6 +9,7 @@ export const AuthContext = createContext<AuthContextProps | undefined>(undefined
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const isHydrated = useHydration();
 
   // Check auth status on admin pages
@@ -27,6 +28,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } catch {
         setIsAuthenticated(false);
         localStorage.removeItem('admin_logged_in');
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -38,6 +41,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Check auth only if on admin route (excluding login) OR if we have a local flag saying we might be logged in
     if (!isLoginPage && (isAdminRoute || hasAuthFlag)) {
       checkAuth();
+    } else {
+      setIsLoading(false);
     }
   }, [isHydrated]);
 
@@ -59,7 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, handleLogin, handleLogout }}>
+    <AuthContext.Provider value={{ isAuthenticated, isLoading, handleLogin, handleLogout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -7,7 +7,8 @@ jest.mock("@/models/ArticleModel", () => ({
   __esModule: true,
   default: {
     find: jest.fn().mockReturnThis(),
-    sort: jest.fn(),
+    sort: jest.fn().mockReturnThis(),
+    select: jest.fn().mockReturnThis(),
     findById: jest.fn(),
     create: jest.fn(),
     findByIdAndUpdate: jest.fn(),
@@ -23,6 +24,7 @@ describe("articleController", () => {  it("getArticles calls find", async () => 
     await getArticles();
     expect(dbConnect).toHaveBeenCalled();
     expect(ArticleModel.find).toHaveBeenCalled();
+    expect(ArticleModel.find().sort).toHaveBeenCalledWith({ createdAt: -1 });
     expect(ArticleModel.find().sort).toHaveBeenCalledWith({ createdAt: -1 });
   });
 

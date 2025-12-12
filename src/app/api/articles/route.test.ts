@@ -100,12 +100,33 @@ describe("/api/articles", () => {
       expect(mockCreateArticle).toHaveBeenCalledWith({
         title: "New Article",
         content: "New content",
-        tags: ["new"]
+        tags: ["new"],
+        images: []
       });
       expect(mockNextResponse).toHaveBeenCalledWith(
         { success: true, data: mockArticle },
         { status: 201 }
       );
+    });
+
+    it("extracts images from markdown content", async () => {
+      const mockArticle = { _id: "1", title: "Img Article", content: "![img](http://test.com/img.jpg)", tags: [] };
+      const mockRequest = {
+        json: jest.fn().mockResolvedValue({
+          title: "Img Article",
+          content: "![img](http://test.com/img.jpg)",
+          tags: []
+        })
+      } as unknown as NextRequest;
+
+      mockVerifyToken.mockResolvedValue({ userId: "1" });
+      mockCreateArticle.mockResolvedValue(mockArticle);
+
+      await POST(mockRequest);
+
+      expect(mockCreateArticle).toHaveBeenCalledWith(expect.objectContaining({
+        images: ["http://test.com/img.jpg"]
+      }));
     });
 
     it("returns 401 when not authenticated", async () => {
@@ -143,7 +164,8 @@ describe("/api/articles", () => {
       expect(mockUpdateArticle).toHaveBeenCalledWith("1", {
         title: "Updated Article",
         content: "Updated content",
-        tags: ["updated"]
+        tags: ["updated"],
+        images: []
       });
       expect(mockNextResponse).toHaveBeenCalledWith(
         { success: true, data: mockUpdatedArticle },

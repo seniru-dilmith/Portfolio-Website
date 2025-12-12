@@ -1,53 +1,48 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { bucket } from '@/lib/firebaseAdmin';
-import { verifyToken } from '@/middleware/auth';
-import { v4 as uuidv4 } from 'uuid';
+import { NextRequest, NextResponse } from "next/server";
+import { bucket } from "@/lib/firebaseAdmin";
+import { v4 as uuidv4 } from "uuid";
+import { verifyToken } from "@/middleware/auth";
 
-export async function POST(request: NextRequest) {
-  try {
-    await verifyToken(request);
+export async function POST(req: NextRequest) {
+    try {
+        await verifyToken(req);
 
-    const formData = await request.formData();
-    const files = formData.getAll('files') as File[];
-    const projectId = formData.get('projectId') as string;
+        const formData = await req.formData();
+        const file = formData.get("file") as File;
+        const articleId = formData.get("articleId") as string;
 
-    if (!files.length) {
-      return NextResponse.json({ success: false, message: 'No files received.' }, { status: 400 });
+        if (!file) {
+            return NextResponse.json({ success: false, message: "No files received." }, { status: 400 });
+        }
+
+        if (!articleId) {
+            return NextResponse.json({ success: false, message: "Project ID is required." }, { status: 400 });
+        }
+
+        const buffer = Buffer.from(await file.arrayBuffer());
+        const filename = `articles/${articleId}/${uuidv4()}.jpg`;
+        const fileRef = bucket.file(filename);
+
+        await fileRef.save(buffer, {
+            metadata: {
+                contentType: file.type || "image/jpeg",
+            },
+        });
+
+        // Make the file public (optional, depending on your security model, but typically needed for public articles)
+        await fileRef.makePublic();
+
+        // Construct the public URL
+        const publicUrl = `https://storage.googleapis.com/${bucket.name}/${filename}`;
+
+        return NextResponse.json({ success: true, urls: [publicUrl] }, { status: 200 });
+
+    } catch (error: unknown) {
+        console.error("Upload failed:", error);
+        if (error instanceof Error && error.message === "Unauthorized") {
+             return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
+        }
+        const message = error instanceof Error ? error.message : "Upload failed";
+        return NextResponse.json({ success: false, message }, { status: 500 });
     }
-    if (!projectId) {
-      return NextResponse.json({ success: false, message: 'Project ID is required.' }, { status: 400 });
-    }
-
-    const urls: string[] = [];
-
-    for (const file of files) {
-      const buffer = Buffer.from(await file.arrayBuffer());
-      
-      // Create a unique filename to prevent overwrites
-      const uniqueFilename = `${Date.now()}-${uuidv4()}-${file.name.replace(/\s+/g, '_')}`;
-      const filePath = `projects/${projectId}/${uniqueFilename}`;
-      
-      const fileUpload = bucket.file(filePath);
-
-      await fileUpload.save(buffer, {
-        metadata: {
-          contentType: file.type,
-        },
-      });
-
-      // Make the file public and get its URL
-      await fileUpload.makePublic();
-      urls.push(fileUpload.publicUrl());
-    }
-
-    return NextResponse.json({ success: true, urls: urls }, { status: 200 });
-
-  } catch (err) {
-    console.error('Upload API error:', err);
-    const message = err instanceof Error ? err.message : 'Internal server error';
-    return NextResponse.json(
-      { success: false, message },
-      { status: message.startsWith('Unauthorized') ? 401 : 500 }
-    );
-  }
 }

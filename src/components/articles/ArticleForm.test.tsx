@@ -7,6 +7,12 @@ import '@testing-library/jest-dom';
 // --- Mocks ---
 
 // Mock framer-motion to simplify testing. This part is correct.
+// Mock @mdxeditor/editor to allow tests to run without ESM issues
+jest.mock('@mdxeditor/editor', () => ({
+    MDXEditorMethods: {},
+}));
+
+// Mock framer-motion to simplify testing.
 jest.mock('framer-motion', () => ({
     motion: {
         form: ({ children, ...props }: React.FormHTMLAttributes<HTMLFormElement>) => (
@@ -15,13 +21,12 @@ jest.mock('framer-motion', () => ({
     },
 }));
 
-// THIS IS THE KEY FIX: Mock next/dynamic directly.
-// This tells Jest to replace any dynamically imported component with our mock.
+// Mock next/dynamic directly.
 jest.mock('next/dynamic', () => () => {
     const EditorMock = React.forwardRef<HTMLTextAreaElement, { markdown: string; onChange: (value: string) => void }>(
         ({ markdown, onChange }, ref) => (
             <textarea
-                aria-label="Article Content" // Add a unique accessible name
+                aria-label="Article Content"
                 value={markdown}
                 onChange={(e) => onChange(e.target.value)}
                 ref={ref}
@@ -35,7 +40,17 @@ jest.mock('next/dynamic', () => () => {
 
 describe('ArticleForm', () => {
     const defaultProps = {
-        formState: { title: '', content: '', tags: [] as string[] },
+        formState: {
+            title: '',
+            content: '',
+            tags: [] as string[],
+            author: '',
+            createdAt: '',
+            summary: '',
+            seoTitle: '',
+            seoDescription: '',
+            seoKeywords: ''
+        },
         setFormState: jest.fn(),
         onSubmit: jest.fn(),
     };
@@ -58,6 +73,12 @@ describe('ArticleForm', () => {
             title: 'Test Title',
             content: 'Test Content',
             tags: ['React', 'Testing'],
+            author: 'Test Author',
+            createdAt: '2023-01-01',
+            summary: 'Test Summary',
+            seoTitle: 'Test SEO',
+            seoDescription: 'Desc',
+            seoKeywords: 'key'
         };
 
         render(<ArticleForm {...defaultProps} formState={formState} />);
@@ -116,5 +137,15 @@ describe('ArticleForm', () => {
         render(<ArticleForm {...defaultProps} />);
         const titleInput = screen.getByPlaceholderText('Enter article title...');
         expect(titleInput).toBeRequired();
+    });
+
+    it('shows "Save to enable image uploads" when no articleId provided', () => {
+        render(<ArticleForm {...defaultProps} />);
+        expect(screen.getByText(/Save to enable image uploads/i)).toBeInTheDocument();
+    });
+
+    it('shows "Drag & Drop images supported" when articleId is provided', () => {
+        render(<ArticleForm {...defaultProps} articleId="123" />);
+        expect(screen.getByText(/Drag & Drop images supported/i)).toBeInTheDocument();
     });
 });

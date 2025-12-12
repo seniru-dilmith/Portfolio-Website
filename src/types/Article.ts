@@ -4,9 +4,14 @@ export interface Article {
     _id: string;
     title: string;
     content: string;
+    summary?: string;
     tags: string[];
     author: string;
     createdAt: string | Date;
+    images?: string[];
+    seoTitle?: string;
+    seoDescription?: string;
+    seoKeywords?: string;
 }
 
 export interface ArticleListProps {
@@ -16,7 +21,7 @@ export interface ArticleListProps {
 }
 
 export interface ArticleFormProps {
-    formState: { title: string; content: string; tags: string[]; author: string; createdAt: string };
-    setFormState: Dispatch<SetStateAction<{ title: string; content: string; tags: string[]; author: string; createdAt: string }>>;
+    formState: { title: string; content: string; summary: string; tags: string[]; author: string; createdAt: string; seoTitle: string; seoDescription: string; seoKeywords: string; };
+    setFormState: Dispatch<SetStateAction<{ title: string; content: string; summary: string; tags: string[]; author: string; createdAt: string; seoTitle: string; seoDescription: string; seoKeywords: string; }>>;
     onSubmit: () => void;
 }

@@ -10,7 +10,7 @@ const Editor = dynamic(() => import('./InitializedMDXEditor'), {
 });
 
 // Forward the ref to the editor
-export const ForwardRefEditor = forwardRef<MDXEditorMethods, MDXEditorProps>(
+export const ForwardRefEditor = forwardRef<MDXEditorMethods, MDXEditorProps & { articleId?: string }>(
     (props, ref) => <Editor {...props} editorRef={ref} />
 );
 
