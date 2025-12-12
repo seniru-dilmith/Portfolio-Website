@@ -7,6 +7,7 @@ const ArticleSchema = new Schema<Article>({
     tags: { type: [String], required: true },
     author: { type: String, required: true },
     createdAt: { type: Date, required: true },
+    images: { type: [String], default: [] },
 });
 
 export default models.Article || model<Article>('Article', ArticleSchema);

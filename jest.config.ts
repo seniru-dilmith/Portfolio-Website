@@ -18,6 +18,7 @@ const customJestConfig: Config = {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     // Mock Swiper CSS imports
     '^swiper/css.*$': 'identity-obj-proxy',
+    '^@mdxeditor/editor$': '<rootDir>/src/__mocks__/mdxeditor.tsx',
   },
 
   // use babel-jest to transform all JS/TS files
@@ -29,7 +30,7 @@ const customJestConfig: Config = {
   // which node_modules to transform
   transformIgnorePatterns: [
       // Allow Swiper ESM modules to be transformed
-      '/node_modules/(?!remark|react-markdown|unified|unist-.*|hast-.*|bail|trough|vfile.*|micromark.*|decode-named-character-reference|character-entities|mdast-util-.*|escape-string-regexp|markdown-table|github-slugger|strip-markdown|remark-gfm|swiper)/',
+      '/node_modules/(?!remark|react-markdown|unified|unist-.*|hast-.*|bail|trough|vfile.*|micromark.*|decode-named-character-reference|character-entities|mdast-util-.*|escape-string-regexp|markdown-table|github-slugger|strip-markdown|remark-gfm|swiper|@mdxeditor)/',
       '^.+\\.module\\.(css|sass|scss)$',
   ],
 };

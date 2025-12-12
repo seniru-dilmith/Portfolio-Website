@@ -36,7 +36,7 @@ jest.mock('react-markdown', () => {
     MockReactMarkdown.displayName = "MockReactMarkdown";
     return MockReactMarkdown;
 });
-jest.mock('remark-gfm', () => () => {}); // Mock the plugin with an empty function
+jest.mock('remark-gfm', () => () => { }); // Mock the plugin with an empty function
 
 // Mock AuthContext hook
 jest.mock("@/context/AuthContext", () => ({ useAuth: jest.fn() }));
@@ -51,9 +51,7 @@ jest.mock("@/components/LoadingSpinner", () => {
     return MockLoadingSpinner;
 });
 jest.mock("@/components/articles/ArticleForm", () => {
-    const MockArticleForm = () => <div data-testid="article-form">Article Form</div>;
-    MockArticleForm.displayName = "MockArticleForm";
-    return MockArticleForm;
+    return jest.fn((props) => <div data-testid="article-form" data-article-id={props.articleId}>Article Form</div>);
 });
 jest.mock("@/components/footer/Footer", () => {
     const MockFooter = () => <footer data-testid="footer">Footer</footer>;
@@ -95,5 +93,27 @@ describe("ArticleDetail Page", () => {
 
         const markdownContainer = screen.getByTestId("mock-markdown");
         expect(markdownContainer).toHaveTextContent(mockArticle.content);
+    });
+
+    it("passes articleId to ArticleForm when editing", async () => {
+        (fetch as jest.Mock).mockResolvedValueOnce({
+            ok: true,
+            json: () => Promise.resolve({ success: true, data: mockArticle }),
+        });
+        mockUseAuth.mockReturnValue({
+            isAuthenticated: true, // Authenticated to see Edit button
+            handleLogin: jest.fn(),
+            handleLogout: jest.fn(),
+        });
+
+        render(<ArticleDetail />);
+
+        await waitFor(() => screen.getByText("Test Article"));
+
+        const editButton = screen.getByText("Edit Article");
+        editButton.click();
+
+        const form = screen.getByTestId("article-form");
+        expect(form).toHaveAttribute("data-article-id", "test-id");
     });
 });

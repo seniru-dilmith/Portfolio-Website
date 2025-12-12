@@ -35,7 +35,7 @@ jest.mock('next/dynamic', () => () => {
 
 describe('ArticleForm', () => {
     const defaultProps = {
-        formState: { title: '', content: '', tags: [] as string[] },
+        formState: { title: '', content: '', tags: [] as string[], author: '', createdAt: '' },
         setFormState: jest.fn(),
         onSubmit: jest.fn(),
     };
@@ -58,6 +58,8 @@ describe('ArticleForm', () => {
             title: 'Test Title',
             content: 'Test Content',
             tags: ['React', 'Testing'],
+            author: 'Test Author',
+            createdAt: '2023-01-01',
         };
 
         render(<ArticleForm {...defaultProps} formState={formState} />);
@@ -116,5 +118,15 @@ describe('ArticleForm', () => {
         render(<ArticleForm {...defaultProps} />);
         const titleInput = screen.getByPlaceholderText('Enter article title...');
         expect(titleInput).toBeRequired();
+    });
+
+    it('shows "Save to enable image uploads" when no articleId provided', () => {
+        render(<ArticleForm {...defaultProps} />);
+        expect(screen.getByText(/Save to enable image uploads/i)).toBeInTheDocument();
+    });
+
+    it('shows "Drag & Drop images supported" when articleId is provided', () => {
+        render(<ArticleForm {...defaultProps} articleId="123" />);
+        expect(screen.getByText(/Drag & Drop images supported/i)).toBeInTheDocument();
     });
 });

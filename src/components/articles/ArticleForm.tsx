@@ -13,7 +13,11 @@ const ForwardRefEditor = dynamic(
     { ssr: false }
 );
 
-const ArticleForm: React.FC<ArticleFormProps> = ({ formState, setFormState, onSubmit }) => {
+interface ArticleFormPropsWithId extends ArticleFormProps {
+    articleId?: string;
+}
+
+const ArticleForm: React.FC<ArticleFormPropsWithId> = ({ formState, setFormState, onSubmit, articleId }) => {
     return (
         <motion.form
             className="space-y-6 w-full max-w-3xl mx-auto"
@@ -76,7 +80,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({ formState, setFormState, onSu
             </div>
 
             <div className="space-y-2">
-                <Label>Content</Label>
+                <Label>Content {articleId ? '(Drag & Drop images supported)' : '(Save to enable image uploads)'}</Label>
                 <div className="min-h-[400px] border rounded-md overflow-hidden bg-background">
                     <ForwardRefEditor
                         markdown={formState.content}
@@ -86,6 +90,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({ formState, setFormState, onSu
                                 content: newContent,
                             }))
                         }
+                        articleId={articleId}
                     />
                 </div>
             </div>

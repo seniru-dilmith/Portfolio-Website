@@ -5,17 +5,16 @@ import { useParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { ArrowLeft, Edit, Save, X, Calendar, User } from 'lucide-react';
+import { ArrowLeft, Calendar, User } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from '@/context/AuthContext';
 import { apiFetch } from "@/lib/api";
 import { Article } from '@/types/Article';
 import { Separator } from '@/components/ui/separator';
+import ArticleForm from '@/components/articles/ArticleForm';
 
 export default function ArticleDetail() {
     const { id } = useParams();
@@ -26,7 +25,13 @@ export default function ArticleDetail() {
     const [article, setArticle] = useState<Article | null>(null);
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
-    const [formData, setFormData] = useState<Omit<Article, '_id'>>({
+    const [formData, setFormData] = useState<{
+        title: string;
+        content: string;
+        tags: string[];
+        author: string;
+        createdAt: string;
+    }>({
         title: '',
         content: '',
         tags: [],
@@ -63,7 +68,7 @@ export default function ArticleDetail() {
                 content: article.content,
                 tags: article.tags,
                 author: article.author,
-                createdAt: article.createdAt,
+                createdAt: new Date(article.createdAt).toISOString().split('T')[0],
             });
         }
     }, [article]);
@@ -106,52 +111,12 @@ export default function ArticleDetail() {
                 </Button>
 
                 {isEditing ? (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">Title</label>
-                            <Input
-                                value={formData.title}
-                                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                className="text-xl font-bold"
-                            />
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Author</label>
-                                <Input
-                                    value={formData.author}
-                                    onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Publish Date</label>
-                                <Input
-                                    type="date"
-                                    value={formData.createdAt as string}
-                                    onChange={(e) => setFormData({ ...formData, createdAt: e.target.value })}
-                                />
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">Content (Markdown supported)</label>
-                            <Textarea
-                                value={formData.content}
-                                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                                className="min-h-[400px] font-mono"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">Tags (comma separated)</label>
-                            <Input
-                                value={formData.tags.join(', ')}
-                                onChange={(e) => setFormData({ ...formData, tags: e.target.value.split(',').map(t => t.trim()) })}
-                            />
-                        </div>
-                        <div className="flex gap-4">
-                            <Button onClick={handleSave} className="gap-2"><Save className="h-4 w-4" /> Save Changes</Button>
-                            <Button variant="outline" onClick={() => setIsEditing(false)} className="gap-2"><X className="h-4 w-4" /> Cancel</Button>
-                        </div>
-                    </motion.div>
+                    <ArticleForm
+                        formState={formData}
+                        setFormState={setFormData}
+                        onSubmit={handleSave}
+                        articleId={article._id}
+                    />
                 ) : (
                     <motion.article initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-foreground">
                         <div className="mb-8 text-center md:text-left space-y-4">
@@ -176,7 +141,7 @@ export default function ArticleDetail() {
                         {isAuthenticated && (
                             <div className="mb-8 flex justify-end">
                                 <Button variant="outline" onClick={() => setIsEditing(true)} className="gap-2">
-                                    <Edit className="h-4 w-4" /> Edit Article
+                                    Edit Article
                                 </Button>
                             </div>
                         )}

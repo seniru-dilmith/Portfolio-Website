@@ -7,6 +7,7 @@ export interface Article {
     tags: string[];
     author: string;
     createdAt: string | Date;
+    images?: string[];
 }
 
 export interface ArticleListProps {

@@ -1,0 +1,52 @@
+/* MDXEditor Custom Theme */
+
+/* Target the editor content specifically */
+.mdxeditor-content {
+  /* Ensure a base color is set that contrasts with the background */
+  color: var(--foreground); 
+}
+
+/* Light mode specific overrides if variable vars aren't enough */
+:root .mdxeditor-content h1,
+:root .mdxeditor-content h2,
+:root .mdxeditor-content h3,
+:root .mdxeditor-content h4,
+:root .mdxeditor-content h5,
+:root .mdxeditor-content h6,
+:root .mdxeditor-content strong {
+  color: #111827; /* gray-900 */
+}
+
+:root .mdxeditor-content blockquote {
+  color: #4b5563; /* gray-600 */
+  border-left-color: #e5e7eb; /* gray-200 */
+}
+
+/* Dark mode overrides */
+.dark .mdxeditor-content h1,
+.dark .mdxeditor-content h2,
+.dark .mdxeditor-content h3,
+.dark .mdxeditor-content h4,
+.dark .mdxeditor-content h5,
+.dark .mdxeditor-content h6,
+.dark .mdxeditor-content strong {
+  color: #f9fafb; /* gray-50 */
+}
+
+.dark .mdxeditor-content blockquote {
+  color: #9ca3af; /* gray-400 */
+  border-left-color: #374151; /* gray-700 */
+}
+
+/* Fix for "prose" class potentially forcing colors */
+.prose h2, .prose h3, .prose h4 {
+    /* Let our specific rules take precedence or use !important if prose is too strong */
+    color: inherit;
+}
+
+/* Custom Multicolour Support - span classes */
+.text-red { color: #ef4444; }
+.text-blue { color: #3b82f6; }
+.text-green { color: #22c55e; }
+.text-yellow { color: #eab308; }
+.text-purple { color: #a855f7; }
