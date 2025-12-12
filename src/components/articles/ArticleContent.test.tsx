@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import ArticleContent from "@/components/articles/ArticleContent";
 import "@testing-library/jest-dom";
 
@@ -121,7 +121,7 @@ describe("CustomImageRenderer", () => {
     it("renders with default classes", () => {
         render(<CustomImageRenderer src="test.jpg" alt="Test Image" />);
         const img = screen.getByRole("img");
-        expect(img).toHaveClass("w-full");
+        expect(img).toHaveClass("max-w-full");
         expect(img).toHaveAttribute("alt", "Test Image");
     });
 

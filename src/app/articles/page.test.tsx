@@ -28,38 +28,25 @@ jest.mock("@/context/AuthContext", () => ({
   useAuth: jest.fn(),
 }));
 
+import { useAuth } from "@/context/AuthContext";
+const mockUseAuth = useAuth as jest.MockedFunction<typeof useAuth>;
+
 // Mock components
-jest.mock("@/components/footer/Footer", () => {
-  return function MockFooter() {
-    return <div data-testid="footer">Footer</div>;
+jest.mock("@/components/articles/ArticleHero", () => {
+  return function MockArticleHero() {
+    return <div data-testid="article-hero">Article Hero</div>;
   };
 });
 
-jest.mock("@/components/articles/ArticleForm", () => {
-  return function MockArticleForm({ onSubmit }: { onSubmit: () => void }) {
+jest.mock("@/components/articles/ArticleSearch", () => {
+  return function MockArticleSearch({ searchQuery, setSearchQuery }: { searchQuery: string, setSearchQuery: (q: string) => void }) {
     return (
-      <div data-testid="article-form">
-        <button onClick={onSubmit} data-testid="submit-article">Submit Article</button>
-      </div>
+      <input
+        data-testid="article-search"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
     );
-  };
-});
-
-jest.mock("@/components/articles/ArticleList", () => {
-  return function MockArticleList() {
-    return <div data-testid="article-list">Article List</div>;
-  };
-});
-
-jest.mock("@/components/articles/HeroForArticles", () => {
-  return function MockHeroForArticles() {
-    return <div data-testid="hero-for-articles">Hero for Articles</div>;
-  };
-});
-
-jest.mock("@/util/SmallLoadingSpinner", () => {
-  return function MockSmallLoadingSpinner() {
-    return <div data-testid="small-loading-spinner">Loading...</div>;
   };
 });
 
@@ -69,16 +56,6 @@ jest.mock("@/components/ui/LoadingIndicator", () => {
     return <div data-testid="loading-spinner">Loading Indicator</div>;
   };
 });
-
-jest.mock("next/head", () => {
-  return function MockHead({ children }: { children: React.ReactNode }) {
-    return <>{children}</>;
-  };
-});
-
-import { useAuth } from "@/context/AuthContext";
-
-const mockUseAuth = useAuth as jest.MockedFunction<typeof useAuth>;
 
 // Mock fetch
 global.fetch = jest.fn();
@@ -91,6 +68,7 @@ describe("Articles Page", () => {
       isAuthenticated: false,
       handleLogin: jest.fn(),
       handleLogout: jest.fn(),
+      isLoading: false,
     });
   });
 
@@ -104,13 +82,12 @@ describe("Articles Page", () => {
       render(<Articles />);
     });
 
-    expect(screen.getByTestId("hero-for-articles")).toBeInTheDocument();
-
+    expect(screen.getByTestId("article-hero")).toBeInTheDocument();
   });
 
   it("fetches and displays articles on mount", async () => {
     const mockArticles = [
-      { _id: "1", title: "Test Article", content: "Test content", tags: ["test"], author: "Test User", createdAt: new Date().toISOString() },
+      { _id: "1", title: "Test Article", content: "Test content", tags: ["test"], author: "Test User", createdAt: new Date().toISOString(), summary: "Summary" },
     ];
 
     mockFetch.mockResolvedValueOnce({
@@ -125,7 +102,8 @@ describe("Articles Page", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByTestId("article-list")).toBeInTheDocument();
+      expect(screen.getByText("Test Article")).toBeInTheDocument();
+      expect(screen.getByText("Summary")).toBeInTheDocument();
     });
   });
 
@@ -137,11 +115,12 @@ describe("Articles Page", () => {
     expect(screen.getByTestId("loading-spinner")).toBeInTheDocument();
   });
 
-  it("shows article form when authenticated", async () => {
+  it("shows 'Write Article' button when authenticated", async () => {
     mockUseAuth.mockReturnValue({
       isAuthenticated: true,
       handleLogin: jest.fn(),
       handleLogout: jest.fn(),
+      isLoading: false,
     });
 
     mockFetch.mockResolvedValueOnce({
@@ -153,25 +132,7 @@ describe("Articles Page", () => {
       render(<Articles />);
     });
 
-    // The authenticated state is tested by rendering without errors
-    expect(screen.getByTestId("hero-for-articles")).toBeInTheDocument();
-  });
-
-  it("hides article form when not authenticated", () => {
-    mockUseAuth.mockReturnValue({
-      isAuthenticated: false,
-      handleLogin: jest.fn(),
-      handleLogout: jest.fn(),
-    });
-
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({ success: true, data: [] }),
-    } as Response);
-
-    render(<Articles />);
-
-    // This would depend on the actual implementation details
-    // The test should check if non-authenticated users don't see the form
+    // Check for the button/link to create new article
+    expect(screen.getByText(/Write Article/i)).toBeInTheDocument();
   });
 });

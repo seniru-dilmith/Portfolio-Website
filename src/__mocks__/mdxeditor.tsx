@@ -1,7 +1,7 @@
 
-import React, { ForwardedRef } from 'react';
+import React from 'react';
 
-export const MDXEditor = React.forwardRef((props: any, ref: ForwardedRef<any>) => {
+export const MDXEditor = React.forwardRef(() => {
     return <div data-testid="mdx-editor-mock">MDXEditor Mock</div>;
 });
 MDXEditor.displayName = 'MDXEditor';

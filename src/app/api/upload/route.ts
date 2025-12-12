@@ -1,19 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { bucket } from "@/lib/firebaseAdmin";
 import { v4 as uuidv4 } from "uuid";
+import { verifyToken } from "@/middleware/auth";
 
 export async function POST(req: NextRequest) {
     try {
+        await verifyToken(req);
+
         const formData = await req.formData();
         const file = formData.get("file") as File;
         const articleId = formData.get("articleId") as string;
 
         if (!file) {
-            return NextResponse.json({ error: "No file provided" }, { status: 400 });
+            return NextResponse.json({ success: false, message: "No files received." }, { status: 400 });
         }
 
         if (!articleId) {
-            return NextResponse.json({ error: "No article ID provided" }, { status: 400 });
+            return NextResponse.json({ success: false, message: "Project ID is required." }, { status: 400 });
         }
 
         const buffer = Buffer.from(await file.arrayBuffer());
@@ -30,14 +33,16 @@ export async function POST(req: NextRequest) {
         await fileRef.makePublic();
 
         // Construct the public URL
-        // Method 1: Signed URL (Time limited) - Not ideal for articles
-        // Method 2: Public URL (Persistent)
         const publicUrl = `https://storage.googleapis.com/${bucket.name}/${filename}`;
 
-        return NextResponse.json({ url: publicUrl });
+        return NextResponse.json({ success: true, urls: [publicUrl] }, { status: 200 });
 
-    } catch (error) {
+    } catch (error: unknown) {
         console.error("Upload failed:", error);
-        return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+        if (error instanceof Error && error.message === "Unauthorized") {
+             return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
+        }
+        const message = error instanceof Error ? error.message : "Upload failed";
+        return NextResponse.json({ success: false, message }, { status: 500 });
     }
 }
