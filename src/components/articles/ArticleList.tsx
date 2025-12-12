@@ -3,32 +3,6 @@ import { motion } from 'framer-motion';
 import { ArticleListProps } from '@/types/Article';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { remark } from 'remark'; // To process markdown
-import strip from 'strip-markdown'; // To remove markdown formatting
-
-/**
- * Creates a plain text summary from a Markdown string.
- * @param markdownContent The raw Markdown content.
- * @param maxLength The maximum length of the summary.
- * @returns A plain text, truncated string.
- */
-const createSummary = (markdownContent: string, maxLength: number = 150): string => {
-    // Convert Markdown to plain text using remark and strip-markdown
-    const plainText = remark()
-        .use(strip)
-        .processSync(markdownContent)
-        .toString();
-
-    // Clean up consecutive whitespace and newlines
-    const cleanedText = plainText.replace(/\s+/g, ' ').trim();
-
-    // Truncate the text if it exceeds the max length
-    if (cleanedText.length > maxLength) {
-        return cleanedText.substring(0, maxLength) + '...';
-    }
-
-    return cleanedText;
-};
 
 const ArticleList: React.FC<ArticleListProps> = ({ articles, onEdit, onDelete }) => {
     const { isAuthenticated } = useAuth();
@@ -42,9 +16,6 @@ const ArticleList: React.FC<ArticleListProps> = ({ articles, onEdit, onDelete })
             transition={{ duration: 0.5 }}
         >
             {articles.map((article) => {
-                // Generate the plain text summary for each article card
-                const summary = createSummary(article.content);
-
                 return (
                     <motion.div
                         key={article._id}
@@ -59,10 +30,10 @@ const ArticleList: React.FC<ArticleListProps> = ({ articles, onEdit, onDelete })
                         </div>
                         {/* Card Body */}
                         <div className="card-body p-4 bg-neutral">
-                            <p className="text-neutral-content text-sm h-16"> {/* Using a fixed height for a uniform look */}
-                                {summary}
+                            <p className="text-neutral-content text-sm h-16 line-clamp-3"> {/* Using a fixed height for a uniform look */}
+                                {article.summary || "No summary available."}
                             </p>
-                            
+
                             {/* Read More Button */}
                             <div className="mt-4">
                                 <motion.button

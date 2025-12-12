@@ -51,6 +51,7 @@
     "react-icons": "^5.5.0",
     "react-intersection-observer": "^9.15.1",
     "react-markdown": "^10.1.0",
+    "rehype-raw": "^7.0.0",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.1",
     "strip-markdown": "^6.0.0",

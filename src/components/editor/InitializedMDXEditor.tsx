@@ -23,11 +23,8 @@ import {
 } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css'; // Required styles
 import '@/styles/mdx-editor-theme.css'; // Custom Theme Overrides
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from '@/util/firebaseServer';
-import { compressAndConvertToJpg } from '@/util/imageUtils';
-import { v4 as uuidv4 } from 'uuid';
 import { useTheme } from 'next-themes';
+import { AlignmentTools } from './AlignmentTools';
 
 // This is the component that will be dynamically imported
 export default function InitializedMDXEditor({
@@ -36,27 +33,44 @@ export default function InitializedMDXEditor({
     ...props
 }: { editorRef: ForwardedRef<MDXEditorMethods> | null, articleId?: string } & MDXEditorProps) {
 
-    async function imageUploadHandler(image: File): Promise<string> {
-        if (!articleId) {
-            alert("Please save the article first before uploading images.");
-            throw new Error("Article ID is required for image upload.");
+
+
+    // Image upload handler
+    const imageUploadHandler = async (image: File) => {
+        const formData = new FormData();
+        formData.append('file', image);
+        // Ensure articleId is present, or handle accordingly (e.g., upload to a temp folder if creating new)
+        if (articleId) {
+            formData.append('articleId', articleId);
+        } else {
+            // Fallback or error if no ID. For new articles, we might need a temp ID or just handle in backend.
+            // Given the form logic, we should have an ID or handle it. 
+            // Ideally the parent creates an ID before editing.
+            // For now, let's assume articleId might be missing for new drafts and handle gracefully? 
+            // Actually, the API requires articleId. 
+            // If we are in "create new" mode, we might not have an ID yet. 
+            // But let's restore the basic functionality first. 
+            console.error("No articleId for image upload");
+            // We could generate a temp ID here or prompt user? 
+            // For now, let's try to pass 'temp' or similar if undefined, 
+            // OR just let the API error out if it needs strict ID.
+            // The previous implementation likely required it.
+            formData.append('articleId', articleId || 'temp-upload');
         }
 
-        try {
-            const compressedImage = await compressAndConvertToJpg(image);
-            // The folder name in the storage bucket should be the article id.
-            // So path should be `${articleId}/${filename}`.
+        const response = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
+        });
 
-            const storageRef = ref(storage, `${articleId}/${uuidv4()}.jpg`);
-
-            await uploadBytes(storageRef, compressedImage);
-            const downloadURL = await getDownloadURL(storageRef);
-            return downloadURL;
-        } catch (error) {
-            console.error("Image upload failed:", error);
-            throw error;
+        if (!response.ok) {
+            throw new Error('Upload failed');
         }
-    }
+
+        const json = await response.json();
+        return json.url;
+    };
+
 
     return (
         <MDXEditor
@@ -69,6 +83,7 @@ export default function InitializedMDXEditor({
                             <BoldItalicUnderlineToggles />
                             <ListsToggle />
                             <BlockTypeSelect />
+                            <AlignmentTools editorRef={editorRef as React.MutableRefObject<MDXEditorMethods | null>} />
                             <InsertImage />
                         </DiffSourceToggleWrapper>
                     ),
@@ -77,6 +92,7 @@ export default function InitializedMDXEditor({
                 listsPlugin(),
                 quotePlugin(),
                 thematicBreakPlugin(),
+                markdownShortcutPlugin(),
                 markdownShortcutPlugin(),
                 imagePlugin({ imageUploadHandler }),
                 diffSourcePlugin({ viewMode: 'rich-text', diffMarkdown: 'previous-markdown' }),

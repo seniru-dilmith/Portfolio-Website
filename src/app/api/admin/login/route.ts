@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { parseExpiryToSeconds } from "@/lib/utils";
 import dbConnect from "@/util/dbConnect";
 import User from "@/models/UserModel";
 import jwt from "jsonwebtoken";
@@ -61,12 +62,14 @@ export async function POST(request: Request) {
       secure: true,
       sameSite: "strict",
       path: "/",
+      maxAge: parseExpiryToSeconds(ACCESS_TOKEN_EXPIRY!),
     });
     response.cookies.set("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "strict",
       path: "/", 
+      maxAge: parseExpiryToSeconds(REFRESH_TOKEN_EXPIRY!),
     });
 
     return response;
