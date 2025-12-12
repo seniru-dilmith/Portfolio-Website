@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
         }
 
         const buffer = Buffer.from(await file.arrayBuffer());
-        const filename = `${articleId}/${uuidv4()}.jpg`;
+        const filename = `articles/${articleId}/${uuidv4()}.jpg`;
         const fileRef = bucket.file(filename);
 
         await fileRef.save(buffer, {

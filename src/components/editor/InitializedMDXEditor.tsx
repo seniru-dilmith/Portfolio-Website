@@ -35,6 +35,43 @@ export default function InitializedMDXEditor({
 
 
 
+    // Image upload handler
+    const imageUploadHandler = async (image: File) => {
+        const formData = new FormData();
+        formData.append('file', image);
+        // Ensure articleId is present, or handle accordingly (e.g., upload to a temp folder if creating new)
+        if (articleId) {
+            formData.append('articleId', articleId);
+        } else {
+            // Fallback or error if no ID. For new articles, we might need a temp ID or just handle in backend.
+            // Given the form logic, we should have an ID or handle it. 
+            // Ideally the parent creates an ID before editing.
+            // For now, let's assume articleId might be missing for new drafts and handle gracefully? 
+            // Actually, the API requires articleId. 
+            // If we are in "create new" mode, we might not have an ID yet. 
+            // But let's restore the basic functionality first. 
+            console.error("No articleId for image upload");
+            // We could generate a temp ID here or prompt user? 
+            // For now, let's try to pass 'temp' or similar if undefined, 
+            // OR just let the API error out if it needs strict ID.
+            // The previous implementation likely required it.
+            formData.append('articleId', articleId || 'temp-upload');
+        }
+
+        const response = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (!response.ok) {
+            throw new Error('Upload failed');
+        }
+
+        const json = await response.json();
+        return json.url;
+    };
+
+
     return (
         <MDXEditor
             plugins={[
@@ -56,7 +93,8 @@ export default function InitializedMDXEditor({
                 quotePlugin(),
                 thematicBreakPlugin(),
                 markdownShortcutPlugin(),
-                imagePlugin(),
+                markdownShortcutPlugin(),
+                imagePlugin({ imageUploadHandler }),
                 diffSourcePlugin({ viewMode: 'rich-text', diffMarkdown: 'previous-markdown' }),
                 jsxPlugin(),
             ]}
