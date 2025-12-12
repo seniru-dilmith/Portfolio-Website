@@ -67,6 +67,8 @@ const mockArticle = {
     title: "Test Article",
     content: "This is test content.",
     tags: ["React", "Testing"],
+    author: "Test Author",
+    createdAt: new Date().toISOString(),
 };
 
 describe("ArticleDetail Page", () => {
@@ -113,7 +115,7 @@ describe("ArticleDetail Page", () => {
         const editButton = screen.getByText("Edit Article");
         editButton.click();
 
-        const form = screen.getByTestId("article-form");
+        const form = await screen.findByTestId("article-form");
         expect(form).toHaveAttribute("data-article-id", "test-id");
     });
 });
