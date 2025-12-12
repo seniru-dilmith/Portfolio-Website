@@ -6,7 +6,7 @@ import { getArticleById } from '@/controllers/articleController';
 import { Article } from '@/types/Article';
 
 type Props = {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 };
 
 async function getArticle(id: string): Promise<Article | null> {
@@ -23,7 +23,8 @@ async function getArticle(id: string): Promise<Article | null> {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const article = await getArticle(params.id);
+    const { id } = await params;
+    const article = await getArticle(id);
 
     if (!article) {
         return {
@@ -47,7 +48,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ArticlePage({ params }: Props) {
-    const article = await getArticle(params.id);
+    const { id } = await params;
+    const article = await getArticle(id);
 
     if (!article) {
         notFound();
