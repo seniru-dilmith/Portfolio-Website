@@ -21,11 +21,9 @@ Object.defineProperty(window, 'matchMedia', {
 // Mock framer-motion to discard animation props that cause React warnings in tests
 jest.mock('framer-motion', () => {
   const original = jest.requireActual('framer-motion');
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const discardProps = (props: any) => {
     // Remove animation/boolean props that cause warnings
     // Add more as needed
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { whileHover, whileTap, whileInView, layout, transition, animate, initial, exit, variants, viewport, ...rest } = props;
     return rest;
   };
@@ -33,7 +31,6 @@ jest.mock('framer-motion', () => {
     ...original,
     motion: new Proxy(original.motion, {
       get(target, prop) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return (props: any) => {
           const Comp = target[prop] || 'div';
           return React.createElement(Comp, discardProps(props));
@@ -44,10 +41,7 @@ jest.mock('framer-motion', () => {
 });
 
 // Mock next/image to discard boolean props that cause React warnings in tests
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const MockedImage = (props: any) => {
-  // Remove boolean props that cause warnings
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { fill, priority, ...rest } = props;
   return React.createElement('img', rest);
 };

@@ -7,6 +7,12 @@ import '@testing-library/jest-dom';
 // --- Mocks ---
 
 // Mock framer-motion to simplify testing. This part is correct.
+// Mock @mdxeditor/editor to allow tests to run without ESM issues
+jest.mock('@mdxeditor/editor', () => ({
+    MDXEditorMethods: {},
+}));
+
+// Mock framer-motion to simplify testing.
 jest.mock('framer-motion', () => ({
     motion: {
         form: ({ children, ...props }: React.FormHTMLAttributes<HTMLFormElement>) => (
@@ -15,13 +21,12 @@ jest.mock('framer-motion', () => ({
     },
 }));
 
-// THIS IS THE KEY FIX: Mock next/dynamic directly.
-// This tells Jest to replace any dynamically imported component with our mock.
+// Mock next/dynamic directly.
 jest.mock('next/dynamic', () => () => {
     const EditorMock = React.forwardRef<HTMLTextAreaElement, { markdown: string; onChange: (value: string) => void }>(
         ({ markdown, onChange }, ref) => (
             <textarea
-                aria-label="Article Content" // Add a unique accessible name
+                aria-label="Article Content"
                 value={markdown}
                 onChange={(e) => onChange(e.target.value)}
                 ref={ref}
@@ -35,7 +40,17 @@ jest.mock('next/dynamic', () => () => {
 
 describe('ArticleForm', () => {
     const defaultProps = {
-        formState: { title: '', content: '', tags: [] as string[], author: '', createdAt: '' },
+        formState: {
+            title: '',
+            content: '',
+            tags: [] as string[],
+            author: '',
+            createdAt: '',
+            summary: '',
+            seoTitle: '',
+            seoDescription: '',
+            seoKeywords: ''
+        },
         setFormState: jest.fn(),
         onSubmit: jest.fn(),
     };
@@ -60,6 +75,10 @@ describe('ArticleForm', () => {
             tags: ['React', 'Testing'],
             author: 'Test Author',
             createdAt: '2023-01-01',
+            summary: 'Test Summary',
+            seoTitle: 'Test SEO',
+            seoDescription: 'Desc',
+            seoKeywords: 'key'
         };
 
         render(<ArticleForm {...defaultProps} formState={formState} />);

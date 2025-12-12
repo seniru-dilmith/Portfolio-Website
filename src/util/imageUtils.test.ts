@@ -4,7 +4,7 @@ import imageCompression from 'browser-image-compression';
 
 // Mock the browser-image-compression library
 jest.mock('browser-image-compression', () => {
-    return jest.fn((file, options) => {
+    return jest.fn(() => {
         // Return a dummy blob imitating a compressed file
         return Promise.resolve(new Blob(['compressed-content'], { type: 'image/jpeg' }));
     });
@@ -48,7 +48,7 @@ describe('imageUtils', () => {
         });
 
          it('should throw error if compression fails', async () => {
-            (imageCompression as jest.Mock).mockRejectedValueOnce(new Error('Compression failed'));
+            (imageCompression as unknown as jest.Mock).mockRejectedValueOnce(new Error('Compression failed'));
             const file = new File(['dummy'], 'fail.png', { type: 'image/png' });
 
             await expect(compressAndConvertToJpg(file)).rejects.toThrow('Compression failed');

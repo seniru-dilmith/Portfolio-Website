@@ -32,7 +32,7 @@ const ArticleHero = () => {
                         Explore My <span className="text-primary">Thoughts</span>
                     </h1>
                     <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl">
-                        A collection of articles on software engineering, system design, and the lessons I've learned while building digital products.
+                        A collection of articles on software engineering, system design, and the lessons I&apos;ve learned while building digital products.
                     </p>
                 </motion.div>
             </div>

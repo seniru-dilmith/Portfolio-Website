@@ -23,7 +23,6 @@ import {
 } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css'; // Required styles
 import '@/styles/mdx-editor-theme.css'; // Custom Theme Overrides
-import { useTheme } from 'next-themes';
 import { AlignmentTools } from './AlignmentTools';
 
 // This is the component that will be dynamically imported

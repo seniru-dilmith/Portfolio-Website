@@ -1,6 +1,13 @@
 import React from 'react';
+import Image from 'next/image';
 
-export const CustomImageRenderer = ({ node, alt, src, title, ...props }: any) => {
+interface CustomImageRendererProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src'> {
+    src?: unknown;
+    alt?: string;
+    title?: string;
+}
+
+export const CustomImageRenderer = ({ alt, src, title, ...props }: CustomImageRendererProps) => {
     let className = "rounded-lg max-w-full";
     let cleanAlt = alt || "";
 
@@ -17,23 +24,31 @@ export const CustomImageRenderer = ({ node, alt, src, title, ...props }: any) =>
         className += " block mx-auto mb-6 mt-6";
     }
 
+    const imgSrc = typeof src === 'string' ? src : undefined;
+
+    if (!imgSrc) return null;
+
     return (
-        <img
+        <Image
             {...props}
-            src={src}
+            src={imgSrc}
             alt={cleanAlt}
             title={title}
             className={className}
+            width={0}
+            height={0}
+            sizes="100vw"
+            style={{ width: '100%', height: 'auto' }}
         />
     );
 };
 
-export const CustomParagraphRenderer = ({ children, ...props }: any) => {
+export const CustomParagraphRenderer = ({ children, ...props }: { children?: React.ReactNode }) => {
     let alignmentClass = "";
 
     // Helper to process children and find/remove alignment tags
-    const processChildren = (nodes: any[]): any[] => {
-        return React.Children.map(nodes, (child, index) => {
+    const processChildren = (nodes: React.ReactNode[]): React.ReactNode[] => {
+        return React.Children.map(nodes, (child) => {
             // Only check the last child (or string children) for the tag
             if (typeof child === 'string') {
                 if (/#center/i.test(child)) {
@@ -58,7 +73,7 @@ export const CustomParagraphRenderer = ({ children, ...props }: any) => {
             // Complex case: "Text **Bold** #center" -> The last child is " #center"
 
             return child;
-        });
+        }) || [];
     };
 
     // We process children to extract the tag. 
