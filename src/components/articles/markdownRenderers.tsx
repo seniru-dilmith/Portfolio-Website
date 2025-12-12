@@ -14,8 +14,7 @@ export const CustomImageRenderer = ({ node, alt, src, title, ...props }: any) =>
         className += " block mx-auto mb-4";
         cleanAlt = cleanAlt.replace("#center", "");
     } else {
-        // Default: block full width or whatever
-        className += " w-full mb-6 mt-6";
+        className += " block mx-auto mb-6 mt-6";
     }
 
     return (
@@ -26,5 +25,49 @@ export const CustomImageRenderer = ({ node, alt, src, title, ...props }: any) =>
             title={title}
             className={className}
         />
+    );
+};
+
+export const CustomParagraphRenderer = ({ children, ...props }: any) => {
+    let alignmentClass = "";
+
+    // Helper to process children and find/remove alignment tags
+    const processChildren = (nodes: any[]): any[] => {
+        return React.Children.map(nodes, (child, index) => {
+            // Only check the last child (or string children) for the tag
+            if (typeof child === 'string') {
+                if (/#center/i.test(child)) {
+                    alignmentClass = "text-center";
+                    return child.replace(/#center\s*$/i, '').replace(/\s+$/, '');
+                }
+                if (/#left/i.test(child)) {
+                    alignmentClass = "text-left";
+                    return child.replace(/#left\s*$/i, '').replace(/\s+$/, '');
+                }
+                if (/#right/i.test(child)) {
+                    alignmentClass = "text-right";
+                    return child.replace(/#right\s*$/i, '').replace(/\s+$/, '');
+                }
+                if (/#justify/i.test(child)) {
+                    alignmentClass = "text-justify";
+                    return child.replace(/#justify\s*$/i, '').replace(/\s+$/, '');
+                }
+            }
+            // If child is an element (like strong/em), we might want to peek inside, 
+            // but usually the tag is at the very end of the paragraph string.
+            // Complex case: "Text **Bold** #center" -> The last child is " #center"
+
+            return child;
+        });
+    };
+
+    // We process children to extract the tag. 
+    // Note: ReactMarkdown passes children as an array of mixed types.
+    const cleanChildren = processChildren(React.Children.toArray(children));
+
+    return (
+        <p className={`mb-4 leading-7 ${alignmentClass}`} {...props}>
+            {cleanChildren}
+        </p>
     );
 };

@@ -23,8 +23,8 @@ import {
 } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css'; // Required styles
 import '@/styles/mdx-editor-theme.css'; // Custom Theme Overrides
-import { compressAndConvertToJpg } from '@/util/imageUtils';
 import { useTheme } from 'next-themes';
+import { AlignmentTools } from './AlignmentTools';
 
 // This is the component that will be dynamically imported
 export default function InitializedMDXEditor({
@@ -33,35 +33,7 @@ export default function InitializedMDXEditor({
     ...props
 }: { editorRef: ForwardedRef<MDXEditorMethods> | null, articleId?: string } & MDXEditorProps) {
 
-    async function imageUploadHandler(image: File): Promise<string> {
-        if (!articleId) {
-            alert("Please save the article first before uploading images.");
-            throw new Error("Article ID is required for image upload.");
-        }
 
-        try {
-            const compressedImage = await compressAndConvertToJpg(image);
-
-            const formData = new FormData();
-            formData.append("file", compressedImage);
-            formData.append("articleId", articleId);
-
-            const res = await fetch("/api/upload", {
-                method: "POST",
-                body: formData,
-            });
-
-            if (!res.ok) {
-                throw new Error("Upload failed");
-            }
-
-            const data = await res.json();
-            return data.url;
-        } catch (error) {
-            console.error("Image upload failed:", error);
-            throw error;
-        }
-    }
 
     return (
         <MDXEditor
@@ -74,6 +46,7 @@ export default function InitializedMDXEditor({
                             <BoldItalicUnderlineToggles />
                             <ListsToggle />
                             <BlockTypeSelect />
+                            <AlignmentTools editorRef={editorRef as React.MutableRefObject<MDXEditorMethods | null>} />
                             <InsertImage />
                         </DiffSourceToggleWrapper>
                     ),
@@ -83,7 +56,7 @@ export default function InitializedMDXEditor({
                 quotePlugin(),
                 thematicBreakPlugin(),
                 markdownShortcutPlugin(),
-                imagePlugin({ imageUploadHandler }),
+                imagePlugin(),
                 diffSourcePlugin({ viewMode: 'rich-text', diffMarkdown: 'previous-markdown' }),
                 jsxPlugin(),
             ]}

@@ -1,7 +1,9 @@
 'use client';
 
+import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ArticleFormProps } from '@/types/Article';
+import { MDXEditorMethods } from '@mdxeditor/editor';
 import dynamic from 'next/dynamic';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -18,6 +20,8 @@ interface ArticleFormPropsWithId extends ArticleFormProps {
 }
 
 const ArticleForm: React.FC<ArticleFormPropsWithId> = ({ formState, setFormState, onSubmit, articleId }) => {
+    const editorRef = useRef<MDXEditorMethods>(null);
+
     return (
         <motion.form
             className="space-y-6 w-full max-w-3xl mx-auto"
@@ -102,8 +106,9 @@ const ArticleForm: React.FC<ArticleFormPropsWithId> = ({ formState, setFormState
 
             <div className="space-y-2">
                 <Label>Content {articleId ? '(Drag & Drop images supported)' : '(Save to enable image uploads)'}</Label>
-                <div className="min-h-[400px] border rounded-md overflow-hidden bg-background">
+                <div className="min-h-[400px] border rounded-md bg-background">
                     <ForwardRefEditor
+                        ref={editorRef}
                         markdown={formState.content}
                         onChange={(newContent) =>
                             setFormState((prev) => ({

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 import { ArrowLeft, Calendar, User, LayoutList } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -15,7 +16,7 @@ import { apiFetch } from "@/lib/api";
 import { Article } from '@/types/Article';
 import { Separator } from '@/components/ui/separator';
 import ArticleForm from '@/components/articles/ArticleForm';
-import { CustomImageRenderer } from './markdownRenderers';
+import { CustomImageRenderer, CustomParagraphRenderer } from './markdownRenderers';
 
 interface ArticleDetailClientProps {
     initialArticle: Article;
@@ -136,11 +137,13 @@ export default function ArticleDetailClient({ initialArticle }: ArticleDetailCli
 
                         {/* Note: Summary is NOT displayed here as per requirements */}
 
-                        <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground">
+                        <div className="rendered-article-content prose prose-lg dark:prose-invert max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground">
                             <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
+                                rehypePlugins={[rehypeRaw]}
                                 components={{
-                                    img: CustomImageRenderer
+                                    img: CustomImageRenderer,
+                                    p: CustomParagraphRenderer
                                 }}
                             >
                                 {article.content}
