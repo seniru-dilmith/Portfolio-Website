@@ -135,7 +135,7 @@ export default function ArticlesPage() {
                                     </CardHeader>
                                     <CardContent className="flex-1">
                                         <p className="text-muted-foreground text-sm line-clamp-3">
-                                            {article.content.replace(/<[^>]*>/g, '').substring(0, 150)}...
+                                            {article.summary || article.content.replace(/<[^>]*>/g, '').substring(0, 150) + "..."}
                                         </p>
                                         <div className="flex flex-wrap gap-2 mt-4">
                                             {article.tags.slice(0, 3).map(tag => (

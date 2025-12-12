@@ -23,10 +23,7 @@ import {
 } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css'; // Required styles
 import '@/styles/mdx-editor-theme.css'; // Custom Theme Overrides
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from '@/util/firebaseServer';
 import { compressAndConvertToJpg } from '@/util/imageUtils';
-import { v4 as uuidv4 } from 'uuid';
 import { useTheme } from 'next-themes';
 
 // This is the component that will be dynamically imported
@@ -44,14 +41,22 @@ export default function InitializedMDXEditor({
 
         try {
             const compressedImage = await compressAndConvertToJpg(image);
-            // The folder name in the storage bucket should be the article id.
-            // So path should be `${articleId}/${filename}`.
 
-            const storageRef = ref(storage, `${articleId}/${uuidv4()}.jpg`);
+            const formData = new FormData();
+            formData.append("file", compressedImage);
+            formData.append("articleId", articleId);
 
-            await uploadBytes(storageRef, compressedImage);
-            const downloadURL = await getDownloadURL(storageRef);
-            return downloadURL;
+            const res = await fetch("/api/upload", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!res.ok) {
+                throw new Error("Upload failed");
+            }
+
+            const data = await res.json();
+            return data.url;
         } catch (error) {
             console.error("Image upload failed:", error);
             throw error;

@@ -1,162 +1,57 @@
-"use client";
-
-import React, { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import { ArrowLeft, Calendar, User } from 'lucide-react';
-
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { useToast } from "@/components/ui/use-toast";
-import { useAuth } from '@/context/AuthContext';
-import { apiFetch } from "@/lib/api";
+import type { Metadata } from 'next';
+// Force re-compile
+import { notFound } from 'next/navigation';
+import ArticleDetailClient from '@/components/articles/ArticleContent';
+import { getArticleById } from '@/controllers/articleController';
 import { Article } from '@/types/Article';
-import { Separator } from '@/components/ui/separator';
-import ArticleForm from '@/components/articles/ArticleForm';
 
-export default function ArticleDetail() {
-    const { id } = useParams();
-    const router = useRouter();
-    const { isAuthenticated } = useAuth();
-    const { toast } = useToast();
+type Props = {
+    params: { id: string };
+};
 
-    const [article, setArticle] = useState<Article | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [isEditing, setIsEditing] = useState(false);
-    const [formData, setFormData] = useState<{
-        title: string;
-        content: string;
-        tags: string[];
-        author: string;
-        createdAt: string;
-    }>({
-        title: '',
-        content: '',
-        tags: [],
-        author: '',
-        createdAt: '',
-    });
+async function getArticle(id: string): Promise<Article | null> {
+    try {
+        const articleFn = await getArticleById(id);
+        if (!articleFn) return null;
 
-    useEffect(() => {
-        const fetchArticle = async (articleId: string) => {
-            try {
-                setLoading(true);
-                const res = await apiFetch(`/api/articles/${articleId}`);
-                const data = await res.json();
-                if (data.success) {
-                    setArticle(data.data);
-                } else {
-                    toast({ variant: "destructive", title: "Error", description: "Article not found" });
-                    router.push('/articles');
-                }
-            } catch (_error) {
-                console.error("Failed to fetch article", _error);
-                toast({ variant: "destructive", title: "Error", description: "Could not load article" });
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (id) fetchArticle(id as string);
-    }, [id, router, toast]);
-    useEffect(() => {
-        if (article) {
-            setFormData({
-                title: article.title,
-                content: article.content,
-                tags: article.tags,
-                author: article.author,
-                createdAt: new Date(article.createdAt).toISOString().split('T')[0],
-            });
-        }
-    }, [article]);
-
-
-
-    async function handleSave() {
-        if (!article) return;
-        try {
-            const res = await apiFetch(`/api/articles?id=${article._id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
-            });
-            const data = await res.json();
-            if (data.success) {
-                setArticle(data.data);
-                setIsEditing(false);
-                toast({ title: "Success", description: "Article updated successfully." });
-                router.replace(`/articles/${article._id}`); // Clear edit param
-            } else {
-                throw new Error("Update failed");
-            }
-        } catch {
-            toast({ variant: "destructive", title: "Error", description: "Failed to update article." });
-        }
+        // Serialize Mongoose document to plain JSON
+        return JSON.parse(JSON.stringify(articleFn));
+    } catch (error) {
+        console.error("Error fetching article:", error);
+        return null;
     }
-
-    if (loading) {
-        return <div className="min-h-screen flex items-center justify-center pt-20">Loading...</div>;
-    }
-
-    if (!article) return null;
-
-    return (
-        <div className="min-h-screen bg-background pt-24 pb-12">
-            <div className="container max-w-4xl px-4 mx-auto">
-                <Button variant="ghost" className="mb-8 pl-0 hover:pl-2 transition-all" onClick={() => router.push('/articles')}>
-                    <ArrowLeft className="mr-2 h-4 w-4" /> Back to Articles
-                </Button>
-
-                {isEditing ? (
-                    <ArticleForm
-                        formState={formData}
-                        setFormState={setFormData}
-                        onSubmit={handleSave}
-                        articleId={article._id}
-                    />
-                ) : (
-                    <motion.article initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-foreground">
-                        <div className="mb-8 text-center md:text-left space-y-4">
-                            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight text-foreground">{article.title}</h1>
-
-                            <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
-                                {/* Mock Metadata for now as API might not return it yet, or use createdAt if available */}
-                                <div className="flex items-center gap-1 text-sm">
-                                    <Calendar className="h-4 w-4" />
-                                    <span>{new Date(article.createdAt).toLocaleDateString('en-GB')}</span>
-                                </div>
-                                <div className="flex items-center gap-1 text-sm">
-                                    <User className="h-4 w-4" />
-                                    <span>{article.author}</span>
-                                </div>
-                                {article.tags.map(tag => (
-                                    <Badge key={tag} variant="secondary" className="rounded-full px-3">{tag}</Badge>
-                                ))}
-                            </div>
-                        </div>
-
-                        {isAuthenticated && (
-                            <div className="mb-8 flex justify-end">
-                                <Button variant="outline" onClick={() => setIsEditing(true)} className="gap-2">
-                                    Edit Article
-                                </Button>
-                            </div>
-                        )}
-
-                        <Separator className="my-8" />
-
-                        <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground">
-                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                {article.content}
-                            </ReactMarkdown>
-                        </div>
-                    </motion.article>
-                )}
-            </div>
-        </div>
-    );
 }
 
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const article = await getArticle(params.id);
+
+    if (!article) {
+        return {
+            title: 'Article Not Found',
+        };
+    }
+
+    return {
+        title: article.seoTitle || article.title,
+        description: article.seoDescription || article.summary || `Read ${article.title}`,
+        keywords: article.seoKeywords ? article.seoKeywords.split(',').map(k => k.trim()) : article.tags,
+        openGraph: {
+            title: article.seoTitle || article.title,
+            description: article.seoDescription || article.summary || `Read ${article.title}`,
+            type: 'article',
+            publishedTime: new Date(article.createdAt).toISOString(),
+            authors: [article.author],
+            tags: article.tags,
+        },
+    };
+}
+
+export default async function ArticlePage({ params }: Props) {
+    const article = await getArticle(params.id);
+
+    if (!article) {
+        notFound();
+    }
+
+    return <ArticleDetailClient initialArticle={article} />;
+}
