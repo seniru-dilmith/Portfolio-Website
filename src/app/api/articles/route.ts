@@ -35,7 +35,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     await verifyToken(request);
-    const { title, content, summary, tags, author, createdAt, seoTitle, seoDescription, seoKeywords } = await request.json();
+    const { title, content, summary, tags, author, createdAt, seoTitle, seoDescription, seoKeywords, slug } = await request.json();
 
     // Extract image URLs from markdown content
     const imageRegex = /!\[.*?\]\((.*?)\)/g;
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
 
     const article = await createArticle({ 
       title, content, summary, tags, author, createdAt, images,
-      seoTitle, seoDescription, seoKeywords
+      seoTitle, seoDescription, seoKeywords, slug
     });
     return NextResponse.json({ success: true, data: article }, { status: 201 });
   } catch (err) {
@@ -68,7 +68,7 @@ export async function PUT(request: NextRequest) {
     if (!id) {
       return NextResponse.json({ success: false, message: "Missing id query param" }, { status: 400 });
     }
-    const { title, content, summary, tags, author, createdAt, seoTitle, seoDescription, seoKeywords } = await request.json();
+    const { title, content, summary, tags, author, createdAt, seoTitle, seoDescription, seoKeywords, slug } = await request.json();
     
     // Extract image URLs from markdown content
     const imageRegex = /!\[.*?\]\((.*?)\)/g;
@@ -80,7 +80,7 @@ export async function PUT(request: NextRequest) {
 
     const updated = await updateArticle(id, { 
       title, content, summary, tags, author, createdAt, images,
-      seoTitle, seoDescription, seoKeywords
+      seoTitle, seoDescription, seoKeywords, slug
     });
     return NextResponse.json({ success: true, data: updated }, { status: 200 });
   } catch (err) {

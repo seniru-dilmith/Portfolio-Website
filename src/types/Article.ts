@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction } from 'react';
 export interface Article {
     _id: string;
     title: string;
+    slug?: string;
     content: string;
     summary?: string;
     tags: string[];
