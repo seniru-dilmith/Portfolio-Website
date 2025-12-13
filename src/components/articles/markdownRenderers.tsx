@@ -97,7 +97,7 @@ export const CustomParagraphRenderer = ({ children, className, ...props }: { chi
     const cleanChildren = processChildren(React.Children.toArray(children));
 
     // Handle justify specifically for mobile
-    const extraClasses = alignmentClass === 'text-justify' ? 'hyphens-auto' : '';
+    const extraClasses = alignmentClass === 'text-justify' ? 'break-words' : '';
 
     return (
         <p className={cn("mb-4 leading-7", alignmentClass, extraClasses, className)} {...props}>
