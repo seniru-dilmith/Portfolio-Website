@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import { cn } from "@/lib/utils";
 
 interface CustomImageRendererProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src'> {
     src?: unknown;
@@ -71,7 +72,7 @@ export const CustomImageRenderer = ({ alt, src, title, style, width, ...props }:
     );
 };
 
-export const CustomParagraphRenderer = ({ children, ...props }: { children?: React.ReactNode }) => {
+export const CustomParagraphRenderer = ({ children, className, ...props }: { children?: React.ReactNode, className?: string } & React.HTMLAttributes<HTMLParagraphElement>) => {
     let alignmentClass = "";
 
     // Helper to process children and find/remove alignment tags
@@ -95,8 +96,11 @@ export const CustomParagraphRenderer = ({ children, ...props }: { children?: Rea
     // Note: ReactMarkdown passes children as an array of mixed types.
     const cleanChildren = processChildren(React.Children.toArray(children));
 
+    // Handle justify specifically for mobile
+    const extraClasses = alignmentClass === 'text-justify' ? 'break-words' : '';
+
     return (
-        <p className={`mb-4 leading-7 ${alignmentClass}`} {...props}>
+        <p className={cn("mb-4 leading-7", alignmentClass, extraClasses, className)} {...props}>
             {cleanChildren}
         </p>
     );

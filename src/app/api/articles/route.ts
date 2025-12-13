@@ -6,26 +6,11 @@ import {
   deleteArticle,
 } from "@/controllers/articleController";
 import { verifyToken } from "@/middleware/auth";
-import { stripMarkdown } from "@/lib/markdown";
 
 export async function GET() {
   try {
     const articles = await getArticles();
-    
-    // Process articles to strip markdown for preview on the server side
-    // avoiding main-thread blocking on the client
-    const processedArticles = [];
-    // Limit to recent 20 articles to prevent rendering bottleneck
-    const recentArticles = articles.reverse().slice(0, 20); 
-    
-    for (const article of recentArticles) {
-      const articleObj = article.toObject ? article.toObject() : article;
-      const plainText = await stripMarkdown(articleObj.content || "");
-      // Truncate to 300 chars to reduce payload size and JSON parse time on client
-      processedArticles.push({ ...articleObj, content: plainText.slice(0, 300) });
-    }
-
-    return NextResponse.json({ success: true, data: processedArticles }, { status: 200 });
+    return NextResponse.json({ success: true, data: articles }, { status: 200 });
   } catch (err) {
     console.error("GET /api/articles error:", err);
     return NextResponse.json({ success: false, message: "Internal server error" }, { status: 500 });

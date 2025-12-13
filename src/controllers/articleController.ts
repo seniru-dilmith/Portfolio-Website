@@ -6,7 +6,7 @@ import { generateSlug } from '@/util/slug';
 
 export const getArticles = async () => {
     await dbConnect();
-    return ArticleModel.find().sort({ createdAt: -1 });
+    return ArticleModel.find().sort({ createdAt: -1 }).select('-content');
 };
 
 export const getArticleById = async (id: string) => {
