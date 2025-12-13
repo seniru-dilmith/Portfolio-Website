@@ -23,15 +23,10 @@ interface ArticleFormPropsWithId extends ArticleFormProps {
 const ArticleForm: React.FC<ArticleFormPropsWithId> = ({ formState, setFormState, onSubmit, articleId, onCancel }) => {
     const editorRef = useRef<MDXEditorMethods>(null);
 
-    // Use a ref to store the initial markdown to prevent re-initializing the editor on every keystroke
-    const initialContentRef = useRef(formState.content || "");
-
-    // If the article ID changes (e.g. navigation), update the initial ref.
-    React.useEffect(() => {
-        if (articleId) {
-            initialContentRef.current = formState.content || "";
-        }
-    }, [articleId]); // Only reset if ID changes, ignore formState.content updates during editing
+    // Snapshot the initial content when articleId changes.
+    // We intentionally omit formState.content from deps to avoid updating on every keystroke.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const initialContent = React.useMemo(() => formState.content || "", [articleId]);
 
     return (
         <form
@@ -118,12 +113,13 @@ const ArticleForm: React.FC<ArticleFormPropsWithId> = ({ formState, setFormState
                 <Label>Content {articleId ? '(Drag & Drop images supported)' : '(Save to enable image uploads)'}</Label>
                 <div className="min-h-[400px] border rounded-md bg-background">
                     <ForwardRefEditor
+                        key={articleId || 'new'}
                         ref={editorRef}
-                        markdown={initialContentRef.current}
+                        markdown={initialContent}
                         onChange={(newContent) =>
                             setFormState((prev) => ({
                                 ...prev,
-                                content: newContent,
+                                content: newContent || "",
                             }))
                         }
                         articleId={articleId}

@@ -7,7 +7,7 @@ interface CustomImageRendererProps extends Omit<React.ImgHTMLAttributes<HTMLImag
     title?: string;
 }
 
-export const CustomImageRenderer = ({ alt, src, title, style, width, height, ...props }: CustomImageRendererProps & { style?: React.CSSProperties, width?: string | number, height?: string | number }) => {
+export const CustomImageRenderer = ({ alt, src, title, style, width, ...props }: CustomImageRendererProps & { style?: React.CSSProperties, width?: string | number }) => {
     const imgSrc = typeof src === 'string' ? src : undefined;
 
     // Helper to extract clean alt and alignment

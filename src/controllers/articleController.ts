@@ -45,7 +45,7 @@ export const createArticle = async (articleData: Partial<Article>) => {
         articleData.slug = slug;
     } else if (articleData.slug) {
         // Validation if slug is explicitly provided
-         let exists = await ArticleModel.findOne({ slug: articleData.slug });
+         const exists = await ArticleModel.findOne({ slug: articleData.slug });
          if (exists) {
              throw new Error("Slug already exists");
          }

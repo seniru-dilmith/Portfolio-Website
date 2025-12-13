@@ -16,7 +16,6 @@ import {
     UndoRedo,
     BoldItalicUnderlineToggles,
     ListsToggle,
-    BlockTypeSelect,
     InsertImage,
     diffSourcePlugin,
     jsxPlugin,
