@@ -20,10 +20,13 @@ import {
     InsertImage,
     diffSourcePlugin,
     jsxPlugin,
+    linkPlugin,
+    tablePlugin,
 } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css'; // Required styles
 import '@/styles/mdx-editor-theme.css'; // Custom Theme Overrides
 import { AlignmentTools } from './AlignmentTools';
+
 
 // This is the component that will be dynamically imported
 export default function InitializedMDXEditor({
@@ -81,7 +84,6 @@ export default function InitializedMDXEditor({
                             <UndoRedo />
                             <BoldItalicUnderlineToggles />
                             <ListsToggle />
-                            <BlockTypeSelect />
                             <AlignmentTools editorRef={editorRef as React.MutableRefObject<MDXEditorMethods | null>} />
                             <InsertImage />
                         </DiffSourceToggleWrapper>
@@ -92,8 +94,9 @@ export default function InitializedMDXEditor({
                 quotePlugin(),
                 thematicBreakPlugin(),
                 markdownShortcutPlugin(),
-                markdownShortcutPlugin(),
                 imagePlugin({ imageUploadHandler }),
+                linkPlugin(),
+                tablePlugin(),
                 diffSourcePlugin({ viewMode: 'rich-text', diffMarkdown: 'previous-markdown' }),
                 jsxPlugin(),
             ]}
