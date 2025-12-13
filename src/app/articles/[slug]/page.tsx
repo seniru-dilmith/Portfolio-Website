@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-// Force re-compile
 import { notFound } from 'next/navigation';
+import { cache } from 'react';
 import ArticleDetailClient from '@/components/articles/ArticleContent';
 import { getArticleByIdOrSlug } from '@/controllers/articleController';
 import { Article } from '@/types/Article';
@@ -9,7 +9,7 @@ type Props = {
     params: Promise<{ slug: string }>;
 };
 
-async function getArticle(slug: string): Promise<Article | null> {
+const getArticle = cache(async (slug: string): Promise<Article | null> => {
     try {
         const articleFn = await getArticleByIdOrSlug(slug);
         if (!articleFn) return null;
@@ -20,7 +20,7 @@ async function getArticle(slug: string): Promise<Article | null> {
         console.error("Error fetching article:", error);
         return null;
     }
-}
+});
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;

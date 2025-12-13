@@ -6,22 +6,42 @@ if (!MONGO_URI) {
   throw new Error('❌ MONGO_URI is not defined in the environment variables.');
 }
 
-const cached = { conn: null as mongoose.Connection | null, promise: null as Promise<mongoose.Connection> | null };
+/**
+ * Global is used here to maintain a cached connection across hot reloads
+ * in development. This prevents connections growing exponentially
+ * during API Route usage.
+ */
+let cached = (global as any).mongoose;
 
-const dbConnect = async () => {
+if (!cached) {
+  cached = (global as any).mongoose = { conn: null, promise: null };
+}
+
+async function dbConnect() {
   if (cached.conn) {
     return cached.conn;
   }
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGO_URI).then((connection) => {
-      return connection.connection;
+    const opts = {
+      bufferCommands: false,
+    };
+
+    cached.promise = mongoose.connect(MONGO_URI!, opts).then((mongoose) => {
+      console.log('✅MongoDB connected');
+      return mongoose;
     });
   }
 
-  cached.conn = await cached.promise;
-  console.log('✅MongoDB connected');
+  try {
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null;
+    throw e;
+  }
+
   return cached.conn;
-};
+}
 
 export default dbConnect;
+
