@@ -148,7 +148,7 @@ export default function ArticlesPage() {
                                     key={article._id}
                                     variants={item}
                                 >
-                                    <Link href={`/articles/${article._id}`} className="group block h-full">
+                                    <Link href={`/articles/${article.slug || article._id}`} className="group block h-full">
                                         <Card className="h-full flex flex-col overflow-hidden border-border/50 bg-card hover:border-primary/50 transition-all duration-300 hover:shadow-xl group-hover:-translate-y-1">
 
                                             <CardHeader className="pb-3">
@@ -197,7 +197,7 @@ export default function ArticlesPage() {
                                                             className="h-8 w-8 hover:text-primary hover:bg-primary/10"
                                                             onClick={(e) => {
                                                                 e.preventDefault();
-                                                                router.push(`/articles/${article._id}?edit=true`);
+                                                                router.push(`/articles/${article.slug || article._id}?edit=true`);
                                                             }}
                                                         >
                                                             <Edit className="h-4 w-4" />

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { motion } from 'framer-motion';
+
 import { ArticleFormProps } from '@/types/Article';
 import { MDXEditorMethods } from '@mdxeditor/editor';
 import dynamic from 'next/dynamic';
@@ -17,21 +17,24 @@ const ForwardRefEditor = dynamic(
 
 interface ArticleFormPropsWithId extends ArticleFormProps {
     articleId?: string;
+    onCancel?: () => void;
 }
 
-const ArticleForm: React.FC<ArticleFormPropsWithId> = ({ formState, setFormState, onSubmit, articleId }) => {
+const ArticleForm: React.FC<ArticleFormPropsWithId> = ({ formState, setFormState, onSubmit, articleId, onCancel }) => {
     const editorRef = useRef<MDXEditorMethods>(null);
 
+    // Snapshot the initial content when articleId changes.
+    // We intentionally omit formState.content from deps to avoid updating on every keystroke.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const initialContent = React.useMemo(() => formState.content || "", [articleId]);
+
     return (
-        <motion.form
-            className="space-y-6 w-full max-w-3xl mx-auto"
+        <form
+            className="space-y-6 w-full max-w-3xl mx-auto px-4 md:px-0"
             onSubmit={(e) => {
                 e.preventDefault();
                 onSubmit();
             }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
         >
             <div className="space-y-2">
                 <Label htmlFor="title">Title</Label>
@@ -104,16 +107,19 @@ const ArticleForm: React.FC<ArticleFormPropsWithId> = ({ formState, setFormState
                 </div>
             </div>
 
+
+
             <div className="space-y-2">
                 <Label>Content {articleId ? '(Drag & Drop images supported)' : '(Save to enable image uploads)'}</Label>
                 <div className="min-h-[400px] border rounded-md bg-background">
                     <ForwardRefEditor
+                        key={articleId || 'new'}
                         ref={editorRef}
-                        markdown={formState.content}
+                        markdown={initialContent}
                         onChange={(newContent) =>
                             setFormState((prev) => ({
                                 ...prev,
-                                content: newContent,
+                                content: newContent || "",
                             }))
                         }
                         articleId={articleId}
@@ -183,10 +189,15 @@ const ArticleForm: React.FC<ArticleFormPropsWithId> = ({ formState, setFormState
                 </div>
             </div>
 
-            <Button type="submit" size="lg" className="w-full">
-                Publish Article
-            </Button>
-        </motion.form>
+            <div className="flex gap-4">
+                <Button type="button" variant="outline" size="lg" className="flex-1" onClick={onCancel}>
+                    Discard Changes
+                </Button>
+                <Button type="submit" size="lg" className="flex-1">
+                    Publish Article
+                </Button>
+            </div>
+        </form>
     );
 };
 

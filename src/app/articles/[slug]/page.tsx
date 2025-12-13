@@ -2,16 +2,16 @@ import type { Metadata } from 'next';
 // Force re-compile
 import { notFound } from 'next/navigation';
 import ArticleDetailClient from '@/components/articles/ArticleContent';
-import { getArticleById } from '@/controllers/articleController';
+import { getArticleByIdOrSlug } from '@/controllers/articleController';
 import { Article } from '@/types/Article';
 
 type Props = {
-    params: Promise<{ id: string }>;
+    params: Promise<{ slug: string }>;
 };
 
-async function getArticle(id: string): Promise<Article | null> {
+async function getArticle(slug: string): Promise<Article | null> {
     try {
-        const articleFn = await getArticleById(id);
+        const articleFn = await getArticleByIdOrSlug(slug);
         if (!articleFn) return null;
 
         // Serialize Mongoose document to plain JSON
@@ -23,8 +23,8 @@ async function getArticle(id: string): Promise<Article | null> {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const { id } = await params;
-    const article = await getArticle(id);
+    const { slug } = await params;
+    const article = await getArticle(slug);
 
     if (!article) {
         return {
@@ -47,12 +47,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
 }
 
+import { redirect } from 'next/navigation';
+
 export default async function ArticlePage({ params }: Props) {
-    const { id } = await params;
-    const article = await getArticle(id);
+    const { slug } = await params;
+    const article = await getArticle(slug);
 
     if (!article) {
         notFound();
+    }
+
+    // Redirect if accessing via ID and slug exists
+    if (article.slug && slug === article._id && article.slug !== slug) {
+        redirect(`/articles/${article.slug}`);
     }
 
     return <ArticleDetailClient initialArticle={article} />;

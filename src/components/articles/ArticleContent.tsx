@@ -17,6 +17,7 @@ import { Article } from '@/types/Article';
 import { Separator } from '@/components/ui/separator';
 import ArticleForm from '@/components/articles/ArticleForm';
 import { CustomImageRenderer, CustomParagraphRenderer } from './markdownRenderers';
+import '@/styles/mdx-editor-theme.css';
 
 interface ArticleDetailClientProps {
     initialArticle: Article;
@@ -104,11 +105,30 @@ export default function ArticleDetailClient({ initialArticle }: ArticleDetailCli
                         setFormState={setFormData}
                         onSubmit={handleSave}
                         articleId={article._id}
+                        onCancel={() => {
+                            setIsEditing(false);
+                            // Reset form data to article state purely in case they edit again?
+                            // Effect handles it if article changes, but if we just cancel, we might want to reset.
+                            // The useEffect([article]) runs when article changes.
+                            // Simple toggle is enough since the form re-mounts or re-initializes usually.
+                            // But cleaner to ensure reset. 
+                            setFormData({
+                                title: article.title,
+                                content: article.content,
+                                summary: article.summary || '',
+                                tags: article.tags,
+                                author: article.author,
+                                createdAt: new Date(article.createdAt).toISOString().split('T')[0],
+                                seoTitle: article.seoTitle || '',
+                                seoDescription: article.seoDescription || '',
+                                seoKeywords: article.seoKeywords || '',
+                            });
+                        }}
                     />
                 ) : (
                     <motion.article initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-foreground">
                         <div className="mb-8 text-center md:text-left space-y-4">
-                            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight text-foreground">{article.title}</h1>
+                            <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight text-foreground">{article.title}</h1>
 
                             <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
                                 <div className="flex items-center gap-1 text-sm">

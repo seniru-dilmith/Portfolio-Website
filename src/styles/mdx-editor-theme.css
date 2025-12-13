@@ -123,14 +123,24 @@
 /* ... existing dialog rules ... */
 
 /* Sticky Toolbar */
+/* Sticky Toolbar */
 .mdxeditor-toolbar {
-  position: sticky;
-  top: 5rem; /* Offset for fixed navbar (approx 80px/h-20) */
-  z-index: 40; /* Below navbar (usually 50) but above content */
+  position: sticky !important;
+  top: 5rem !important; /* Offset for fixed navbar (approx 80px/h-20) */
+  z-index: 40 !important; /* Below navbar (usually 50) but above content */
   background-color: hsl(var(--background)); /* Use theme background */
   border-bottom: 1px solid hsl(var(--border));
   border-radius: var(--radius) var(--radius) 0 0;
   transition: top 0.2s;
+  overflow-x: auto !important; /* Allow horizontal scroll on mobile */
+  max-width: 100vw !important; /* Prevent causing horizontal scroll on body */
+  /* Hide scrollbar for cleaner look if possible, but usability comes first */
+  scrollbar-width: thin;
+}
+
+/* Ensure parents don't clip the sticky toolbar */
+.mdxeditor, .mdxeditor-root {
+  overflow: visible !important;
 }
 
 /* Hide the "Upload" tab trigger if it still appears, though removing the handler should do it */
