@@ -1,9 +1,0 @@
-# *
-User-agent: *
-Allow: /
-
-# Host
-Host: https://seniru.dev
-
-# Sitemaps
-Sitemap: https://seniru.dev/sitemap.xml
