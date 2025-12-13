@@ -33,28 +33,42 @@ export const getArticleByIdOrSlug = async (idOrSlug: string) => {
 export const createArticle = async (articleData: Partial<Article>) => {
     await dbConnect();
     if (articleData.title && !articleData.slug) {
-        articleData.slug = generateSlug(articleData.title);
+        let slug = generateSlug(articleData.title);
+        // Ensure uniqueness
+        let exists = await ArticleModel.findOne({ slug });
+        let counter = 1;
+        while (exists) {
+            slug = `${generateSlug(articleData.title)}-${counter}`;
+            exists = await ArticleModel.findOne({ slug });
+            counter++;
+        }
+        articleData.slug = slug;
+    } else if (articleData.slug) {
+        // Validation if slug is explicitly provided
+         let exists = await ArticleModel.findOne({ slug: articleData.slug });
+         if (exists) {
+             throw new Error("Slug already exists");
+         }
     }
     return ArticleModel.create(articleData);
 };
 
 export const updateArticle = async (id: string, articleData: Partial<Article>) => {
     await dbConnect();
-    
-    // If updating title but no slug provided, check if we need to generate one
-    // Only do this if we really want to enforce slugs. 
-    // To handle the case where an article has no slug yet (migration pending), 
-    // we can check if it exists or just rely on migration.
-    // Ideally, the frontend form should send the slug.
-    
-    // Self-healing: if title is present and no slug, let's try to generate one IF the doc doesn't have one?
-    // That requires a fetch. Let's keep it simple: simpler migration is better.
-    
-    if (articleData.title && !articleData.slug) {
-         // We could auto-generate, but let's stick to the migration script for bulk fix.
-         // However, let's add it here for single-edit fix via API if needed in future.
-         // For now, I'll rely on the migration I'm about to run.
+
+    // Check collision if updating slug specifically
+    if (articleData.slug) {
+        const exists = await ArticleModel.findOne({ slug: articleData.slug, _id: { $ne: id } });
+        if (exists) {
+             throw new Error("Slug already exists");
+        }
     }
+    
+    // Auto-generate if title changes AND slug is missing/empty? 
+    // Usually we don't want to change slug on title change to avoid breaking links.
+    // But if it's explicitly requested:
+    // If title changed and we wanted to sync slug, we'd need that logic here.
+    // For now, adhering to: Only update slug if explicit or if it was missing (handeled migration).
 
     return ArticleModel.findByIdAndUpdate(id, articleData, { new: true, runValidators: true });
 };
